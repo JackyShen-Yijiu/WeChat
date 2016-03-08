@@ -23,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // server render
 app.use(function(req, res) {
   Router.match({ routes: routes.default, location: req.url }, function(err, redirectLocation, renderProps) {
+    console.log('---- Server Render ----');
     if (err) {
       res.status(500).send(err.message)
     } else if (redirectLocation) {
