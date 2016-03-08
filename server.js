@@ -22,8 +22,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use("weixin",weinxinRouter);
-app.use("jzapi/v1",apiRouter);
+app.use("/weixin",weinxinRouter);
+app.use("/jzapi/v1",apiRouter);
 // server render
 app.use(function(req, res) {
   Router.match({ routes: routes.default, location: req.url }, function(err, redirectLocation, renderProps) {
