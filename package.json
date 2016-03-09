@@ -39,7 +39,8 @@
     "serve-favicon": "^2.3.0",
     "swig": "^1.4.2",
     "underscore": "^1.8.3",
-    "xml2js": "^0.4.15"
+    "xml2js": "^0.4.15",
+    "node-weixin-auth":"*"
   },
   "devDependencies": {
     "babel-core": "^6.1.19",
