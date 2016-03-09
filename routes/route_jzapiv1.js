@@ -4,6 +4,11 @@
 var express = require("express");
 var Router = express.Router();
 var baseController = require('../server/controller/controller_jzapiv1.js');
-//  获取城市列表
-v1.get("/getCity",baseController.getCity);
+
+//  鑾峰彇鍩庡競鍒楄〃
+Router.get("/getCity", baseController.getCity);
+
+// 鏌ヨ椹炬牎鍒楄〃
+Router.get("/searchSchool", baseController.searchSchool);
+
 module.exports = Router;
