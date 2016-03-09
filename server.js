@@ -11,6 +11,8 @@ var React = require('react');
 var ReactDOM = require('react-dom/server');
 var Router = require('react-router');
 var routes = require('./app/routes');
+var weinxinRouter=require("./routes/route_weixin");
+var apiRouter=require("./routes/route_jzapiv1");
 
 var app = express();
 
@@ -20,6 +22,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use("/weixin",weinxinRouter);
+app.use("/jzapi/v1",apiRouter);
 // server render
 app.use(function(req, res) {
   Router.match({ routes: routes.default, location: req.url }, function(err, redirectLocation, renderProps) {
