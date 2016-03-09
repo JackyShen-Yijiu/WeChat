@@ -27,7 +27,7 @@ exports.getCityList = function (callback) {
                     if (err) {
                         return callback("查找出错" + err);
                     }
-                    console.log(data);
+                    // console.log(data);
                     var list = _.map(data, function (item, i) {
                         var one = {
                             id: item.indexid,
@@ -64,9 +64,9 @@ exports.searchDriverSchool = function (searchinfo, callback) {
     if (searchinfo.schoolname != "") {
         searchcondition.name = new RegExp(searchinfo.schoolname);
     }
-    if (searchinfo.licensetype != "" && parseInt(searchinfo.licensetype) != 0) {
-        searchcondition.licensetype = {"$in": [searchinfo.licensetype]}
-    }
+    //if (searchinfo.licensetype != "" && parseInt(searchinfo.licensetype) != 0) {
+    //    searchcondition.licensetype = {"$in": [searchinfo.licensetype]}
+    //}
     var ordercondition = {};
     // 0 默认 1距离 2 评分  3 价格
     if (searchinfo.ordertype == 2) {
@@ -74,7 +74,7 @@ exports.searchDriverSchool = function (searchinfo, callback) {
     } else if (searchinfo.ordertype == 3) {
         ordercondition.minprice = 1;
     }
-    console.log(searchcondition);
+    //console.log(searchcondition);
     //console.log(ordercondition);
     //console.log(searchinfo);
     schoolModel.find(searchcondition)
