@@ -33,6 +33,7 @@ app.use(function(req, res, next) {
 });
 app.use("/weixin",weinxinRouter);
 app.use("/jzapi/v1",apiRouter);
+
 // server render
 app.use(function(req, res) {
   Router.match({ routes: routes.default, location: req.url }, function(err, redirectLocation, renderProps) {
