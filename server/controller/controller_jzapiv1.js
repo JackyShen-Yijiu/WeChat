@@ -13,7 +13,7 @@ exports.getCity = function (req, res) {
     });
 }
 
-//搜索驾校列表
+// 搜索驾校列表
 exports.searchSchool = function (req, res) {
     var q = {
         latitude: parseFloat(req.query.latitude),
@@ -24,6 +24,42 @@ exports.searchSchool = function (req, res) {
         schoolname: req.query.schoolname ? req.query.schoolname : ""
     }
     service.searchDriverSchool(q, function (err, data) {
+        if (err) {
+            return res.json(new BaseReturnInfo(0, err, []));
+        } else {
+            return res.json(new BaseReturnInfo(1, "", data));
+        }
+    });
+}
+
+// 获取驾校详情
+exports.getSchoolInfo = function (req, res) {
+    var schoolid = req.params.schoolid;
+    if (schoolid === undefined) {
+        return res.json(new BaseReturnInfo(0, "获取参数错误", ""));
+    }
+    service.getSchoolInfoserver(schoolid, function (err, data) {
+        if (err) {
+            return res.json(new BaseReturnInfo(0, err, {}));
+        }
+        return res.json(new BaseReturnInfo(1, "", data));
+    });
+};
+
+
+// 获取驾校下面的教练
+exports.getSchoolCoach = function (req, res) {
+    var coachinfo = {
+        schoolid: req.params.schoolid,
+        index: req.query.index,
+        name: req.query.name
+    }
+    //sconsole.log(coachinfo);
+    if (coachinfo.schoolid === undefined || coachinfo.index === undefined) {
+        return res.json(
+            new BaseReturnInfo(0, "parms is wrong", ""));
+    }
+    service.getSchoolCoach(coachinfo, function (err, data) {
         if (err) {
             return res.json(new BaseReturnInfo(0, err, []));
         } else {

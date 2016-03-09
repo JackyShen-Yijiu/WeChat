@@ -7,6 +7,11 @@ var cityInfoModel = mongodb.CityiInfoModel;
 var cache = require("../Common/cache");
 var schoolModel = mongodb.DriveSchoolModel;
 var geolib = require('geolib');
+var async = require('async');
+var cachedata = require('../common/cachedata');
+var resbaseschoolinfomode = require("../models/returndriveschoolinfo").resBaseSchoolInfo;
+var classtypeModel = mongodb.ClassTypeModel;
+var coachmode = mongodb.CoachModel;
 //  获取城市列表
 exports.getCityList = function (callback) {
 
@@ -74,6 +79,9 @@ exports.searchDriverSchool = function (searchinfo, callback) {
     } else if (searchinfo.ordertype == 3) {
         ordercondition.minprice = 1;
     }
+    //微信坐标转换为百度地图坐标
+   // var path = "http://api.map.baidu.com/geoconv/v1/?coords=" + searchinfo.latitude + "," +  searchinfo.longitude + "&from=3&to=5&output=json&ak=201bccec2ea05baf5cf275aca9901cc0";
+
     //console.log(searchcondition);
     //console.log(ordercondition);
     //console.log(searchinfo);
@@ -127,3 +135,131 @@ exports.searchDriverSchool = function (searchinfo, callback) {
             }
         })
 }
+
+// 获取驾校详情
+exports.getSchoolInfoserver = function (schoolid, callback) {
+    async.waterfall([
+        //获取该驾校的班型
+        function (cb) {
+            var searchinfo = {};
+            //if (cartype != 0) {
+            //    searchinfo = {"carmodel.modelsid": cartype};
+            //}
+            searchinfo.schoolid = new mongodb.ObjectId(schoolid);
+            searchinfo.is_using = true;
+            classtypeModel.find(searchinfo)
+                .populate("schoolid", " name  latitude longitude address")
+                .populate("vipserverlist", " name  color id")
+                .exec(function (err, data) {
+                    if (err) {
+                        return callback("查询出错：" + err);
+                    } else {
+                        process.nextTick(function () {
+                            var classlist = [];
+                            data.forEach(function (r) {
+                                var oneclass = {
+                                    calssid: r._id,
+                                    //schoolinfo: {
+                                    //    schoolid: r.schoolid._id,
+                                    //    name: r.schoolid.name,
+                                    //    latitude: r.schoolid.latitude,
+                                    //    longitude: r.schoolid.longitude,
+                                    //    address: r.schoolid.address,
+                                    //},
+                                    classname: r.classname,
+                                    begindate: r.begindate,
+                                    enddate: r.enddate,
+                                    is_vip: r.is_vip,
+                                    classdesc: r.classdesc,
+                                    price: r.price,
+                                    onsaleprice: r.onsaleprice,
+                                    carmodel: r.carmodel,
+                                    cartype: r.cartype,
+                                    classdesc: r.classdesc,
+                                    vipserverlist: r.vipserverlist,
+                                    classchedule: r.classchedule,
+                                    applycount: r.applycount,
+
+                                }
+                                classlist.push(oneclass)
+                            })
+                            return callback(null, classlist);
+                        });
+                    }
+                });
+        },
+        function (schoolClass, cb) {
+            schoolModel.findById(new mongodb.ObjectId(schoolid), function (err, schooldata) {
+                if (err || !schooldata) {
+                    return callback("查询驾校详情出错：" + err);
+                }
+                var data = new resbaseschoolinfomode(schooldata);
+                data.classlist = schoolClass.classlist;
+                return cb(null, data);
+            });
+        }
+
+    ], function (err, result) {
+        return callback(err, result);
+    });
+
+};
+
+
+// 获取学校下面的教练
+exports.getSchoolCoach = function (coachinfo, callback) {
+    //{"name":new RegExp(schoolname)}
+    var searchinfo = {
+        "driveschool": new mongodb.ObjectId(coachinfo.schoolid), "is_lock": false,
+        "is_validation": true
+    };
+    if (coachinfo.name && coachinfo.name != "") {
+        searchinfo.name = new RegExp(coachinfo.name);
+    }
+    coachmode.find(searchinfo)
+        .populate("serverclasslist", "classname carmodel cartype  price onsaleprice", {"is_using": true})
+        .skip((coachinfo.index - 1) * 10)
+        .limit(10)
+        .exec(function (err, coachlist) {
+            if (err || !coachlist) {
+                console.log(err);
+                callback("查找教练出错" + err);
+
+            } else if (coachlist.length == 0) {
+                callback(null, coachlist);
+            }
+            else {
+                process.nextTick(function () {
+                    var rescoachlist = [];
+                    coachlist.forEach(function (r, idx) {
+                        var returnmodel = { //new resbasecoachinfomode(r);
+                            coachid: r._id,
+                            name: r.name,
+                            driveschoolinfo: r.driveschoolinfo,
+                            headportrait: r.headportrait,
+                            starlevel: r.starlevel,
+                            is_shuttle: r.is_shuttle,
+                            passrate: r.passrate,
+                            Seniority: r.Seniority,
+                            latitude: r.latitude,
+                            longitude: r.longitude,
+                            subject: r.subject,
+                            Gender: r.Gender,
+                            commentcount: r.commentcount,
+                            maxprice: r.maxprice ? r.maxprice : 0,  // 最高价格
+                            minprice: r.minprice ? r.minprice : 0,  // 最低价格
+                            carmodel: r.carmodel,
+                            serverclasslist: r.serverclasslist ? r.serverclasslist : []
+
+                        }
+                        //  r.restaurantId = r._id;
+                        // delete(r._id);
+                        rescoachlist.push(returnmodel);
+                    });
+                    callback(null, rescoachlist);
+                });
+            }
+
+        });
+
+};

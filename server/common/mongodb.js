@@ -20,7 +20,7 @@ mongoose.connection.on('connected', function () {
 });
 
 // If the connection throws an error
-mongoose.connection.on('error',function (err) {
+mongoose.connection.on('error', function (err) {
     console.log('Mongoose default connection error: ' + err);
 });
 
@@ -30,7 +30,7 @@ mongoose.connection.on('disconnected', function () {
 });
 
 // If the Node process ends, close the Mongoose connection
-process.on('SIGINT', function() {
+process.on('SIGINT', function () {
     mongoose.connection.close(function () {
         console.log('Mongoose default connection disconnected through app termination');
         process.exit(0);
@@ -38,11 +38,16 @@ process.on('SIGINT', function() {
 });
 
 exports.ObjectId = mongoose.Types.ObjectId;
-exports.close = function() {
+exports.close = function () {
     mongoose.connection.close();
 }
-exports.CityiInfoModel=require("../models/cityinfo");
-exports.DriveSchoolModel=require('../models/driveschool');
+exports.CityiInfoModel = require("../models/cityinfo");
+exports.DriveSchoolModel = require('../models/driveschool');
+exports.TrainingFieldModel = require('../models/trainingfield');
+exports.SchoolBusRouteModel = require("../models/schoolbusroute");
+exports.VipServerModel = require("../models/vipserver");
+exports.ClassTypeModel = require('../models/calsstype');
+exports.CoachModel = require('../models/coach');
 //exports.AppVersionModel = require('./appversion.js');
 //exports.SmsVerifyCodeModel = require('./smsVerifyCode.js');
 //exports.UserModel=require('./user');
