@@ -1,13 +1,303 @@
+@import 'variables';
 body {
-    background-color: #efefef;
+    color: @gray-dark;
+    background-color: @gray-light;
 }
 
-.com-block {
-    .list-group {
-        padding-left: 15px;
-        background-color: #fff;
-        border-bottom: 1px #ddd solid;
+a {
+    &:hover {
+        text-decoration: none;
+        color: @gray-dark;
     }
+}
+
+.school-item {
+    // 驾校
+    position: relative;
+    display: block;
+    background-color: @white;
+    height: 100px;
+    border-bottom: 1px @gray-light solid;
+    overflow: hidden;
+    padding-left: 120px;
+    padding-right: 120px;
+    color: @gray-dark;
+    .left,
+    .middle,
+    .right {
+        height: 100px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .left {
+        position: absolute;
+        left: 10px;
+        top: 0;
+        img {
+            height: 80px;
+            width: 100px;
+        }
+    }
+    .middle {
+        .title {
+            margin-bottom: 8px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .address {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        .price {
+            font-weight: bolder;
+            color: @red;
+            font-size: 15px;
+        }
+    }
+    .right {
+        position: absolute;
+        right: 10px;
+        top: 0;
+        width: 100px;
+        text-align: right;
+        .stars {
+            overflow: hidden;
+            margin-bottom: 12px;
+            margin-top: 4px;
+            i {
+                float: right;
+                margin-right: 2px;
+            }
+        }
+        .distance {
+            margin-bottom: 8px;
+        }
+        .coach {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+    }
+}
+
+.lesson-item {
+    // 班型
+    .header {
+        position: relative;
+        line-height: 40px;
+        .title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .price {
+            position: absolute;
+            font-size: 16px;
+            font-weight: 600;
+            right: 0;
+            top: 0;
+            line-height: 40px;
+            color: @red;
+        }
+    }
+    .info {
+        color: @gray;
+    }
+    .footer {
+        position: relative;
+        line-height: 44px;
+        margin-top: 5px;
+        .btn-signup {
+            position: absolute;
+            right: 0;
+            width: 100px;
+            margin-top: 5px;
+            background-color: @blue-base;
+            color: @white;
+        }
+        .time {
+            color: @gray;
+        }
+    }
+}
+
+.coach-item {
+    // 教练
+    position: relative;
+    display: block;
+    background-color: @white;
+    color: @gray-dark;
+    height: 100px;
+    border-bottom: 1px @gray-light solid;
+    overflow: hidden;
+    padding-left: 100px;
+    padding-right: 120px;
+    .left,
+    .middle,
+    .right {
+        height: 100px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .left {
+        position: absolute;
+        left: 10px;
+        top: 0;
+        img {
+            height: 80px;
+            width: 80px;
+        }
+    }
+    .middle {
+        .title {
+            margin-bottom: 8px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .lesson {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        .desc {
+            font-weight: bolder;
+            color: @red;
+            font-size: 13px;
+        }
+    }
+    .right {
+        position: absolute;
+        right: 10px;
+        top: 0;
+        width: 100px;
+        text-align: right;
+        .stars {
+            overflow: hidden;
+            margin-bottom: 12px;
+            margin-top: 4px;
+            i.fa {
+                float: right;
+                margin-right: 2px;
+            }
+        }
+        .age {
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        .rate {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            font-size: 13px;
+        }
+    }
+}
+
+.user-item {
+    // 个人中心
+    position: relative;
+    display: block;
+    background-color: @white;
+    color: @gray-dark;
+    height: 100px;
+    border-bottom: 1px @gray-light solid;
+    overflow: hidden;
+    padding-left: 130px;
+    .left,
+    .middle,
+    .right {
+        height: 100px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .left {
+        position: absolute;
+        left: 35px;
+        top: 0;
+        img {
+            height: 80px;
+            width: 80px;
+        }
+    }
+    .middle {
+        .name {
+            margin-bottom: 8px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .mobile {
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        .ycode {
+            color: @blue;
+            font-size: 13px;
+        }
+    }
+}
+
+.order-item {
+    // 订单
+    .header {
+        position: relative;
+        line-height: 40px;
+        .title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .price {
+            position: absolute;
+            font-size: 16px;
+            font-weight: 600;
+            right: 0;
+            top: 0;
+            line-height: 40px;
+            color: @red;
+        }
+    }
+    .footer {
+        position: relative;
+        .lesson,.time {
+            color: @gray;
+            font-size: 16px;
+            line-height: 30px;
+        }
+        .qr {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 60px;
+            img {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    }
+}
+
+.link-list-group {
+    // 链接
+    .list-group-item {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        i {
+            line-height: 20px;
+            color: @gray-light;
+            font-size: 20px;
+        }
+    }
+}
+
+.prop-list-group {
+    // 属性信息
+    padding-left: 15px;
+    background-color: @white;
+    border-bottom: 1px @gray-light solid;
     .list-group-item {
         border-radius: 0;
         border-left: 0;
@@ -24,76 +314,157 @@ body {
             margin-right: 5px;
             text-align: center;
         }
-    }
-}
+        .title {
+            color: @gray;
+        }
+        .icon {
 
-.com-panel {
-    .list-group-item {
-        border-radius: 0;
-        border-left: 0;
-        border-right: 0;
-    }
-}
-
-.com-links {
-    .list-group-item {
-        border-radius: 0;
-        border-left: 0;
-        border-right: 0;
-        i.fa {
-            line-height: 20px;
         }
     }
 }
 
-.com-lessons {
+.info-list-group {
+    // 代标题的信息
+    .list-group-item {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        .school-info {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            color: @gray;
+        }
+    }
+}
+
+.lesson-list-group, 
+.order-list-group { // 班型列表/订单列表
+    margin-bottom: 0;
     .list-group-item {
         border-radius: 0;
         border-left: 0;
         border-right: 0;
         &:last-child {
-        	border-bottom: none;
+            border-bottom: none;
         }
-    }
-    .list-group {
-    	margin-bottom: 0;
+        a.pay {
+            display: block;
+            line-height: 20px;
+            font-size: 16px;
+            color: @gray-dark;
+            span {
+                color: @red;
+                i {
+                    color: @gray-light;
+                }
+            }
+        }
     }
 }
 
-.lesson-info {
-    .header {
-        position: relative;
-        line-height: 40px;
+.ground-list-group { // 训练场地
+    .list-group-item {
+        .title,.address,.desc {
+            line-height: 24px;
+        }
         .title {
             font-size: 16px;
             font-weight: 600;
         }
-        .price {
-            position: absolute;
-            font-size: 16px;
-            font-weight: 600;
-            right: 0;
-            line-height: 40px;
-            color: #f00;
+        .address,.desc {
+            color: @gray;
         }
-    }
-    .footer {
-    	position: relative;
-    	line-height: 44px;
-    	margin-top: 5px;
-    	.btn-signup {
-    		position: absolute;
-    		right: 0;
-    		width: 100px;
-    		height: 44px;
-    	}
+        .desc {
+            span {
+                margin-left: 74px;
+                color: @gray;
+            }
+        }
     }
 }
 
-.school-info {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+.signup-list-group {
+    // 报名信息
+    padding-left: 15px;
+    background-color: @white;
+    border-bottom: 1px @gray-light solid;
+    .list-group-item {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        padding-left: 0;
+        &:last-child {
+            border-bottom: none;
+        }
+        &:first-child {
+            border-top: none;
+        }
+        em {
+            color: @red;
+            font-size: 16px;
+            font-style: normal;
+        }
+    }
 }
+
+.input-list-group {
+    // 表单列表
+    background-color: @white;
+    padding-left: 15px;
+    border-bottom: 1px @gray-darker solid;
+    border-top: 1px @gray-darker solid;
+    .list-group-item {
+        position: relative;
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        border-top: none;
+        padding-left: 80px;
+        margin-bottom: 0;
+        &:last-child {
+            border-bottom: none;
+        }
+        .title {
+            position: absolute;
+            left: 0;
+            top: 0;
+            line-height: 40px;
+            width: 80px;
+        }
+        input {
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            color: @gray-dark;
+            padding: 0;
+            height: 20px;
+        }
+        .btn-sendcode {
+            position: absolute;
+            right: 10px;
+            top: 5px;
+            background-color: @blue-base;
+            color: @white;
+            font-size: 12px;
+        }
+    }
+}
+
+.list-footer {
+    // 列表页脚
+    display: none;
+    color: #333;
+    height: 44px;
+    text-align: center;
+    line-height: 44px;
+    background-color: #fff;
+    &:hover {
+        text-decoration: none;
+        color: #333;
+    }
+}
+
+
