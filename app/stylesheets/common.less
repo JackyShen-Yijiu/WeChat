@@ -1,0 +1,99 @@
+body {
+    background-color: #efefef;
+}
+
+.com-block {
+    .list-group {
+        padding-left: 15px;
+        background-color: #fff;
+        border-bottom: 1px #ddd solid;
+    }
+    .list-group-item {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        padding-left: 0;
+        &:last-child {
+            border-bottom: none;
+        }
+        &:first-child {
+            border-top: none;
+        }
+        i.fa {
+            width: 14px;
+            margin-right: 5px;
+            text-align: center;
+        }
+    }
+}
+
+.com-panel {
+    .list-group-item {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+    }
+}
+
+.com-links {
+    .list-group-item {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        i.fa {
+            line-height: 20px;
+        }
+    }
+}
+
+.com-lessons {
+    .list-group-item {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        &:last-child {
+        	border-bottom: none;
+        }
+    }
+    .list-group {
+    	margin-bottom: 0;
+    }
+}
+
+.lesson-info {
+    .header {
+        position: relative;
+        line-height: 40px;
+        .title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .price {
+            position: absolute;
+            font-size: 16px;
+            font-weight: 600;
+            right: 0;
+            line-height: 40px;
+            color: #f00;
+        }
+    }
+    .footer {
+    	position: relative;
+    	line-height: 44px;
+    	margin-top: 5px;
+    	.btn-signup {
+    		position: absolute;
+    		right: 0;
+    		width: 100px;
+    		height: 44px;
+    	}
+    }
+}
+
+.school-info {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
