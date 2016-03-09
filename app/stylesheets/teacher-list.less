@@ -1,0 +1,100 @@
+.tl-list {}
+
+.tl-list-item {
+    position: relative;
+    display: block;
+    color: #333;
+    background-color: #fff;
+    height: 100px;
+    border-bottom: 1px #ccc solid;
+    overflow: hidden;
+    padding-left: 100px;
+    padding-right: 120px;
+    &:hover {
+        text-decoration: none;
+        color: #333;
+    }
+    .left,
+    .middle,
+    .right {
+        height: 100px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .left {
+        position: absolute;
+        left: 10px;
+        top: 0;
+        img {
+            height: 80px;
+            width: 80px;
+        }
+    }
+    .middle {
+        .title {
+            margin-bottom: 8px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .lesson {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        .desc {
+            font-weight: bolder;
+            color: #f00;
+            font-size: 13px;
+        }
+    }
+    .right {
+        position: absolute;
+        right: 10px;
+        top: 0;
+        width: 100px;
+        text-align: right;
+        .stars {
+            overflow: hidden;
+            margin-bottom: 12px;
+            margin-top: 4px;
+            i.fa {
+                float: right;
+                margin-right: 2px;
+            }
+        }
+        .age {
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        .rate {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            font-size: 13px;
+        }
+    }
+}
+
+.tl-main {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+}
+
+.tl-list-footer {
+    display: block;
+    color: #333;
+    height: 44px;
+    text-align: center;
+    line-height: 44px;
+    background-color: #fff;
+    &:hover {
+        text-decoration: none;
+        color: #333;
+    }
+}
