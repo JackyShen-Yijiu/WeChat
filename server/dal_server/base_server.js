@@ -189,7 +189,7 @@ exports.getSchoolInfoserver = function (schoolid, callback) {
                                 }
                                 classlist.push(oneclass)
                             })
-                            cb(err, {classList : classlist})
+                            cb(err, {classList: classlist})
                         });
                     }
                 });
@@ -200,11 +200,9 @@ exports.getSchoolInfoserver = function (schoolid, callback) {
                     return callback("查询驾校详情出错：" + err);
                 }
                 var data = new resbaseschoolinfomode(schooldata);
-                var resultInfo = {
-                    schoolInfo: data,
-                    classList: schoolClass.classList
-                }
-                return cb(null, resultInfo);
+                data.classList = schoolClass.classList;
+
+                return cb(null, data);
             });
         }
 
