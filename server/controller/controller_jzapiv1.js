@@ -66,6 +66,7 @@ exports.getSchoolCoach = function (req, res) {
             return res.json(new BaseReturnInfo(1, "", data));
         }
     });
+
 };
 
 // 用户报名接口
@@ -89,4 +90,15 @@ exports.postUserApplySchool=function(req,res){
 
 
 
+}
+
+// 获取驾校下面的训练场
+exports.getSchoolTrainingField=function(req,res){
+    var schoolid=req.query.schoolid;
+    service.getSchoolTrainingField(schoolid,function(err,data){
+        if(err){
+            return res.json(new BaseReturnInfo(0,err,[]));
+        }
+        return res.json(new BaseReturnInfo(1,"",data));
+    })
 }

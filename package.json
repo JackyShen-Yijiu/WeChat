@@ -47,7 +47,10 @@
     "serve-favicon": "^2.3.0",
     "swig": "^1.4.2",
     "underscore": "^1.8.3",
-    "xml2js": "^0.4.15"
+    "xml2js": "^0.4.15",
+    "ioredis" : "1.11.1",
+    "geolib": "^2.0.14",
+    "superagent": "^1.1.0"
   },
   "devDependencies": {
     "babel-core": "^6.1.19",
