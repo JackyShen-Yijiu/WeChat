@@ -13,6 +13,7 @@ var resbaseschoolinfomode = require("../models/returndriveschoolinfo").resBaseSc
 var classtypeModel = mongodb.ClassTypeModel;
 var coachmode = mongodb.CoachModel;
 var baiDuUtil = require('../common/baidu_util.js');
+var trainingfiledModel = mongodb.TrainingFieldModel;
 //  获取城市列表
 exports.getCityList = function (callback) {
 
@@ -80,8 +81,10 @@ exports.searchDriverSchool = function (searchinfo, callback) {
     } else if (searchinfo.ordertype == 3) {
         ordercondition.minprice = 1;
     }
+    var latitude = searchinfo.latitude || 0;
+    var longitude = searchinfo.longitude || 0;
     //微信坐标转换为百度地图坐标
-    baiDuUtil.weixintobaidu(searchinfo.latitude, searchinfo.longitude, function (err, data) {
+    baiDuUtil.weixintobaidu(latitude, longitude, function (err, data) {
         //console.log(data);
         schoolModel.find(searchcondition)
             .select("")
@@ -95,12 +98,19 @@ exports.searchDriverSchool = function (searchinfo, callback) {
                 } else {
                     process.nextTick(function () {
                         var driveschoollist = [];
+                        var distance = 0;
                         driveschool.forEach(function (r, idx) {
-                            var oneschool = {
-                                distance: geolib.getDistance(
+                            if (data.lat == 0 && data.lot == 0) {
+                                // 默认距离为0
+                                distance = -1;
+                            } else {
+                                distance = geolib.getDistance(
                                     {latitude: data.lat, longitude: data.lot},
                                     {latitude: r.latitude, longitude: r.longitude},
-                                    10),
+                                    10)
+                            }
+                            var oneschool = {
+                                distance: distance,
                                 id: r._id,
                                 schoolid: r._id,
                                 name: r.name,
@@ -108,8 +118,8 @@ exports.searchDriverSchool = function (searchinfo, callback) {
                                 latitude: r.latitude,
                                 longitude: r.longitude,
                                 address: r.address,
-                                maxprice: r.maxprice,
-                                minprice: r.minprice,
+                                maxprice: r.maxprice ? r.maxprice : 0,
+                                minprice: r.minprice ? r.maxprice : 0,
                                 schoollevel: r.schoollevel,
                                 coachcount: r.coachcount ? r.coachcount : 0,
                                 commentcount: r.commentcount ? r.commentcount : 0,
@@ -154,14 +164,14 @@ exports.getSchoolInfoserver = function (schoolid, callback) {
                             var classlist = [];
                             data.forEach(function (r) {
                                 var oneclass = {
-                                    calssid: r._id,
-                                    //schoolinfo: {
-                                    //    schoolid: r.schoolid._id,
-                                    //    name: r.schoolid.name,
-                                    //    latitude: r.schoolid.latitude,
-                                    //    longitude: r.schoolid.longitude,
-                                    //    address: r.schoolid.address,
-                                    //},
+                                    classid: r._id,
+                                    schoolinfo: {
+                                        schoolid: r.schoolid._id,
+                                        name: r.schoolid.name,
+                                        latitude: r.schoolid.latitude,
+                                        longitude: r.schoolid.longitude,
+                                        address: r.schoolid.address,
+                                    },
                                     classname: r.classname,
                                     begindate: r.begindate,
                                     enddate: r.enddate,
@@ -179,7 +189,7 @@ exports.getSchoolInfoserver = function (schoolid, callback) {
                                 }
                                 classlist.push(oneclass)
                             })
-                            return callback(null, classlist);
+                            cb(err, {classList : classlist})
                         });
                     }
                 });
@@ -190,8 +200,11 @@ exports.getSchoolInfoserver = function (schoolid, callback) {
                     return callback("查询驾校详情出错：" + err);
                 }
                 var data = new resbaseschoolinfomode(schooldata);
-                data.classlist = schoolClass.classlist;
-                return cb(null, data);
+                var resultInfo = {
+                    schoolInfo: data,
+                    classList: schoolClass.classList
+                }
+                return cb(null, resultInfo);
             });
         }
 
@@ -259,3 +272,30 @@ exports.getSchoolCoach = function (coachinfo, callback) {
         });
 
 };
+
+// 获取驾校下面的练车场
+exports.getSchoolTrainingField = function (schoolid, callback) {
+    trainingfiledModel.find({"driveschool": new mongodb.ObjectId(schoolid)}, function (err, data) {
+        console.log(data);
+        if (err || !data) {
+            return callback("查询出错：" + err);
+        }
+        process.nextTick(function () {
+            var list = [];
+            data.forEach(function (r, index) {
+                var listone = {
+                    id: r._id,
+                    name: r.fieldname,
+                    //latitude: r.latitude,
+                    //longitude: r.longitude,
+                    address: r.address,
+                    //班车
+                    schoolbusroute: "暂无"
+                }
+                list.push(listone);
+            })
+
+            return callback(null, list);
+        })
+    })
+}

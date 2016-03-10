@@ -6,6 +6,13 @@ var request = require('superagent');
 var path = "http://api.map.baidu.com/geoconv/v1/?output=json";
 var ak = "201bccec2ea05baf5cf275aca9901cc0";
 function WeiXinToBaiDu(lat, lot, callback) {
+    if (lat == 0 && lot == 0) {
+        var resultInfo = {
+            lat : 0,
+            lot : 0
+        }
+        return callback(null, resultInfo);
+    }
     var position = "&coords=" + lat + "," + lot;
     var url = path + position + "&from=3&to=5&ak=" + ak;
     //console.log("url = " + url);

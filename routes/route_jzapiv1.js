@@ -17,4 +17,10 @@ Router.get("/getSchoolInfo/:schoolid", baseController.getSchoolInfo);
 // 获取教练列表
 Router.get("/getSchoolCoach/:schoolid", baseController.getSchoolCoach);
 
+// 获取训练场地
+Router.get("/getSchoolTrainingField/:schoolid", baseController.getSchoolTrainingField);
+
+// 获取教练详情
+//Router.get("/getCoachInfo/:coachid", baseController.getCoachInfo);
+
 module.exports = Router;

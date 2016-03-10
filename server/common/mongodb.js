@@ -48,6 +48,7 @@ exports.SchoolBusRouteModel = require("../models/schoolbusroute");
 exports.VipServerModel = require("../models/vipserver");
 exports.ClassTypeModel = require('../models/calsstype');
 exports.CoachModel = require('../models/coach');
+exports.TrainingFieldModel=require('../models/trainingfield');
 //exports.AppVersionModel = require('./appversion.js');
 //exports.SmsVerifyCodeModel = require('./smsVerifyCode.js');
 //exports.UserModel=require('./user');
