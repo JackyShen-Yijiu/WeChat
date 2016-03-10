@@ -6,5 +6,6 @@ var Router=express.Router();
 var weixincontroller=require("../server/controller/controller_weixin");
 
 Router.get("/ack",weixincontroller.weixinAck);
+Router.get("/getjssign",weixincontroller.weiXinJsSdkSign);
 
 module.exports = Router;

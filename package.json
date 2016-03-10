@@ -20,7 +20,10 @@
   },
   "homepage": "https://github.com/JackyShen-Yijiu/WeChat#readme",
   "babel": {
-    "presets": ["es2015", "react"]
+    "presets": [
+      "es2015",
+      "react"
+    ]
   },
   "dependencies": {
     "alt": "^0.17.8",
@@ -29,9 +32,13 @@
     "colors": "^1.1.2",
     "compression": "^1.6.0",
     "express": "^4.13.3",
+    "geolib": "^2.0.14",
     "history": "^1.13.0",
+    "ioredis": "1.11.1",
     "mongoose": "^4.2.5",
     "morgan": "^1.6.1",
+    "node-weixin-auth": "*",
+    "validator":"*",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
     "react-router": "^1.0.0",
@@ -39,10 +46,7 @@
     "serve-favicon": "^2.3.0",
     "swig": "^1.4.2",
     "underscore": "^1.8.3",
-    "xml2js": "^0.4.15",
-    "ioredis" : "1.11.1",
-    "geolib": "^2.0.14",
-    "node-weixin-auth":"*"
+    "xml2js": "^0.4.15"
   },
   "devDependencies": {
     "babel-core": "^6.1.19",

@@ -1,6 +1,6 @@
 exports.weixinconfig = {
-    id: 'wx687edf91584139a4',
-    secret: 'ceed3256fd3787839e0d16bf1c98338f',
+    id: 'wx59f87fdc85ee66c9',
+    secret: 'd4624c36b6795d1d99dcf0547af5443d',
     token: 'jizhijiafuweixin'
 };
 
