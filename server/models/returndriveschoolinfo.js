@@ -5,6 +5,7 @@
 exports.resBaseSchoolInfo = function (school) {
     this.schoolid = school._id;
     this.name = school.name;
+    this.schoollevel = school.schoollevel;
     this.latitude = school.latitude;
     this.longitude = school.longitude;
     //this.pictures=school.pictures;
