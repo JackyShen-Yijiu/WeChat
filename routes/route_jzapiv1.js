@@ -27,5 +27,7 @@ Router.get("/getSchoolTrainingField/:school_id", baseController.getSchoolTrainin
 // 获取教练详情
 Router.get("/getCoachInfo/:coach_id", baseController.getCoachInfo);
 
+// 获取验证码
+Router.get('/code/:mobile', baseController.fetchCode);
 
 module.exports = Router;

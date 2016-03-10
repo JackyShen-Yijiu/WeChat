@@ -15,6 +15,11 @@ var coachmode = mongodb.CoachModel;
 var baiDuUtil = require('../common/baidu_util.js');
 var trainingfiledModel = mongodb.TrainingFieldModel;
 var resbasecoachinfomode = require("../models/returncoachinfo").resBaseCoachInfo;
+var smsVerifyCodeModel = mongodb.SmsVerifyCodeModel;
+var resendTimeout = 60;
+var addtestsmscode = require('../Common/sendsmscode').addsmscode;
+var smscodemodule = require('../Common/sendsmscode').sendsmscode;
+
 //  获取城市列表
 exports.getCityList = function (callback) {
 
@@ -185,7 +190,7 @@ exports.getSchoolInfoserver = function (schoolid, callback) {
                     return callback("查询驾校详情出错：" + err);
                 }
                 var data = new resbaseschoolinfomode(schooldata);
-                data.classList = schoolClass.classList;
+                data.class_list = schoolClass.class_list;
 
                 return cb(null, data);
             });
@@ -286,4 +291,58 @@ exports.getCoachInfoServer = function (userid, callback) {
             var returnmodel = new resbasecoachinfomode(coachdata);
             return callback(err, returnmodel);
         });
+};
+
+//获取验证码
+exports.getCodebyMolile = function (mobilenumber, callback) {
+    smsVerifyCodeModel.findOne({mobile: mobilenumber}, function (err, instace) {
+            if (err) {
+                return callback("发送验证码错误: " + err);
+            }
+            if (instace) {
+                var now = new Date();
+                //console.log(now-instace.createdTime);
+                if ((now - instace.createdTime) < resendTimeout * 1000) {
+                    return callback("您发送过于频繁，请稍后再发");
+                }
+                else {
+                    instace.remove(function (err) {
+                        if (err) {
+                            return callback("发送验证码错误: " + err);
+                        }
+                        if (mobilenumber.substr(0, 8) == "18444444") {
+                            addtestsmscode(mobilenumber, callback)
+                        } else {
+                            smscodemodule(mobilenumber, function (err, response) {
+                                return sendSmsResponse(err, response, callback);
+                            });
+                        }
+                    });
+                }
+
+            }
+            else {
+                // now send
+                if (mobilenumber.substr(0, 8) == "18444444") {
+                    addtestsmscode(mobilenumber, callback)
+                } else {
+                    smscodemodule(mobilenumber, function (error, response) {
+                        return sendSmsResponse(error, response, callback);
+                    });
+                }
+            }
+
+
+        }
+    );
+};
+
+//
+var sendSmsResponse = function (error, response, callback) {
+    if (error || response.statusCode != 200) {
+        return callback("Error occured in sending sms: " + error);
+    }
+
+    // get back to user
+    return callback(null, "Error occured in sending sms: " + error);
 };

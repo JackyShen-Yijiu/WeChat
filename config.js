@@ -22,3 +22,10 @@ exports.redisConfig = {
     redis_db: 0,
     redis_password: "yibuxueche"
 }
+
+//  app配置基本信息
+exports.appconfiginfo={
+    appname:"极致驾服",  // appname  一步学车  极致驾服
+    companyname:"极致驾服" ,  // 公司名称  一步科技 极致驾服
+    appport:8183,       //app  端口  一步 8181  极致 8183
+}
