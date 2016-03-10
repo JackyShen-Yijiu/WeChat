@@ -14,7 +14,7 @@ var classtypeModel = mongodb.ClassTypeModel;
 var coachmode = mongodb.CoachModel;
 var baiDuUtil = require('../common/baidu_util.js');
 var trainingfiledModel = mongodb.TrainingFieldModel;
-
+var resbasecoachinfomode = require("../models/returncoachinfo").resBaseCoachInfo;
 //  获取城市列表
 exports.getCityList = function (callback) {
 
@@ -113,18 +113,17 @@ exports.searchDriverSchool = function (searchinfo, callback) {
                             var oneschool = {
                                 distance: distance,
                                 id: r._id,
-                                schoolid: r._id,
                                 name: r.name,
-                                logoimg: r.logoimg,
+                                logo_img: r.logoimg,
                                 latitude: r.latitude,
                                 longitude: r.longitude,
                                 address: r.address,
-                                maxprice: r.maxprice ? r.maxprice : 0,
-                                minprice: r.minprice ? r.maxprice : 0,
-                                schoollevel: r.schoollevel,
-                                coachcount: r.coachcount ? r.coachcount : 0,
-                                commentcount: r.commentcount ? r.commentcount : 0,
-                                passingrate: r.passingrate
+                                max_price: r.maxprice ? r.maxprice : 0,
+                                min_price: r.minprice ? r.maxprice : 0,
+                                school_level: r.schoollevel,
+                                coach_count: r.coachcount ? r.coachcount : 0,
+                                //comment_count: r.commentcount ? r.commentcount : 0,
+                                passing_rate: r.passingrate
                             };
                             if (oneschool.name.indexOf("一步") > -1) {
                                 driveschoollist.unshift(oneschool);
@@ -165,32 +164,17 @@ exports.getSchoolInfoserver = function (schoolid, callback) {
                             var classlist = [];
                             data.forEach(function (r) {
                                 var oneclass = {
-                                    classid: r._id,
-                                    schoolinfo: {
-                                        schoolid: r.schoolid._id,
-                                        name: r.schoolid.name,
-                                        latitude: r.schoolid.latitude,
-                                        longitude: r.schoolid.longitude,
-                                        address: r.schoolid.address,
-                                    },
-                                    classname: r.classname,
-                                    begindate: r.begindate,
-                                    enddate: r.enddate,
-                                    is_vip: r.is_vip,
-                                    classdesc: r.classdesc,
-                                    price: r.price,
-                                    onsaleprice: r.onsaleprice,
-                                    carmodel: r.carmodel,
-                                    cartype: r.cartype,
-                                    classdesc: r.classdesc,
-                                    vipserverlist: r.vipserverlist,
-                                    classchedule: r.classchedule,
-                                    applycount: r.applycount,
-
-                                }
+                                    id: r._id,
+                                    name: r.classname,
+                                    desc: r.classdesc,
+                                    price: r.onsaleprice,
+                                    car_model: r.carmodel,
+                                    car_type: r.cartype,
+                                    schedule: r.classchedule//时间
+                                };
                                 classlist.push(oneclass)
-                            })
-                            cb(err, {classList: classlist})
+                            });
+                            cb(err, {class_list: classlist})
                         });
                     }
                 });
@@ -240,28 +224,15 @@ exports.getSchoolCoach = function (coachinfo, callback) {
                 process.nextTick(function () {
                     var rescoachlist = [];
                     coachlist.forEach(function (r, idx) {
-                        var returnmodel = { //new resbasecoachinfomode(r);
-                            coachid: r._id,
+                        var returnmodel = {
+                            id: r._id,
                             name: r.name,
-                            driveschoolinfo: r.driveschoolinfo,
-                            headportrait: r.headportrait,
-                            starlevel: r.starlevel,
-                            is_shuttle: r.is_shuttle,
-                            passrate: r.passrate,
-                            Seniority: r.Seniority,
-                            latitude: r.latitude,
-                            longitude: r.longitude,
-                            subject: r.subject,
-                            Gender: r.Gender,
-                            commentcount: r.commentcount,
-                            maxprice: r.maxprice ? r.maxprice : 0,  // 最高价格
-                            minprice: r.minprice ? r.minprice : 0,  // 最低价格
-                            carmodel: r.carmodel,
-                            serverclasslist: r.serverclasslist ? r.serverclasslist : []
-
+                            head_img: r.headportrait,
+                            level: r.starlevel,
+                            pass_rate: r.passrate,
+                            seniority: r.Seniority,
+                            subjects: r.subject
                         }
-                        //  r.restaurantId = r._id;
-                        // delete(r._id);
                         rescoachlist.push(returnmodel);
                     });
                     callback(null, rescoachlist);
@@ -274,7 +245,8 @@ exports.getSchoolCoach = function (coachinfo, callback) {
 
 
 // 用户报名
-exports.postUserApplySchool=function (applyinfo, callback){}
+exports.postUserApplySchool = function (applyinfo, callback) {
+}
 
 // 获取驾校下面的练车场
 exports.getSchoolTrainingField = function (schoolid, callback) {
@@ -289,16 +261,29 @@ exports.getSchoolTrainingField = function (schoolid, callback) {
                 var listone = {
                     id: r._id,
                     name: r.fieldname,
-                    //latitude: r.latitude,
-                    //longitude: r.longitude,
                     address: r.address,
                     //班车
-                    schoolbusroute: "暂无"
+                    school_bus: "暂无"
                 }
                 list.push(listone);
             })
 
             return callback(null, list);
         })
-    })}
+    })
+}
 
+//获取用户信息
+exports.getCoachInfoServer = function (userid, callback) {
+    coachmode.findById(new mongodb.ObjectId(userid))
+        .populate("tagslist", " _id  tagname tagtype color")
+        .populate("trainfield", " _id  pictures fieldname phone")
+        .populate("serverclasslist", "classname carmodel cartype classdesc price onsaleprice", {"is_using": true})
+        .exec(function (err, coachdata) {
+            if (err || !coachdata) {
+                return callback("查询教练出错：" + err);
+            }
+            var returnmodel = new resbasecoachinfomode(coachdata);
+            return callback(err, returnmodel);
+        });
+};

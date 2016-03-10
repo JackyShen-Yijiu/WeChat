@@ -18,10 +18,10 @@ exports.searchSchool = function (req, res) {
     var q = {
         latitude: parseFloat(req.query.latitude),
         longitude: parseFloat(req.query.longitude),
-        ordertype: req.query.ordertype ? parseInt(req.query.ordertype) : 0,
+        ordertype: req.query.ordertype ? parseInt(req.query.order_type) : 0,
         index: req.query.index ? parseInt(req.query.index) : 1,
         count: req.query.count ? parseInt(req.query.count) : 1,
-        schoolname: req.query.schoolname ? req.query.schoolname : ""
+        schoolname: req.query.schoolname ? req.query.school_name : ""
     }
     service.searchDriverSchool(q, function (err, data) {
         if (err) {
@@ -34,7 +34,7 @@ exports.searchSchool = function (req, res) {
 
 // 获取驾校详情
 exports.getSchoolInfo = function (req, res) {
-    var schoolid = req.params.schoolid;
+    var schoolid = req.params.school_id;
     if (schoolid === undefined) {
         return res.json(new BaseReturnInfo(0, "获取参数错误", ""));
     }
@@ -50,7 +50,7 @@ exports.getSchoolInfo = function (req, res) {
 // 获取驾校下面的教练
 exports.getSchoolCoach = function (req, res) {
     var coachinfo = {
-        schoolid: req.params.schoolid,
+        schoolid: req.params.school_id,
         index: req.query.index,
         name: req.query.name
     }
@@ -94,11 +94,24 @@ exports.postUserApplySchool=function(req,res){
 
 // 获取驾校下面的训练场
 exports.getSchoolTrainingField=function(req,res){
-    var schoolid=req.query.schoolid;
+    var schoolid=req.query.school_id;
     service.getSchoolTrainingField(schoolid,function(err,data){
         if(err){
             return res.json(new BaseReturnInfo(0,err,[]));
         }
         return res.json(new BaseReturnInfo(1,"",data));
     })
+}
+
+//获取教练信息
+exports.getCoachInfo=function(req,res){
+    var userId=req.params.coach_id;
+    console.log("调用 coachid = " + userId);
+    service.getCoachInfoServer(userId,function(err,data){
+        if(err){
+            return res.json(new BaseReturnInfo(0,err,{}));
+        }
+        return res.json(new BaseReturnInfo(1,"",data));
+    })
+
 }
