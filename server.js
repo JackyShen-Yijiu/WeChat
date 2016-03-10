@@ -31,20 +31,21 @@ app.use(function(req, res, next) {
   }
   next();
 });
-app.use("/weixin",weinxinRouter);
+app.use("/jzapi/weixin",weinxinRouter);
 app.use("/jzapi/v1",apiRouter);
 
 // server render
-app.use(function(req, res) {
-  Router.match({ routes: routes.default, location: req.url }, function(err, redirectLocation, renderProps) {
+app.use(function(data,req, res,next) {
+  Router.match({ routes: routes.default, location: "index" }, function(err, redirectLocation, renderProps) {
     console.log('---- Server Render ----');
+    console.log(data);
     if (err) {
       res.status(500).send(err.message)
     } else if (redirectLocation) {
       res.status(302).redirect(redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps) {
       var html = ReactDOM.renderToString(React.createElement(Router.RoutingContext, renderProps));
-      var page = swig.renderFile('views/index.html', { html: html });
+      var page = swig.renderFile('views/index.html', { html: html ,openid:data.openid});
       res.status(200).send(page);
     } else {
       res.status(404).send('Page Not Found')

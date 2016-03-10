@@ -66,4 +66,27 @@ exports.getSchoolCoach = function (req, res) {
             return res.json(new BaseReturnInfo(1, "", data));
         }
     });
+};
+
+// 用户报名接口
+exports.postUserApplySchool=function(req,res){
+    var applyinfo= {
+        name : req.body.name,
+        mobile : req.body.mobile,
+        smscode:req.body.smscode,
+        schoolid:req.body.schoolid,
+        coachid:req.body.coachid,
+        classtypeid:req.body.classtypeid,
+        openid:req.body.openid
+    };
+    if (applyinfo.name===undefined||
+        applyinfo.mobile === undefined||applyinfo.userid === undefined
+        ||applyinfo.schoolid === undefined ||applyinfo.coachid === undefined
+        ||applyinfo.openid === undefined ||applyinfo.classtypeid === undefined) {
+        return res.json(
+            new BaseReturnInfo(0,"参数不完整",""));
+    };
+
+
+
 }

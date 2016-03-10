@@ -12,6 +12,7 @@ var cachedata = require('../common/cachedata');
 var resbaseschoolinfomode = require("../models/returndriveschoolinfo").resBaseSchoolInfo;
 var classtypeModel = mongodb.ClassTypeModel;
 var coachmode = mongodb.CoachModel;
+
 //  获取城市列表
 exports.getCityList = function (callback) {
 
@@ -263,3 +264,8 @@ exports.getSchoolCoach = function (coachinfo, callback) {
         });
 
 };
+
+// 用户报名
+exports.postUserApplySchool=function (applyinfo, callback){
+
+}

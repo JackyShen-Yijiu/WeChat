@@ -38,6 +38,7 @@
     "mongoose": "^4.2.5",
     "morgan": "^1.6.1",
     "node-weixin-auth": "*",
+    "wechat-oauth":"^1.1.1",
     "validator":"*",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
