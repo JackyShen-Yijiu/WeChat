@@ -12,6 +12,7 @@ var cachedata = require('../common/cachedata');
 var resbaseschoolinfomode = require("../models/returndriveschoolinfo").resBaseSchoolInfo;
 var classtypeModel = mongodb.ClassTypeModel;
 var coachmode = mongodb.CoachModel;
+var baiDuUtil = require('../common/baidu_util.js');
 //  获取城市列表
 exports.getCityList = function (callback) {
 
@@ -80,60 +81,55 @@ exports.searchDriverSchool = function (searchinfo, callback) {
         ordercondition.minprice = 1;
     }
     //微信坐标转换为百度地图坐标
-   // var path = "http://api.map.baidu.com/geoconv/v1/?coords=" + searchinfo.latitude + "," +  searchinfo.longitude + "&from=3&to=5&output=json&ak=201bccec2ea05baf5cf275aca9901cc0";
-
-    //console.log(searchcondition);
-    //console.log(ordercondition);
-    //console.log(searchinfo);
-    schoolModel.find(searchcondition)
-        .select("")
-        .sort(ordercondition)
-        .skip((searchinfo.index - 1) * searchinfo.count)
-        .limit(searchinfo.count)
-        .exec(function (err, driveschool) {
-            if (err) {
-                console.log(err);
-                callback("查找驾校出错：" + err);
-            } else {
-                process.nextTick(function () {
-                    var driveschoollist = [];
-                    driveschool.forEach(function (r, idx) {
-                        var oneschool = {
-                            distance: geolib.getDistance(
-                                {latitude: searchinfo.latitude, longitude: searchinfo.longitude},
-                                {latitude: r.latitude, longitude: r.longitude},
-                                10),
-                            id: r._id,
-                            schoolid: r._id,
-                            name: r.name,
-                            logoimg: r.logoimg,
-                            latitude: r.latitude,
-                            longitude: r.longitude,
-                            address: r.address,
-                            maxprice: r.maxprice,
-                            minprice: r.minprice,
-                            schoollevel: r.schoollevel,
-                            coachcount: r.coachcount ? r.coachcount : 0,
-                            commentcount: r.commentcount ? r.commentcount : 0,
-                            passingrate: r.passingrate
-                        };
-                        if (oneschool.name.indexOf("一步") > -1) {
-                            driveschoollist.unshift(oneschool);
+    baiDuUtil.weixintobaidu(searchinfo.latitude, searchinfo.longitude, function (err, data) {
+        //console.log(data);
+        schoolModel.find(searchcondition)
+            .select("")
+            .sort(ordercondition)
+            .skip((searchinfo.index - 1) * searchinfo.count)
+            .limit(searchinfo.count)
+            .exec(function (err, driveschool) {
+                if (err) {
+                    console.log(err);
+                    callback("查找驾校出错：" + err);
+                } else {
+                    process.nextTick(function () {
+                        var driveschoollist = [];
+                        driveschool.forEach(function (r, idx) {
+                            var oneschool = {
+                                distance: geolib.getDistance(
+                                    {latitude: data.lat, longitude: data.lot},
+                                    {latitude: r.latitude, longitude: r.longitude},
+                                    10),
+                                id: r._id,
+                                schoolid: r._id,
+                                name: r.name,
+                                logoimg: r.logoimg,
+                                latitude: r.latitude,
+                                longitude: r.longitude,
+                                address: r.address,
+                                maxprice: r.maxprice,
+                                minprice: r.minprice,
+                                schoollevel: r.schoollevel,
+                                coachcount: r.coachcount ? r.coachcount : 0,
+                                commentcount: r.commentcount ? r.commentcount : 0,
+                                passingrate: r.passingrate
+                            };
+                            if (oneschool.name.indexOf("一步") > -1) {
+                                driveschoollist.unshift(oneschool);
+                            }
+                            else {
+                                driveschoollist.push(oneschool);
+                            }
+                        });
+                        if (searchinfo.ordertype == 0 || searchinfo.ordertype == 1) {
+                            driveschoollist = _.sortBy(driveschoollist, "distance")
                         }
-                        else {
-                            driveschoollist.push(oneschool);
-                        }
-
-                        //  r.restaurantId = r._id;
-                        // delete(r._id);
+                        callback(null, driveschoollist);
                     });
-                    if (searchinfo.ordertype == 0 || searchinfo.ordertype == 1) {
-                        driveschoollist = _.sortBy(driveschoollist, "distance")
-                    }
-                    callback(null, driveschoollist);
-                });
-            }
-        })
+                }
+            })
+    })
 }
 
 // 获取驾校详情

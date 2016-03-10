@@ -42,6 +42,7 @@
     "xml2js": "^0.4.15",
     "ioredis" : "1.11.1",
     "geolib": "^2.0.14",
+    "superagent": "^1.1.0",
     "node-weixin-auth":"*"
   },
   "devDependencies": {
