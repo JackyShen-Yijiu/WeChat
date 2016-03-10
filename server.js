@@ -6,13 +6,15 @@ var path = require('path');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 
-var swig  = require('swig');
+var swig = require('swig');
 var React = require('react');
 var ReactDOM = require('react-dom/server');
 var Router = require('react-router');
+
 var routes = require('./app/routes');
-var weinxinRouter=require("./routes/route_weixin");
-var apiRouter=require("./routes/route_jzapiv1");
+
+var weinxinRouter = require("./routes/route_weixin");
+var apiRouter = require("./routes/route_jzapiv1");
 
 var app = express();
 
@@ -23,36 +25,33 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type, Authorization');
-  if (req.method.toUpperCase() === 'OPTIONS') {
-    return res.end();
-  }
-  next();
-});
-app.use("/jzapi/weixin",weinxinRouter);
-app.use("/jzapi/v1",apiRouter);
-
-// server render
-app.use(function(data,req, res,next) {
-  Router.match({ routes: routes.default, location: "index" }, function(err, redirectLocation, renderProps) {
-    console.log('---- Server Render ----');
-    console.log(data);
-    if (err) {
-      res.status(500).send(err.message)
-    } else if (redirectLocation) {
-      res.status(302).redirect(redirectLocation.pathname + redirectLocation.search)
-    } else if (renderProps) {
-      var html = ReactDOM.renderToString(React.createElement(Router.RoutingContext, renderProps));
-      var page = swig.renderFile('views/index.html', { html: html ,openid:data.openid});
-      res.status(200).send(page);
-    } else {
-      res.status(404).send('Page Not Found')
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type, Authorization');
+    if (req.method.toUpperCase() === 'OPTIONS') {
+        return res.end();
     }
-  });
+    next();
+});
+app.use("/jzapi/weixin", weinxinRouter);
+app.use("/jzapi/v1", apiRouter);
+
+app.use(function(req, res) {
+    Router.match({ routes: routes.default, location: req.url }, function(err, redirectLocation, renderProps) {
+        if (err) {
+            res.status(500).send(err.message)
+        } else if (redirectLocation) {
+            res.status(302).redirect(redirectLocation.pathname + redirectLocation.search)
+        } else if (renderProps) {
+            var html = ReactDOM.renderToString(React.createElement(Router.RoutingContext, renderProps));
+            var page = swig.renderFile('views/index.html', { html: html });
+            res.status(200).send(page);
+        } else {
+            res.status(404).send('Page Not Found')
+        }
+    });
 });
 
 app.listen(app.get('port'), function() {
-  console.log('Express server listening on port ' + app.get('port'));
+    console.log('Express server listening on port ' + app.get('port'));
 });
