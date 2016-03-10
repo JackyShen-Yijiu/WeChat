@@ -4,6 +4,7 @@
 var BaseReturnInfo = require('../common/basereturnmodel.js');
 var service = require('../dal_server/base_server.js');
 var mobileVerify = /^1\d{10}$/;
+var qr=require("qr-image");
 // 获取城市列表
 exports.getCity = function (req, res) {
     service.getCityList(function (err, data) {
@@ -144,5 +145,18 @@ exports.fetchCode = function (req, res) {
                 new BaseReturnInfo(1, "", "send success"));
         }
     });
-
 };
+
+//生成二维码
+exports.createQrCode = function (req, res) {
+    var text = req.query.text;
+    var sizedata = Number(req.query.size ? req.query.size : 10);
+    try {
+        var img = qr.image(text, {size: sizedata});
+        res.writeHead(200, {'Content-Type': 'image/png'});
+        img.pipe(res);
+    } catch (e) {
+        res.writeHead(414, {'Content-Type': 'text/html'});
+        res.end('NOT Found');
+    }
+}
