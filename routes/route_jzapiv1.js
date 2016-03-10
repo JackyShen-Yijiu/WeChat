@@ -28,6 +28,9 @@ Router.get("/getSchoolTrainingField/:school_id", baseController.getSchoolTrainin
 Router.get("/getCoachInfo/:coach_id", baseController.getCoachInfo);
 
 // 获取验证码
-Router.get('/code/:mobile', baseController.fetchCode);
+Router.get("/code/:mobile", baseController.fetchCode);
+
+//获取二维码
+Router.get("/createQrCode",baseController.createQrCode);
 
 module.exports = Router;
