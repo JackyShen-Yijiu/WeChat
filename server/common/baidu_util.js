@@ -3,7 +3,10 @@
  */
 //百度地图
 var request = require('superagent');
+//坐标转换
 var path = "http://api.map.baidu.com/geoconv/v1/?output=json";
+//坐标定位城市
+var path1 = "http://api.map.baidu.com/geoconv/v2/?output=json";
 var ak = "201bccec2ea05baf5cf275aca9901cc0";
 function WeiXinToBaiDu(lat, lot, callback) {
     if (lat == 0 && lot == 0) {
@@ -38,4 +41,28 @@ function WeiXinToBaiDu(lat, lot, callback) {
         }
     })
 }
+function GetCityByPosition(lat, lot , callback) {
+    if (lat == 0 && lot == 0) {
+        var cityName = "北京市";
+        return callback(null, cityName);
+    }
+    var position = "&location=" + lat + "," + lot;
+    var url = path + position + "&pois=0&ak=" + ak;
+    request.get(url).end(function (err, res) {
+        if (err) {
+            return callback("坐标获取城市失败： " + err);
+        }
+        //console.log(res);
+        var resmsg = JSON.parse(res.text);
+        //console.log("status =" + resmsg.status);
+        if (resmsg.status == 0) {
+            console.log("result = " +resmsg.result[0]);
+            var cityName = resmsg.result.addressComponent.city;
+            return callback(null, cityName);
+        } else {
+            return callback("获取坐标转换失败： " + res.status);
+        }
+    })
+}
 exports.weixintobaidu = WeiXinToBaiDu;
+exports.getCityByPosition = GetCityByPosition;
