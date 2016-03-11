@@ -1,0 +1,45 @@
+@import 'variables';
+
+.yl-wrap{
+  .yl-main{
+
+    .list-group{
+      .li-style{
+        margin:10px 0;
+        width: 100%;
+        list-style: none;
+
+        .ylist{
+          width: 90%;
+          border: 1px solid @gray;
+          height: 100px;
+          margin: 0 auto;
+          position: relative;
+          .left{
+            position: absolute;
+            top: 30px;
+            left: 20px;
+          }
+          .middle{
+            position: absolute;
+            right: 40px;
+            top: 30px;
+            .middle-top{
+              color: @red;
+              font-size: 18px;
+              font-weight: 600;
+            }
+            .middle-bottom{
+              color: @gray;
+              font-size: 14px;
+              margin-top: 4px;
+              .date{
+                margin-left: 20px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
