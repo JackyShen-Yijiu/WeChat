@@ -179,19 +179,17 @@ exports.createQrCode = function (req, res) {
 };
 
 //搜索驾校和教练
-//exports.search = function (req, res) {
-//    var q = {
-//        latitude: parseFloat(req.query.latitude),
-//        longitude: parseFloat(req.query.longitude),
-//        index: req.query.index ? parseInt(req.query.index) : 1,
-//        count: req.query.count ? parseInt(req.query.count) : 1,
-//        name: req.query.name ? req.query.name : ""
-//    };
-//    service.search(q, function (err, data) {
-//        if (err) {
-//            return res.json(new BaseReturnInfo(0, err, []));
-//        } else {
-//            return res.json(new BaseReturnInfo(1, "", data));
-//        }
-//    });
-//}
+exports.searchList = function (req, res) {
+    var q = {
+        //latitude: parseFloat(req.query.latitude),
+        //longitude: parseFloat(req.query.longitude),
+        name: req.query.name ? req.query.name : ""
+    };
+    service.searchList(q, function (err, data) {
+        if (err) {
+            return res.json(new BaseReturnInfo(0, err, []));
+        } else {
+            return res.json(new BaseReturnInfo(1, "", data));
+        }
+    });
+}

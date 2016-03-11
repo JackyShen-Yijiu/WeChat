@@ -442,35 +442,72 @@ var sendSmsResponse = function (error, response, callback) {
     return callback(null, "Error occured in sending sms: " + error);
 };
 
-////搜索驾校以及教练
-//exports.search = function (q, callback) {
-//    async.waterfall([
-//        //搜索驾校
-//        function (cb) {
-//            schoolModel.find({"name": new RegExp(name)})
-//                .exec(function (err, driverschool) {
-//                    if (err) {
-//                        return callback("搜索失败: " + err);
-//                    }
-//                    process.nextTick(function(){
-//                        driveschoollist=[];
-//                        driveschool.forEach(function(r, idx){
-//                            var oneschool= {
-//                                id: r._id,
-//                                name:r.name,
-//                                logo_img:r.logoimg,
-//                                latitude: r.latitude,
-//                                longitude: r.longitude,
-//                                address: r.address,
-//                                maxprice: r.maxprice,
-//                                minprice: r.minprice,
-//                                passingrate: r.passingrate
-//                            }
-//                            driveschoollist.push(oneschool);
-//                        });
-//                        callback(null,driveschoollist);
-//                    });
-//                });
-//        }
-//    ]);
-//};
+//搜索驾校以及教练
+exports.searchList = function (q, callback) {
+    var name = q.name;
+    async.waterfall([
+        //搜索驾校
+        function (cb) {
+            schoolModel.find({"name": new RegExp(name)})
+                .exec(function (err, driverschool) {
+                    if (err) {
+                        return callback("搜索失败: " + err);
+                    }
+                    process.nextTick(function () {
+                        var driveschoollist = [];
+                        driverschool.forEach(function (r, idx) {
+                            var oneschool = {
+                                id: r._id,
+                                name: r.name,
+                                logo_img: r.logoimg,
+                                latitude: r.latitude,
+                                longitude: r.longitude,
+                                address: r.address,
+                                maxprice: r.maxprice,
+                                minprice: r.minprice,
+                                passingrate: r.passingrate
+                            }
+                            driveschoollist.push(oneschool);
+                        });
+                        cb(err, {school_list: driveschoollist});
+                    });
+                });
+        },
+        function (data, cb) {
+            coachmode.find({"name": new RegExp(name)})
+                .populate("serverclasslist", "classname carmodel cartype  price onsaleprice", {"is_using": true})
+                .exec(function (err, coachlist) {
+                    if (err || !coachlist) {
+                        console.log(err);
+                        callback("查找教练出错" + err);
+
+                    } else if (coachlist.length == 0) {
+                        return cb(null, data);
+                    }
+                    else {
+                        process.nextTick(function () {
+                            var rescoachlist = [];
+                            coachlist.forEach(function (r, idx) {
+                                var returnmodel = {
+                                    id: r._id,
+                                    name: r.name,
+                                    head_img: r.headportrait,
+                                    level: r.starlevel,
+                                    pass_rate: r.passrate,
+                                    seniority: r.Seniority,
+                                    subjects: r.subject
+                                }
+                                rescoachlist.push(returnmodel);
+                            });
+                            data.coach_list = rescoachlist;
+                            return cb(null, data);
+                        });
+                    }
+
+                });
+
+        }
+    ], function (err, result) {
+        return callback(err, result);
+    });
+};
