@@ -5,6 +5,21 @@ var BaseReturnInfo = require('../common/basereturnmodel.js');
 var service = require('../dal_server/base_server.js');
 var mobileVerify = /^1\d{10}$/;
 var qr = require("qr-image");
+
+//通过位置定位城市
+exports.getCityByPosition = function (req, res) {
+    var q = {
+        latitude: parseFloat(req.query.latitude) || 0,
+        longitude: parseFloat(req.query.longitude) || 0
+    };
+    service.getCityByPosition(q, function (err, data) {
+        if (err) {
+            return res.json(new BaseReturnInfo(0, err, []));
+        } else {
+            return res.json(new BaseReturnInfo(1, "", data));
+        }
+    });
+}
 // 获取城市列表
 exports.getCity = function (req, res) {
     service.getCityList(function (err, data) {

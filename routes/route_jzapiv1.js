@@ -5,6 +5,8 @@ var express = require("express");
 var Router = express.Router();
 var baseController = require('../server/controller/controller_jzapiv1.js');
 
+//定位城市
+Router.get("/getCityByPosition", baseController.getCityByPosition);
 // 获取城市列表
 Router.get("/getCity", baseController.getCity);
 

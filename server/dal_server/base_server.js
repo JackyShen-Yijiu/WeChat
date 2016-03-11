@@ -20,6 +20,41 @@ var resendTimeout = 60;
 var addtestsmscode = require('../Common/sendsmscode').addsmscode;
 var smscodemodule = require('../Common/sendsmscode').sendsmscode;
 
+//  定位城市
+exports.getCityByPosition = function (q, callback) {
+    var latitude = q.latitude || 0;
+    var longitude = q.longitude || 0;
+    //微信坐标转换为百度地图坐标
+    baiDuUtil.weixintobaidu(latitude, longitude, function (err, data) {
+            //如果坐标为空
+        var city = {
+            id : 131,
+            name : "北京市"
+        };
+            if (data.lat == 0 && data.lot == 0) {
+               return callback(null, city);
+            } else {
+                //根据坐标显示城市
+                baiDuUtil.getCityByPosition(data.lat, data.lot, function(err, cityName){
+                    var search = {
+                        "name" : cityName
+                    };
+                    cityInfoModel.find(search)
+                        .select("indexid")
+                        .exec(function (err, data) {
+                            if (err) {
+                                return callback ("查找出错" + err);
+                            }
+                            var city = {
+                                "id" : data[0].indexid,
+                                "name" : search.name
+                            };
+                            return callback(null, city);
+                        })
+                });
+            }
+    })
+}
 //  获取城市列表
 exports.getCityList = function (callback) {
 
@@ -71,7 +106,7 @@ exports.getSchoolList = function (searchinfo, callback) {
         if (searchinfo.cityname == "") {
             //如果坐标为空
             if (data.longitude == 0 && data.latitude == 0) {
-                serachinfo.cityname = "北京市";
+                searchinfo.cityname = "北京市";
             } else {
                 //根据坐标显示城市
                  baiDuUtil.getCityByPosition(latitude, longitude, function(err, cityName){
