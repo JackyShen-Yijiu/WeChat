@@ -4,7 +4,7 @@
 var BaseReturnInfo = require('../common/basereturnmodel.js');
 var service = require('../dal_server/base_server.js');
 var mobileVerify = /^1\d{10}$/;
-var qr=require("qr-image");
+var qr = require("qr-image");
 // 获取城市列表
 exports.getCity = function (req, res) {
     service.getCityList(function (err, data) {
@@ -16,16 +16,17 @@ exports.getCity = function (req, res) {
 }
 
 // 搜索驾校列表
-exports.searchSchool = function (req, res) {
+exports.getSchoolList = function (req, res) {
     var q = {
-        latitude: parseFloat(req.query.latitude),
-        longitude: parseFloat(req.query.longitude),
+        latitude: parseFloat(req.query.latitude) || 0,
+        longitude: parseFloat(req.query.longitude) || 0,
+        cityname: req.query.cityname ? req.query.city_name : "",
         ordertype: req.query.ordertype ? parseInt(req.query.order_type) : 0,
         index: req.query.index ? parseInt(req.query.index) : 1,
-        count: req.query.count ? parseInt(req.query.count) : 1,
-        schoolname: req.query.schoolname ? req.query.school_name : ""
+        count: req.query.count ? parseInt(req.query.count) : 10,
+        //schoolname: req.query.schoolname ? req.query.school_name : ""
     }
-    service.searchDriverSchool(q, function (err, data) {
+    service.getSchoolList(q, function (err, data) {
         if (err) {
             return res.json(new BaseReturnInfo(0, err, []));
         } else {
@@ -159,4 +160,22 @@ exports.createQrCode = function (req, res) {
         res.writeHead(414, {'Content-Type': 'text/html'});
         res.end('NOT Found');
     }
-}
+};
+
+//搜索驾校和教练
+//exports.search = function (req, res) {
+//    var q = {
+//        latitude: parseFloat(req.query.latitude),
+//        longitude: parseFloat(req.query.longitude),
+//        index: req.query.index ? parseInt(req.query.index) : 1,
+//        count: req.query.count ? parseInt(req.query.count) : 1,
+//        name: req.query.name ? req.query.name : ""
+//    };
+//    service.search(q, function (err, data) {
+//        if (err) {
+//            return res.json(new BaseReturnInfo(0, err, []));
+//        } else {
+//            return res.json(new BaseReturnInfo(1, "", data));
+//        }
+//    });
+//}

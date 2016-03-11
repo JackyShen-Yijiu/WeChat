@@ -57,41 +57,53 @@ exports.getCityList = function (callback) {
 };
 
 // 查询驾校列表
-exports.searchDriverSchool = function (searchinfo, callback) {
-
-    var searchcondition = {
-        is_validation: true
-    };
-    if (searchinfo.cityname != "") {
-        searchcondition.city = new RegExp(searchinfo.cityname);
-    } else {
-        searchcondition.loc = {
-            $nearSphere: {
-                $geometry: {
-                    type: 'Point',
-                    coordinates: [searchinfo.longitude, searchinfo.latitude]
-                }, $maxDistance: 100000
-            }
-        }
-    }
-    if (searchinfo.schoolname != "") {
-        searchcondition.name = new RegExp(searchinfo.schoolname);
-    }
-    //if (searchinfo.licensetype != "" && parseInt(searchinfo.licensetype) != 0) {
-    //    searchcondition.licensetype = {"$in": [searchinfo.licensetype]}
-    //}
-    var ordercondition = {};
-    // 0 默认 1距离 2 评分  3 价格
-    if (searchinfo.ordertype == 2) {
-        ordercondition.schoollevel = -1;
-    } else if (searchinfo.ordertype == 3) {
-        ordercondition.minprice = 1;
-    }
+exports.getSchoolList = function (searchinfo, callback) {
     var latitude = searchinfo.latitude || 0;
     var longitude = searchinfo.longitude || 0;
     //微信坐标转换为百度地图坐标
     baiDuUtil.weixintobaidu(latitude, longitude, function (err, data) {
         //console.log(data);
+        //查询条件
+        var searchcondition = {
+            is_validation: true
+        };
+        //判断城市是否为空
+        if (searchinfo.cityname == "") {
+            //如果坐标为空
+            if (data.longitude == 0 && data.latitude == 0) {
+                serachinfo.cityname = "北京市";
+            } else {
+                //根据坐标显示城市
+                 baiDuUtil.getCityByPosition(latitude, longitude, function(err, cityName){
+                     searchinfo.cityname = cityName;
+                });
+            }
+        }
+        if (searchinfo.cityname != "") {
+            searchcondition.city = new RegExp(searchinfo.cityname);
+        } else {
+            searchcondition.loc = {
+                $nearSphere: {
+                    $geometry: {
+                        type: 'Point',
+                        coordinates: [searchinfo.longitude, searchinfo.latitude]
+                    }, $maxDistance: 100000
+                }
+            }
+        }
+        if (searchinfo.schoolname != "") {
+            searchcondition.name = new RegExp(searchinfo.schoolname);
+        }
+        //if (searchinfo.licensetype != "" && parseInt(searchinfo.licensetype) != 0) {
+        //    searchcondition.licensetype = {"$in": [searchinfo.licensetype]}
+        //}
+        var ordercondition = {};
+        // 0 默认 1距离 2 评分  3 价格
+        if (searchinfo.ordertype == 2) {
+            ordercondition.schoollevel = -1;
+        } else if (searchinfo.ordertype == 3) {
+            ordercondition.minprice = 1;
+        }
         schoolModel.find(searchcondition)
             .select("")
             .sort(ordercondition)
@@ -337,7 +349,7 @@ exports.getCodebyMolile = function (mobilenumber, callback) {
     );
 };
 
-//
+// 发送
 var sendSmsResponse = function (error, response, callback) {
     if (error || response.statusCode != 200) {
         return callback("Error occured in sending sms: " + error);
@@ -346,3 +358,36 @@ var sendSmsResponse = function (error, response, callback) {
     // get back to user
     return callback(null, "Error occured in sending sms: " + error);
 };
+
+////搜索驾校以及教练
+//exports.search = function (q, callback) {
+//    async.waterfall([
+//        //搜索驾校
+//        function (cb) {
+//            schoolModel.find({"name": new RegExp(name)})
+//                .exec(function (err, driverschool) {
+//                    if (err) {
+//                        return callback("搜索失败: " + err);
+//                    }
+//                    process.nextTick(function(){
+//                        driveschoollist=[];
+//                        driveschool.forEach(function(r, idx){
+//                            var oneschool= {
+//                                id: r._id,
+//                                name:r.name,
+//                                logo_img:r.logoimg,
+//                                latitude: r.latitude,
+//                                longitude: r.longitude,
+//                                address: r.address,
+//                                maxprice: r.maxprice,
+//                                minprice: r.minprice,
+//                                passingrate: r.passingrate
+//                            }
+//                            driveschoollist.push(oneschool);
+//                        });
+//                        callback(null,driveschoollist);
+//                    });
+//                });
+//        }
+//    ]);
+//};

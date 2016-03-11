@@ -8,8 +8,8 @@ var baseController = require('../server/controller/controller_jzapiv1.js');
 // 获取城市列表
 Router.get("/getCity", baseController.getCity);
 
-// 查询驾校列表
-Router.get("/searchSchool", baseController.searchSchool);
+// 获取驾校列表
+Router.get("/getSchoolList", baseController.getSchoolList);
 
 // 获取驾校详情
 Router.get("/getSchoolInfo/:school_id", baseController.getSchoolInfo);
@@ -33,4 +33,6 @@ Router.get("/code/:mobile", baseController.fetchCode);
 //获取二维码
 Router.get("/createQrCode",baseController.createQrCode);
 
+//搜索驾校和教练
+//Router.get("/search", baseController.search);
 module.exports = Router;
