@@ -15,7 +15,7 @@ exports.resBaseCoachInfo = function (user) {
     this.school_info = user.driveschoolinfo;//驾校信息
     this.train_info = user.trainfieldlinfo ? user.trainfieldlinfo : undefined;//练车场地
     this.car_model = user.carmodel;//授课车型
-    this.class_list = user.serverclasslist ? user.serverclasslist.length : 0;//授课班型
+    this.class_list = user.serverclasslist;//授课班型
     //this.mobile = user.mobile;//手机号
 
     //this.createtime = user.createtime;//

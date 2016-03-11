@@ -71,7 +71,8 @@ exports.getSchoolCoach = function (req, res) {
     var coachinfo = {
         schoolid: req.params.school_id,
         index: req.query.index,
-        name: req.query.name
+        name: req.query.name,
+        classId: req.query.class_id
     }
     //sconsole.log(coachinfo);
     if (coachinfo.schoolid === undefined || coachinfo.index === undefined) {

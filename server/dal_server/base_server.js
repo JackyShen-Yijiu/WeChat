@@ -308,6 +308,9 @@ exports.getSchoolCoach = function (coachinfo, callback) {
     if (coachinfo.name && coachinfo.name != "") {
         searchinfo.name = new RegExp(coachinfo.name);
     }
+    if (coachinfo.classId && coachinfo.classId != "") {
+        searchinfo.classId = coachindo.classId;
+    }
     coachmode.find(searchinfo)
         .populate("serverclasslist", "classname carmodel cartype  price onsaleprice", {"is_using": true})
         .skip((coachinfo.index - 1) * 10)
@@ -324,7 +327,7 @@ exports.getSchoolCoach = function (coachinfo, callback) {
                 process.nextTick(function () {
                     var rescoachlist = [];
                     coachlist.forEach(function (r, idx) {
-                        var returnmodel = {
+                        rescoachlist.push( {
                             id: r._id,
                             name: r.name,
                             head_img: r.headportrait,
@@ -332,8 +335,7 @@ exports.getSchoolCoach = function (coachinfo, callback) {
                             pass_rate: r.passrate,
                             seniority: r.Seniority,
                             subjects: r.subject
-                        }
-                        rescoachlist.push(returnmodel);
+                        });
                     });
                     callback(null, rescoachlist);
                 });
