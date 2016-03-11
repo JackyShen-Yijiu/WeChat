@@ -105,33 +105,29 @@ exports.getSchoolList = function (searchinfo, callback) {
         //判断城市是否为空
         if (searchinfo.cityname == "") {
             //如果坐标为空
-            if (data.longitude == 0 && data.latitude == 0) {
+            if (data.lat == 0 && data.lot == 0) {
                 searchinfo.cityname = "北京市";
             } else {
                 //根据坐标显示城市
-                 baiDuUtil.getCityByPosition(latitude, longitude, function(err, cityName){
+                 baiDuUtil.getCityByPosition(data.lat, data.lot, function(err, cityName){
                      searchinfo.cityname = cityName;
                 });
             }
         }
         if (searchinfo.cityname != "") {
+            console.log("111");
             searchcondition.city = new RegExp(searchinfo.cityname);
+            console.log(searchcondition.city);
         } else {
             searchcondition.loc = {
                 $nearSphere: {
                     $geometry: {
                         type: 'Point',
-                        coordinates: [searchinfo.longitude, searchinfo.latitude]
+                        coordinates: [data.lot, data.lat]
                     }, $maxDistance: 100000
                 }
             }
         }
-        if (searchinfo.schoolname != "") {
-            searchcondition.name = new RegExp(searchinfo.schoolname);
-        }
-        //if (searchinfo.licensetype != "" && parseInt(searchinfo.licensetype) != 0) {
-        //    searchcondition.licensetype = {"$in": [searchinfo.licensetype]}
-        //}
         var ordercondition = {};
         // 0 默认 1距离 2 评分  3 价格
         if (searchinfo.ordertype == 2) {

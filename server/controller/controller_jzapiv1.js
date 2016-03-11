@@ -35,12 +35,13 @@ exports.getSchoolList = function (req, res) {
     var q = {
         latitude: parseFloat(req.query.latitude) || 0,
         longitude: parseFloat(req.query.longitude) || 0,
-        cityname: req.query.cityname ? req.query.city_name : "",
-        ordertype: req.query.ordertype ? parseInt(req.query.order_type) : 0,
+        cityname: req.query.city_name ? req.query.city_name : "",
+        ordertype: req.query.order_type ? parseInt(req.query.order_type) : 0,
         index: req.query.index ? parseInt(req.query.index) : 1,
         count: req.query.count ? parseInt(req.query.count) : 10,
         //schoolname: req.query.schoolname ? req.query.school_name : ""
     }
+    console.log(q.cityname);
     service.getSchoolList(q, function (err, data) {
         if (err) {
             return res.json(new BaseReturnInfo(0, err, []));
