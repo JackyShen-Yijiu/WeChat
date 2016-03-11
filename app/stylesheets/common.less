@@ -11,6 +11,28 @@ a {
     }
 }
 
+.text() {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.stars {
+    overflow: hidden;
+    margin-bottom: 12px;
+    margin-top: 4px;
+    width: 75px;
+    float: right;
+    i {
+        float: left;
+        margin-right: 2px;
+        color: @gray-light;
+        &.active {
+            color: @red;
+        }
+    }
+}
+
 .school-item {
     // 驾校
     position: relative;
@@ -40,14 +62,13 @@ a {
     }
     .middle {
         .title {
+            .text();
             margin-bottom: 8px;
             font-size: 16px;
             font-weight: bold;
         }
         .address {
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
+            .text();
             margin-bottom: 8px;
             font-size: 13px;
         }
@@ -63,15 +84,6 @@ a {
         top: 0;
         width: 100px;
         text-align: right;
-        .stars {
-            overflow: hidden;
-            margin-bottom: 12px;
-            margin-top: 4px;
-            i {
-                float: right;
-                margin-right: 2px;
-            }
-        }
         .distance {
             margin-bottom: 8px;
         }
@@ -108,7 +120,6 @@ a {
     .footer {
         position: relative;
         line-height: 44px;
-        margin-top: 5px;
         .btn-signup {
             position: absolute;
             right: 0;
@@ -176,13 +187,7 @@ a {
         width: 100px;
         text-align: right;
         .stars {
-            overflow: hidden;
-            margin-bottom: 12px;
-            margin-top: 4px;
-            i.fa {
-                float: right;
-                margin-right: 2px;
-            }
+            margin-left: 25px;
         }
         .age {
             margin-bottom: 8px;
@@ -309,7 +314,7 @@ a {
         &:first-child {
             border-top: none;
         }
-        i.fa {
+        i {
             width: 14px;
             margin-right: 5px;
             text-align: center;
@@ -455,7 +460,7 @@ a {
 
 .list-footer {
     // 列表页脚
-    display: none;
+    display: block;
     color: #333;
     height: 44px;
     text-align: center;
