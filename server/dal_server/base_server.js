@@ -279,6 +279,23 @@ exports.getSchoolInfoserver = function (schoolid, callback) {
                     }
                 });
         },
+        //获取该驾校的教练数
+        function(classList, cb) {
+            var searchinfo = {
+                "driveschool": new mongodb.ObjectId(schoolid), "is_lock": false,
+                "is_validation": true
+            };
+            coachmode.find(searchinfo).count()
+                .exec(function (err, count) {
+                if (err) {
+                    return callback("查询出错：" + err);
+                } else {
+                        cb(err, {class_list:classList,coach_num:count});
+                }
+            });
+        },
+        //获取该驾校的训练场数目
+        //获取该驾校的班车信息
         function (schoolClass, cb) {
             schoolModel.findById(new mongodb.ObjectId(schoolid), function (err, schooldata) {
                 if (err || !schooldata) {
@@ -286,7 +303,7 @@ exports.getSchoolInfoserver = function (schoolid, callback) {
                 }
                 var data = new resbaseschoolinfomode(schooldata);
                 data.class_list = schoolClass.class_list;
-
+                data.coach_num = schoolClass.coach_num;
                 return cb(null, data);
             });
         }
@@ -327,7 +344,7 @@ exports.getSchoolCoach = function (coachinfo, callback) {
                 process.nextTick(function () {
                     var rescoachlist = [];
                     coachlist.forEach(function (r, idx) {
-                        rescoachlist.push( {
+                        rescoachlist.push({
                             id: r._id,
                             name: r.name,
                             head_img: r.headportrait,
@@ -513,3 +530,25 @@ exports.searchList = function (q, callback) {
         return callback(err, result);
     });
 };
+
+// 查询驾校下的教练数
+var coachCount = function (schoolId, callback) {
+    var searchinfo = {
+        "driveschool": new mongodb.ObjectId(schoolId), "is_lock": false,
+        "is_validation": true
+    };
+    coachmode.find(searchinfo).count()
+        .exec(function (err, count) {
+            callback(null, count);
+        });
+}
+
+//// 查询驾校下的班车数
+//var coachCount = function (schoolId, callback) {
+//
+//};
+//// 查询驾校下的场地数
+//var coachCount = function (schoolId, callback) {
+//
+//};
+// 根据班型ID查新班型信息

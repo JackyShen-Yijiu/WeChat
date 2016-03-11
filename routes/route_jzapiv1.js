@@ -37,4 +37,7 @@ Router.get("/createQrCode",baseController.createQrCode);
 
 //搜索驾校和教练
 Router.get("/searchList", baseController.searchList);
+
+//根据班型ID查询班型
+//Router.get("/searchClass/:class_id", baseController.searchClass);
 module.exports = Router;
