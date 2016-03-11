@@ -309,7 +309,7 @@ exports.getSchoolCoach = function (coachinfo, callback) {
         searchinfo.name = new RegExp(coachinfo.name);
     }
     if (coachinfo.classId && coachinfo.classId != "") {
-        searchinfo.classId = coachindo.classId;
+        searchinfo.serverclasslist = coachinfo.classId;
     }
     coachmode.find(searchinfo)
         .populate("serverclasslist", "classname carmodel cartype  price onsaleprice", {"is_using": true})
@@ -375,7 +375,7 @@ exports.getSchoolTrainingField = function (schoolid, callback) {
     })
 }
 
-//获取用户信息
+//获取教练详情
 exports.getCoachInfoServer = function (userid, callback) {
     coachmode.findById(new mongodb.ObjectId(userid))
         .populate("tagslist", " _id  tagname tagtype color")
