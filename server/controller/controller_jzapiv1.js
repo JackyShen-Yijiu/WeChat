@@ -192,8 +192,10 @@ exports.searchList = function (req, res) {
 
 // 获取班车列表
 exports.getSchoolBus = function (req, res) {
-    var schoolId = req.params.school_id;
-    service.getSchoolBus(schoolId, function (err, data) {
+    var q = {
+        schoolId : req.params.school_id
+    }
+    service.getSchoolBus(q, function (err, data) {
         if (err) {
             return res.json(new BaseReturnInfo(0, err, []));
         } else {

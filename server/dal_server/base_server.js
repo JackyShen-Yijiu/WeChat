@@ -306,14 +306,15 @@ exports.getSchoolInfoserver = function (schoolid, callback) {
                 })
         },
         //获取该驾校的班车数量
-        function (trainList, cb) {
-            schoolBusRouteModel.find({"driveschool": new mongodb.ObjectId(schoolid)}).count()
+        function (busList, cb) {
+            schoolBusRouteModel.find({"schoolid": new mongodb.ObjectId(schoolid)}).count()
                 .exec(function (err, count) {
                     if (err) {
                         return callback("查询出错：" + err);
                     } else {
-                        trainList.bus_num = count;
-                        cb(err, trainList);
+                        console.log(count);
+                        busList.bus_num = count;
+                        cb(err, busList);
                     }
                 })
         },
@@ -558,9 +559,8 @@ exports.searchList = function (q, callback) {
 };
 
 // 获取班车列表
-exports.getSchoolBus = function (schoolId, callback) {
-
-    schoolBusRouteModel.find(schoolId)
+exports.getSchoolBus = function (q, callback) {
+    schoolBusRouteModel.find({"schoolid": new mongodb.ObjectId(q.schoolId)})
         .exec(function (err, data) {
             if (err || !data) {
                 return callback("查询出错：" + err);
