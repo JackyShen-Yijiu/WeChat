@@ -4,23 +4,28 @@
     background-color: @white;
     border-bottom: 1px @gray-light solid;
     padding: 6px 50px 6px 74px;
-    .location {
+    .address {
         position: absolute;
         left: 7px;
         top: 6px;
         width: 60px;
-        span {
+        .city {
             display: block;
             line-height: 32px;
             text-align: center;
+            color: @gray-dark;
         }
     }
-    .search-placeholder {
+    .searchbar {
         height: 32px;
         border: 1px @gray solid;
         line-height: 30px;
         padding: 0 8px;
         border-radius: 4px;
+        .search {
+            display: block;
+            color: @gray-dark;
+        }
     }
     .user {
         position: absolute;
@@ -40,15 +45,16 @@
 
 .sl-sortbar {
     border-bottom: 1px @gray-light solid;
-    a.btn {
+    .btn {
         border: none;
         border-radius: 0;
         padding: 12px 12px;
-        margin: 0 2px;
+        margin: 0;
         &:hover,
         &.active {
             background-color: #fff;
             box-shadow: none;
+            outline: none;
         }
         &.active {
             border-bottom: 2px @blue solid;

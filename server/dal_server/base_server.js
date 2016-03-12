@@ -20,7 +20,7 @@ var smsVerifyCodeModel=mongodb.SmsVerifyCodeModel;
 var userModel=mongodb.UserModel;
 var userAvailableFcodeModel=mongodb.UserAvailableFcodeModel;
 var UserPayModel=mongodb.UserModel;
-var wenpay=require("../weixinpay/wenxinpay")
+var wenpay=require("../weixin_server/wenxinpay")
 require('date-utils');
 
 var  getUserCount=function(callback){
@@ -46,30 +46,27 @@ var  getUserCount=function(callback){
         }
     });
 }
-var defautfun={
-      checkSmsCode:function(mobile,code,callback){
-        smsVerifyCodeModel.findOne({mobile:mobile,smsCode:code, verified: false},function(err,instace){
-            if(err)
-            {
-                return callback("查询出错: "+ err);
+var defautfun= {
+    checkSmsCode: function (mobile, code, callback) {
+        smsVerifyCodeModel.findOne({mobile: mobile, smsCode: code, verified: false}, function (err, instace) {
+            if (err) {
+                return callback("查询出错: " + err);
             }
-            if (!instace)
-            {
+            if (!instace) {
                 return callback("验证码错误，请重新发送");
             }
             //console.log(instace);
-            var  now=new Date();
+            var now = new Date();
             /*console.log(now);
              console.log(instace.createdTime);
              console.log(now-instace.createdTime);*/
-            if ((now-instace.createdTime)>timeout*1000){
+            if ((now - instace.createdTime) > timeout * 1000) {
                 return callback("您已超时请重新发送");
             }
-            instace.verified=true;
-            instace.save(function(err,temp){
-                if (err)
-                {
-                    return callback("服务器内部错误:"+err);
+            instace.verified = true;
+            instace.save(function (err, temp) {
+                if (err) {
+                    return callback("服务器内部错误:" + err);
                 }
                 return callback(null);
             })
@@ -77,16 +74,16 @@ var defautfun={
         });
     },
     // 添加一个用户
-      addWeiXinUser:function(applyinfo,callback){
+    addWeiXinUser: function (applyinfo, callback) {
         var newuser = new userModel();
-          newuser.name=applyinfo.name;
+        newuser.name = applyinfo.name;
         newuser.mobile = applyinfo.mobile;
         newuser.create = new Date();
-        newuser.openid=applyinfo.openid;
-        newuser.password= "";
-        newuser.loc.coordinates=[0,0];
-        newuser.source=2;
-        getUserCount(function(err,usercoutinfo) {
+        newuser.openid = applyinfo.openid;
+        newuser.password = "";
+        newuser.loc.coordinates = [0, 0];
+        newuser.source = 2;
+        getUserCount(function (err, usercoutinfo) {
             if (err) {
                 return callback(" 获取用户ID出错 :" + err);
             }
@@ -101,111 +98,153 @@ var defautfun={
         })
     },
     // 保存报名信息
-    saveUserApplyinfo:function(userid,applyinfo,callback){
-        usermodel.findById(new mongodb.ObjectId(applyinfo.userid),function(err,userdata){
-            if(err|!userdata)
-            {
-                return  callback("不能找到此用户");
+    saveUserApplyinfo: function (userid, applyinfo, callback) {
+        usermodel.findById(new mongodb.ObjectId(applyinfo.userid), function (err, userdata) {
+            if (err | !userdata) {
+                return callback("不能找到此用户");
             }
             //判断用户状态
-            if(userdata.is_lock==true)
-            {
-                return  callback("此用户已锁定，请联系客服");
+            if (userdata.is_lock == true) {
+                return callback("此用户已锁定，请联系客服");
             }
-            if(userdata.applystate>appTypeEmun.ApplyState.Applying){
-                return  callback("您已经报名成功，请不要重复报名");
+            if (userdata.applystate > appTypeEmun.ApplyState.Applying) {
+                return callback("您已经报名成功，请不要重复报名");
             }
 
-            var searchcoachinfo={};
-            if(applyinfo.coachid==-1||applyinfo.coachid=="-1"|| applyinfo.coachid.length<5){
-                searchcoachinfo.driveschool=new mongodb.ObjectId(applyinfo.schoolid);
-                searchcoachinfo.is_validation=true
-            }else{
-                searchcoachinfo._id=new mongodb.ObjectId(applyinfo.coachid)
+            var searchcoachinfo = {};
+            if (applyinfo.coachid == -1 || applyinfo.coachid == "-1" || applyinfo.coachid.length < 5) {
+                searchcoachinfo.driveschool = new mongodb.ObjectId(applyinfo.schoolid);
+                searchcoachinfo.is_validation = true
+            } else {
+                searchcoachinfo._id = new mongodb.ObjectId(applyinfo.coachid)
             }
-            var searchcoachinfo={};
-            if(applyinfo.coachid==-1||applyinfo.coachid=="-1"|| applyinfo.coachid.length<5){
-                searchcoachinfo.driveschool=new mongodb.ObjectId(applyinfo.schoolid);
-                searchcoachinfo.is_validation=true
-            }else{
-                searchcoachinfo._id=new mongodb.ObjectId(applyinfo.coachid)
+            var searchcoachinfo = {};
+            if (applyinfo.coachid == -1 || applyinfo.coachid == "-1" || applyinfo.coachid.length < 5) {
+                searchcoachinfo.driveschool = new mongodb.ObjectId(applyinfo.schoolid);
+                searchcoachinfo.is_validation = true
+            } else {
+                searchcoachinfo._id = new mongodb.ObjectId(applyinfo.coachid)
             }
             // 检查报名驾校和教练
-            coachmode.findOne(searchcoachinfo,function(err,coachdata){
-                if(err){
+            coachmode.findOne(searchcoachinfo, function (err, coachdata) {
+                if (err) {
                     return callback("不能找到报名的教练");
                 }
-                applyinfo.coachid=coachdata?coachdata._id:"";
+                applyinfo.coachid = coachdata ? coachdata._id : "";
                 // 检查教练
-                schoolModel.findById(new mongodb.ObjectId(applyinfo.schoolid),function(err,schooldata){
-                    if(err||!schooldata){
+                schoolModel.findById(new mongodb.ObjectId(applyinfo.schoolid), function (err, schooldata) {
+                    if (err || !schooldata) {
                         return callback("不能找到报名的驾校");
-                    };
+                    }
+                    ;
                     // 检查所报的课程类型
                     classtypeModel.findById(new mongodb.ObjectId(applyinfo.classtypeid))
                         .populate("vipserverlist")
-                        .exec(function(err,classtypedata){
-                            if (err|| !classtypedata){
-                                return callback("不能找到该申请课程"+err);
+                        .exec(function (err, classtypedata) {
+                            if (err || !classtypedata) {
+                                return callback("不能找到该申请课程" + err);
                             }
-                                userdata.carmodel=classtypedata.carmodel;
-                                userdata.applyschoolinfo.id=applyinfo.schoolid;
-                                userdata.applyschoolinfo.name=schooldata.name;
+                            userdata.carmodel = classtypedata.carmodel;
+                            userdata.applyschoolinfo.id = applyinfo.schoolid;
+                            userdata.applyschoolinfo.name = schooldata.name;
 
-                                userdata.applycoach=applyinfo.coachid;
-                                userdata.applycoachinfo.id=applyinfo.coachid;
-                                userdata.applycoachinfo.name=coachdata?coachdata.name:"";
+                            userdata.applycoach = applyinfo.coachid;
+                            userdata.applycoachinfo.id = applyinfo.coachid;
+                            userdata.applycoachinfo.name = coachdata ? coachdata.name : "";
 
-                                userdata.applyclasstype=classtypedata._id;
-                                userdata.applyclasstypeinfo.id=classtypedata._id;
-                                userdata.applyclasstypeinfo.name=classtypedata.classname;
-                                userdata.applyclasstypeinfo.price=classtypedata.price;
-                                userdata.applyclasstypeinfo.onsaleprice=classtypedata.onsaleprice;
-                                userdata.vipserverlist=classtypedata.vipserverlist;
-                                userdata.applystate=appTypeEmun.ApplyState.Applying;
-                                userdata.applyinfo.applytime=new Date();
-                                userdata.applyinfo.handelstate=appTypeEmun.ApplyHandelState.NotHandel;
-                                userdata.scanauditurl="http://api.yibuxueche.com/validation/applyvalidation?userid="
-                                    +userdata._id;
-                                userdata.weixinopenid=applyinfo.openid;
-                                userdata.paytypestatus=0;
-                                //console.log(userdata);
-                                // 保存 申请信息
-                                userdata.save(function(err,newuserdata){
-                                    if(err){
-                                        return   callback("保存申请信息错误："+err);
-                                    }
-                                    classtypedata.applycount=classtypedata.applycount+1;
-                                    coachdata.studentcoount=coachdata.studentcoount+1;
-                                    classtypedata.save();
-                                    //coachdata.save();
-                                    return callback(null,"success");
-                                });
-                            })
+                            userdata.applyclasstype = classtypedata._id;
+                            userdata.applyclasstypeinfo.id = classtypedata._id;
+                            userdata.applyclasstypeinfo.name = classtypedata.classname;
+                            userdata.applyclasstypeinfo.price = classtypedata.price;
+                            userdata.applyclasstypeinfo.onsaleprice = classtypedata.onsaleprice;
+                            userdata.vipserverlist = classtypedata.vipserverlist;
+                            userdata.applystate = appTypeEmun.ApplyState.Applying;
+                            userdata.applyinfo.applytime = new Date();
+                            userdata.applyinfo.handelstate = appTypeEmun.ApplyHandelState.NotHandel;
+                            userdata.scanauditurl = "http://api.yibuxueche.com/validation/applyvalidation?userid="
+                                + userdata._id;
+                            userdata.weixinopenid = applyinfo.openid;
+                            userdata.paytypestatus = 0;
+                            //console.log(userdata);
+                            // 保存 申请信息
+                            userdata.save(function (err, newuserdata) {
+                                if (err) {
+                                    return callback("保存申请信息错误：" + err);
+                                }
+                                classtypedata.applycount = classtypedata.applycount + 1;
+                                coachdata.studentcoount = coachdata.studentcoount + 1;
+                                classtypedata.save();
+                                //coachdata.save();
+                                return callback(null, "success");
+                            });
+                        })
 
-                        });
                 });
-
             });
+
+        });
 
 
     },
     //redis驾校信息
-    redisSchoolInfo:function(schoolid, callback){
-        cache.get("weixinschoolinfo"+schoolid,function(err,data){
-            if(!data){
+    redisSchoolInfo: function (schoolid, callback) {
+        cache.get("weixinschoolinfo" + schoolid, function (err, data) {
+            if (!data) {
                 schoolModel.findById(new mongodb.ObjectId(schoolid))
                     .select("_id name")
-                    .exec(function(err,schooldata){
-                        cache.set("weixinschoolinfo"+schoolid,schooldata,60,function(err){});
-                        return callback(null,schooldata);
+                    .exec(function (err, schooldata) {
+                        cache.set("weixinschoolinfo" + schoolid, schooldata, 60, function (err) {
+                        });
+                        return callback(null, schooldata);
                     })
             }
-            if(data){
-                return callback(null,data);
+            if (data) {
+                return callback(null, data);
             }
         })
     }
+}
+
+var resbasecoachinfomode = require("../models/returncoachinfo").resBaseCoachInfo;
+var smsVerifyCodeModel = mongodb.SmsVerifyCodeModel;
+var resendTimeout = 60;
+var addtestsmscode = require('../Common/sendsmscode').addsmscode;
+var smscodemodule = require('../Common/sendsmscode').sendsmscode;
+var schoolBusRouteModel = mongodb.SchoolBusRouteModel;
+//  定位城市
+exports.getCityByPosition = function (q, callback) {
+    var latitude = q.latitude || 0;
+    var longitude = q.longitude || 0;
+    //微信坐标转换为百度地图坐标
+    baiDuUtil.weixintobaidu(latitude, longitude, function (err, data) {
+        //如果坐标为空
+        var city = {
+            id: 131,
+            name: "北京市"
+        };
+        if (data.lat == 0 && data.lot == 0) {
+            return callback(null, city);
+        } else {
+            //根据坐标显示城市
+            baiDuUtil.getCityByPosition(data.lat, data.lot, function (err, cityName) {
+                var search = {
+                    "name": cityName
+                };
+                cityInfoModel.find(search)
+                    .select("indexid")
+                    .exec(function (err, data) {
+                        if (err) {
+                            return callback("查找出错" + err);
+                        }
+                        var city = {
+                            "id": data[0].indexid,
+                            "name": search.name
+                        };
+                        return callback(null, city);
+                    })
+            });
+        }
+    })
 }
 //  获取城市列表
 exports.getCityList = function (callback) {
@@ -244,94 +283,153 @@ exports.getCityList = function (callback) {
 };
 
 // 查询驾校列表
-exports.searchDriverSchool = function (searchinfo, callback) {
-
-    var searchcondition = {
-        is_validation: true
-    };
-    if (searchinfo.cityname != "") {
-        searchcondition.city = new RegExp(searchinfo.cityname);
-    } else {
-        searchcondition.loc = {
-            $nearSphere: {
-                $geometry: {
-                    type: 'Point',
-                    coordinates: [searchinfo.longitude, searchinfo.latitude]
-                }, $maxDistance: 100000
-            }
-        }
-    }
-    if (searchinfo.schoolname != "") {
-        searchcondition.name = new RegExp(searchinfo.schoolname);
-    }
-    //if (searchinfo.licensetype != "" && parseInt(searchinfo.licensetype) != 0) {
-    //    searchcondition.licensetype = {"$in": [searchinfo.licensetype]}
-    //}
-    var ordercondition = {};
-    // 0 默认 1距离 2 评分  3 价格
-    if (searchinfo.ordertype == 2) {
-        ordercondition.schoollevel = -1;
-    } else if (searchinfo.ordertype == 3) {
-        ordercondition.minprice = 1;
-    }
+exports.getSchoolList = function (searchinfo, callback) {
     var latitude = searchinfo.latitude || 0;
     var longitude = searchinfo.longitude || 0;
     //微信坐标转换为百度地图坐标
     baiDuUtil.weixintobaidu(latitude, longitude, function (err, data) {
         //console.log(data);
-        schoolModel.find(searchcondition)
-            .select("")
-            .sort(ordercondition)
-            .skip((searchinfo.index - 1) * searchinfo.count)
-            .limit(searchinfo.count)
-            .exec(function (err, driveschool) {
-                if (err) {
-                    console.log(err);
-                    callback("查找驾校出错：" + err);
-                } else {
-                    process.nextTick(function () {
-                        var driveschoollist = [];
-                        var distance = 0;
-                        driveschool.forEach(function (r, idx) {
-                            if (data.lat == 0 && data.lot == 0) {
-                                // 默认距离为0
-                                distance = -1;
+        //查询条件
+        var searchcondition = {
+            is_validation: true
+        };
+        //判断城市是否为空
+        if (searchinfo.cityname == "") {
+            //如果坐标为空
+            console.log("1111");
+            if (data.lat == 0 && data.lot == 0) {
+                searchcondition.city = new RegExp("北京市");
+            } else {
+                //根据坐标显示城市
+                baiDuUtil.getCityByPosition(data.lat, data.lot, function (err, cityName) {
+                    searchcondition.city = new RegExp(cityName);
+                    var ordercondition = {};
+                    // 0 默认 1距离 2 评分  3 价格
+                    if (searchinfo.ordertype == 2) {
+                        ordercondition.schoollevel = -1;
+                    } else if (searchinfo.ordertype == 3) {
+                        ordercondition.minprice = 1;
+                    }
+                    console.log(searchcondition);
+                    schoolModel.find(searchcondition)
+                        .select("")
+                        .sort(ordercondition)
+                        .skip((searchinfo.index - 1) * searchinfo.count)
+                        .limit(searchinfo.count)
+                        .exec(function (err, driveschool) {
+                            if (err) {
+                                console.log(err);
+                                callback("查找驾校出错：" + err);
                             } else {
-                                distance = geolib.getDistance(
-                                    {latitude: data.lat, longitude: data.lot},
-                                    {latitude: r.latitude, longitude: r.longitude},
-                                    10)
+                                process.nextTick(function () {
+                                    var driveschoollist = [];
+                                    var distance = 0;
+                                    driveschool.forEach(function (r, idx) {
+                                        if (data.lat == 0 && data.lot == 0) {
+                                            // 默认距离为0
+                                            distance = -1;
+                                        } else {
+                                            distance = geolib.getDistance(
+                                                {latitude: data.lat, longitude: data.lot},
+                                                {latitude: r.latitude, longitude: r.longitude},
+                                                10)
+                                        }
+                                        var oneschool = {
+                                            distance: distance,
+                                            id: r._id,
+                                            name: r.name,
+                                            logo_img: r.logoimg,
+                                            latitude: r.latitude,
+                                            longitude: r.longitude,
+                                            address: r.address,
+                                            max_price: r.maxprice ? r.maxprice : 0,
+                                            min_price: r.minprice ? r.maxprice : 0,
+                                            school_level: r.schoollevel,
+                                            coach_count: r.coachcount ? r.coachcount : 0,
+                                            //comment_count: r.commentcount ? r.commentcount : 0,
+                                            passing_rate: r.passingrate
+                                        };
+                                        if (oneschool.name.indexOf("一步") > -1) {
+                                            driveschoollist.unshift(oneschool);
+                                        }
+                                        else {
+                                            driveschoollist.push(oneschool);
+                                        }
+                                    });
+                                    if (searchinfo.ordertype == 0 || searchinfo.ordertype == 1) {
+                                        driveschoollist = _.sortBy(driveschoollist, "distance")
+                                    }
+                                    callback(null, driveschoollist);
+                                });
                             }
-                            var oneschool = {
-                                distance: distance,
-                                id: r._id,
-                                schoolid: r._id,
-                                name: r.name,
-                                logoimg: r.logoimg,
-                                latitude: r.latitude,
-                                longitude: r.longitude,
-                                address: r.address,
-                                maxprice: r.maxprice ? r.maxprice : 0,
-                                minprice: r.minprice ? r.maxprice : 0,
-                                schoollevel: r.schoollevel,
-                                coachcount: r.coachcount ? r.coachcount : 0,
-                                commentcount: r.commentcount ? r.commentcount : 0,
-                                passingrate: r.passingrate
-                            };
-                            if (oneschool.name.indexOf("一步") > -1) {
-                                driveschoollist.unshift(oneschool);
+                        })
+                });
+            }
+        } else {
+            console.log("2222");
+            var ordercondition = {};
+            // 0 默认 1距离 2 评分  3 价格
+            if (searchinfo.ordertype == 2) {
+                ordercondition.schoollevel = -1;
+            } else if (searchinfo.ordertype == 3) {
+                ordercondition.minprice = 1;
+            }
+            searchcondition.city = new RegExp(searchinfo.cityname);
+            console.log(searchcondition);
+            schoolModel.find(searchcondition)
+                .select("")
+                .sort(ordercondition)
+                .skip((searchinfo.index - 1) * searchinfo.count)
+                .limit(searchinfo.count)
+                .exec(function (err, driveschool) {
+                    if (err) {
+                        console.log(err);
+                        callback("查找驾校出错：" + err);
+                    } else {
+                        process.nextTick(function () {
+                            var driveschoollist = [];
+                            var distance = 0;
+                            driveschool.forEach(function (r, idx) {
+                                if (data.lat == 0 && data.lot == 0) {
+                                    // 默认距离为0
+                                    distance = -1;
+                                } else {
+                                    distance = geolib.getDistance(
+                                        {latitude: data.lat, longitude: data.lot},
+                                        {latitude: r.latitude, longitude: r.longitude},
+                                        10)
+                                }
+                                var oneschool = {
+                                    distance: distance,
+                                    id: r._id,
+                                    name: r.name,
+                                    logo_img: r.logoimg,
+                                    latitude: r.latitude,
+                                    longitude: r.longitude,
+                                    address: r.address,
+                                    max_price: r.maxprice ? r.maxprice : 0,
+                                    min_price: r.minprice ? r.maxprice : 0,
+                                    school_level: r.schoollevel,
+                                    coach_count: r.coachcount ? r.coachcount : 0,
+                                    //comment_count: r.commentcount ? r.commentcount : 0,
+                                    passing_rate: r.passingrate
+                                };
+                                if (oneschool.name.indexOf("一步") > -1) {
+                                    driveschoollist.unshift(oneschool);
+                                }
+                                else {
+                                    driveschoollist.push(oneschool);
+                                }
+                            });
+                            if (searchinfo.ordertype == 0 || searchinfo.ordertype == 1) {
+                                driveschoollist = _.sortBy(driveschoollist, "distance")
                             }
-                            else {
-                                driveschoollist.push(oneschool);
-                            }
+                            callback(null, driveschoollist);
                         });
-                        if (searchinfo.ordertype == 0 || searchinfo.ordertype == 1) {
-                            driveschoollist = _.sortBy(driveschoollist, "distance")
-                        }
-                        callback(null, driveschoollist);
-                    });
-                }
-            })
+                    }
+                })
+        }
+
     })
 }
 
@@ -357,35 +455,64 @@ exports.getSchoolInfoserver = function (schoolid, callback) {
                             var classlist = [];
                             data.forEach(function (r) {
                                 var oneclass = {
-                                    classid: r._id,
-                                    schoolinfo: {
-                                        schoolid: r.schoolid._id,
-                                        name: r.schoolid.name,
-                                        latitude: r.schoolid.latitude,
-                                        longitude: r.schoolid.longitude,
-                                        address: r.schoolid.address,
-                                    },
-                                    classname: r.classname,
-                                    begindate: r.begindate,
-                                    enddate: r.enddate,
-                                    is_vip: r.is_vip,
-                                    classdesc: r.classdesc,
-                                    price: r.price,
-                                    onsaleprice: r.onsaleprice,
-                                    carmodel: r.carmodel,
-                                    cartype: r.cartype,
-                                    classdesc: r.classdesc,
-                                    vipserverlist: r.vipserverlist,
-                                    classchedule: r.classchedule,
-                                    applycount: r.applycount,
-
-                                }
+                                    id: r._id,
+                                    name: r.classname,
+                                    desc: r.classdesc,
+                                    price: r.onsaleprice,
+                                    car_model: r.carmodel,
+                                    car_type: r.cartype,
+                                    schedule: r.classchedule//时间
+                                };
                                 classlist.push(oneclass)
-                            })
-                            cb(err, {classList: classlist})
+                            });
+                            cb(err, {class_list: classlist})
                         });
                     }
                 });
+        },
+        //获取该驾校的教练数
+        function (classList, cb) {
+            var searchinfo = {
+                "driveschool": new mongodb.ObjectId(schoolid), "is_lock": false,
+                "is_validation": true
+            };
+            coachmode.find(searchinfo).count()
+                .exec(function (err, count) {
+                    if (err) {
+                        return callback("查询出错：" + err);
+                    } else {
+                        classList.coach_num = count;
+                        cb(err, classList);
+                    }
+                });
+        },
+        //获取该驾校的训练场数目
+        function (trainList, cb) {
+            var searchInfo = {
+                "driveschool": new mongodb.ObjectId(schoolid),
+                "is_validation": true
+            }
+            trainingfiledModel.find(searchInfo).count()
+                .exec(function (err, count) {
+                if (err) {
+                    return callback("查询出错：" + err);
+                } else {
+                    trainList.training_num = count;
+                    cb(err,trainList);
+                }
+            })
+        },
+        //获取该驾校的班车信息
+        function (trainList, cb) {
+            schoolBusRouteModel.find({"driveschool": new mongodb.ObjectId(schoolid)}).count()
+                .exec(function (err, count) {
+                    if (err) {
+                        return callback("查询出错：" + err);
+                    } else {
+                        trainList.bus_num = count;
+                        cb(err,trainList);
+                    }
+                })
         },
         function (schoolClass, cb) {
             schoolModel.findById(new mongodb.ObjectId(schoolid), function (err, schooldata) {
@@ -393,8 +520,10 @@ exports.getSchoolInfoserver = function (schoolid, callback) {
                     return callback("查询驾校详情出错：" + err);
                 }
                 var data = new resbaseschoolinfomode(schooldata);
-                data.classList = schoolClass.classList;
-
+                data.class_list = schoolClass.class_list;
+                data.coach_count = schoolClass.coach_num;
+                data.ground_count = schoolClass.training_num;
+                data.bus_count = schoolClass.bus_num;
                 return cb(null, data);
             });
         }
@@ -416,6 +545,9 @@ exports.getSchoolCoach = function (coachinfo, callback) {
     if (coachinfo.name && coachinfo.name != "") {
         searchinfo.name = new RegExp(coachinfo.name);
     }
+    if (coachinfo.classId && coachinfo.classId != "") {
+        searchinfo.serverclasslist = coachinfo.classId;
+    }
     coachmode.find(searchinfo)
         .populate("serverclasslist", "classname carmodel cartype  price onsaleprice", {"is_using": true})
         .skip((coachinfo.index - 1) * 10)
@@ -432,29 +564,15 @@ exports.getSchoolCoach = function (coachinfo, callback) {
                 process.nextTick(function () {
                     var rescoachlist = [];
                     coachlist.forEach(function (r, idx) {
-                        var returnmodel = { //new resbasecoachinfomode(r);
-                            coachid: r._id,
+                        rescoachlist.push({
+                            id: r._id,
                             name: r.name,
-                            driveschoolinfo: r.driveschoolinfo,
-                            headportrait: r.headportrait,
-                            starlevel: r.starlevel,
-                            is_shuttle: r.is_shuttle,
-                            passrate: r.passrate,
-                            Seniority: r.Seniority,
-                            latitude: r.latitude,
-                            longitude: r.longitude,
-                            subject: r.subject,
-                            Gender: r.Gender,
-                            commentcount: r.commentcount,
-                            maxprice: r.maxprice ? r.maxprice : 0,  // 最高价格
-                            minprice: r.minprice ? r.minprice : 0,  // 最低价格
-                            carmodel: r.carmodel,
-                            serverclasslist: r.serverclasslist ? r.serverclasslist : []
-
-                        }
-                        //  r.restaurantId = r._id;
-                        // delete(r._id);
-                        rescoachlist.push(returnmodel);
+                            head_img: r.headportrait,
+                            level: r.starlevel,
+                            pass_rate: r.passrate,
+                            seniority: r.Seniority,
+                            subjects: r.subject
+                        });
                     });
                     callback(null, rescoachlist);
                 });
@@ -594,6 +712,7 @@ exports.postUserCreateOrder=function(applyinfo,callback){
         })
 };
 // 用户报名
+
 exports.postUserApplySchool=function (applyinfo, callback){
     // 验证验证码
     defautfun.checkSmsCode(applyinfo.mobile,applyinfo.smscode,function(err,data){
@@ -652,10 +771,15 @@ exports.postUserApplySchool=function (applyinfo, callback){
     // 验证手机号
 };
 
+
 // 获取驾校下面的练车场
 exports.getSchoolTrainingField = function (schoolid, callback) {
-    trainingfiledModel.find({"driveschool": new mongodb.ObjectId(schoolid)}, function (err, data) {
-        console.log(data);
+    var searchInfo = {
+        "driveschool": new mongodb.ObjectId(schoolid),
+        is_validation:true
+    };
+    trainingfiledModel.find(searchInfo)
+        .exec(function (err, data) {
         if (err || !data) {
             return callback("查询出错：" + err);
         }
@@ -665,16 +789,153 @@ exports.getSchoolTrainingField = function (schoolid, callback) {
                 var listone = {
                     id: r._id,
                     name: r.fieldname,
-                    //latitude: r.latitude,
-                    //longitude: r.longitude,
                     address: r.address,
                     //班车
-                    schoolbusroute: "暂无"
+                    school_bus: "暂无"
                 }
                 list.push(listone);
             })
 
             return callback(null, list);
         })
-    })}
+    })
+}
 
+//获取教练详情
+exports.getCoachInfoServer = function (userid, callback) {
+    coachmode.findById(new mongodb.ObjectId(userid))
+        .populate("tagslist", " _id  tagname tagtype color")
+        .populate("trainfield", " _id  pictures fieldname phone")
+        .populate("serverclasslist", "classname carmodel cartype classdesc price onsaleprice", {"is_using": true})
+        .exec(function (err, coachdata) {
+            if (err || !coachdata) {
+                return callback("查询教练出错：" + err);
+            }
+            var returnmodel = new resbasecoachinfomode(coachdata);
+            return callback(err, returnmodel);
+        });
+};
+
+//获取验证码
+exports.getCodebyMolile = function (mobilenumber, callback) {
+    smsVerifyCodeModel.findOne({mobile: mobilenumber}, function (err, instace) {
+            if (err) {
+                return callback("发送验证码错误: " + err);
+            }
+            if (instace) {
+                var now = new Date();
+                //console.log(now-instace.createdTime);
+                if ((now - instace.createdTime) < resendTimeout * 1000) {
+                    return callback("您发送过于频繁，请稍后再发");
+                }
+                else {
+                    instace.remove(function (err) {
+                        if (err) {
+                            return callback("发送验证码错误: " + err);
+                        }
+                        if (mobilenumber.substr(0, 8) == "18444444") {
+                            addtestsmscode(mobilenumber, callback)
+                        } else {
+                            smscodemodule(mobilenumber, function (err, response) {
+                                return sendSmsResponse(err, response, callback);
+                            });
+                        }
+                    });
+                }
+
+            }
+            else {
+                // now send
+                if (mobilenumber.substr(0, 8) == "18444444") {
+                    addtestsmscode(mobilenumber, callback)
+                } else {
+                    smscodemodule(mobilenumber, function (error, response) {
+                        return sendSmsResponse(error, response, callback);
+                    });
+                }
+            }
+
+
+        }
+    );
+};
+
+// 发送
+var sendSmsResponse = function (error, response, callback) {
+    if (error || response.statusCode != 200) {
+        return callback("Error occured in sending sms: " + error);
+    }
+
+    // get back to user
+    return callback(null, "Error occured in sending sms: " + error);
+};
+
+//搜索驾校以及教练
+exports.searchList = function (q, callback) {
+    var name = q.name;
+    async.waterfall([
+        //搜索驾校
+        function (cb) {
+            schoolModel.find({"name": new RegExp(name)})
+                .exec(function (err, driverschool) {
+                    if (err) {
+                        return callback("搜索失败: " + err);
+                    }
+                    process.nextTick(function () {
+                        var driveschoollist = [];
+                        driverschool.forEach(function (r, idx) {
+                            var oneschool = {
+                                id: r._id,
+                                name: r.name,
+                                logo_img: r.logoimg,
+                                latitude: r.latitude,
+                                longitude: r.longitude,
+                                address: r.address,
+                                maxprice: r.maxprice,
+                                minprice: r.minprice,
+                                passingrate: r.passingrate
+                            }
+                            driveschoollist.push(oneschool);
+                        });
+                        cb(err, {school_list: driveschoollist});
+                    });
+                });
+        },
+        function (data, cb) {
+            coachmode.find({"name": new RegExp(name)})
+                .populate("serverclasslist", "classname carmodel cartype  price onsaleprice", {"is_using": true})
+                .exec(function (err, coachlist) {
+                    if (err || !coachlist) {
+                        console.log(err);
+                        callback("查找教练出错" + err);
+
+                    } else if (coachlist.length == 0) {
+                        return cb(null, data);
+                    }
+                    else {
+                        process.nextTick(function () {
+                            var rescoachlist = [];
+                            coachlist.forEach(function (r, idx) {
+                                var returnmodel = {
+                                    id: r._id,
+                                    name: r.name,
+                                    head_img: r.headportrait,
+                                    level: r.starlevel,
+                                    pass_rate: r.passrate,
+                                    seniority: r.Seniority,
+                                    subjects: r.subject
+                                }
+                                rescoachlist.push(returnmodel);
+                            });
+                            data.coach_list = rescoachlist;
+                            return cb(null, data);
+                        });
+                    }
+
+                });
+
+        }
+    ], function (err, result) {
+        return callback(err, result);
+    });
+};
