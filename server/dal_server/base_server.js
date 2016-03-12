@@ -54,7 +54,7 @@ exports.getCityByPosition = function (q, callback) {
             });
         }
     })
-}
+};
 //  获取城市列表
 exports.getCityList = function (callback) {
 
@@ -67,7 +67,7 @@ exports.getCityList = function (callback) {
         } else {
             var search = {
                 "is_open": true
-            }
+            };
             cityInfoModel.find(search)
                 .select("indexid name")
                 .sort({index: 1})
@@ -75,7 +75,6 @@ exports.getCityList = function (callback) {
                     if (err) {
                         return callback("查找出错" + err);
                     }
-                    // console.log(data);
                     var list = _.map(data, function (item, i) {
                         var one = {
                             id: item.indexid,
@@ -97,7 +96,6 @@ exports.getSchoolList = function (searchinfo, callback) {
     var longitude = searchinfo.longitude || 0;
     //微信坐标转换为百度地图坐标
     baiDuUtil.weixintobaidu(latitude, longitude, function (err, data) {
-        //console.log(data);
         //查询条件
         var searchcondition = {
             is_validation: true
@@ -105,7 +103,6 @@ exports.getSchoolList = function (searchinfo, callback) {
         //判断城市是否为空
         if (searchinfo.cityname == "") {
             //如果坐标为空
-            console.log("1111");
             if (data.lat == 0 && data.lot == 0) {
                 searchcondition.city = new RegExp("北京市");
             } else {
@@ -119,7 +116,6 @@ exports.getSchoolList = function (searchinfo, callback) {
                     } else if (searchinfo.ordertype == 3) {
                         ordercondition.minprice = 1;
                     }
-                    console.log(searchcondition);
                     schoolModel.find(searchcondition)
                         .select("")
                         .sort(ordercondition)
@@ -175,7 +171,6 @@ exports.getSchoolList = function (searchinfo, callback) {
                 });
             }
         } else {
-            console.log("2222");
             var ordercondition = {};
             // 0 默认 1距离 2 评分  3 价格
             if (searchinfo.ordertype == 2) {
@@ -184,7 +179,6 @@ exports.getSchoolList = function (searchinfo, callback) {
                 ordercondition.minprice = 1;
             }
             searchcondition.city = new RegExp(searchinfo.cityname);
-            console.log(searchcondition);
             schoolModel.find(searchcondition)
                 .select("")
                 .sort(ordercondition)
@@ -303,15 +297,15 @@ exports.getSchoolInfoserver = function (schoolid, callback) {
             }
             trainingfiledModel.find(searchInfo).count()
                 .exec(function (err, count) {
-                if (err) {
-                    return callback("查询出错：" + err);
-                } else {
-                    trainList.training_num = count;
-                    cb(err,trainList);
-                }
-            })
+                    if (err) {
+                        return callback("查询出错：" + err);
+                    } else {
+                        trainList.training_num = count;
+                        cb(err, trainList);
+                    }
+                })
         },
-        //获取该驾校的班车信息
+        //获取该驾校的班车数量
         function (trainList, cb) {
             schoolBusRouteModel.find({"driveschool": new mongodb.ObjectId(schoolid)}).count()
                 .exec(function (err, count) {
@@ -319,7 +313,7 @@ exports.getSchoolInfoserver = function (schoolid, callback) {
                         return callback("查询出错：" + err);
                     } else {
                         trainList.bus_num = count;
-                        cb(err,trainList);
+                        cb(err, trainList);
                     }
                 })
         },
@@ -400,29 +394,29 @@ exports.postUserApplySchool = function (applyinfo, callback) {
 exports.getSchoolTrainingField = function (schoolid, callback) {
     var searchInfo = {
         "driveschool": new mongodb.ObjectId(schoolid),
-        is_validation:true
+        is_validation: true
     };
     trainingfiledModel.find(searchInfo)
         .exec(function (err, data) {
-        if (err || !data) {
-            return callback("查询出错：" + err);
-        }
-        process.nextTick(function () {
-            var list = [];
-            data.forEach(function (r, index) {
-                var listone = {
-                    id: r._id,
-                    name: r.fieldname,
-                    address: r.address,
-                    //班车
-                    school_bus: "暂无"
-                }
-                list.push(listone);
-            })
+            if (err || !data) {
+                return callback("查询出错：" + err);
+            }
+            process.nextTick(function () {
+                var list = [];
+                data.forEach(function (r, index) {
+                    var listone = {
+                        id: r._id,
+                        name: r.fieldname,
+                        address: r.address,
+                        //班车
+                        school_bus: "暂无"
+                    }
+                    list.push(listone);
+                })
 
-            return callback(null, list);
+                return callback(null, list);
+            })
         })
-    })
 }
 
 //获取教练详情
@@ -448,7 +442,6 @@ exports.getCodebyMolile = function (mobilenumber, callback) {
             }
             if (instace) {
                 var now = new Date();
-                //console.log(now-instace.createdTime);
                 if ((now - instace.createdTime) < resendTimeout * 1000) {
                     return callback("您发送过于频繁，请稍后再发");
                 }
@@ -515,9 +508,9 @@ exports.searchList = function (q, callback) {
                                 latitude: r.latitude,
                                 longitude: r.longitude,
                                 address: r.address,
-                                maxprice: r.maxprice,
-                                minprice: r.minprice,
-                                passingrate: r.passingrate
+                                max_price: r.maxprice,
+                                min_price: r.minprice,
+                                passing_rate: r.passingrate
                             }
                             driveschoollist.push(oneschool);
                         });
@@ -562,4 +555,30 @@ exports.searchList = function (q, callback) {
     ], function (err, result) {
         return callback(err, result);
     });
+};
+
+// 获取班车列表
+exports.getSchoolBus = function (schoolId, callback) {
+
+    schoolBusRouteModel.find(schoolId)
+        .exec(function (err, data) {
+            if (err || !data) {
+                return callback("查询出错：" + err);
+            }
+            process.nextTick(function () {
+                var list = [];
+                data.forEach(function (r, index) {
+                    var listone = {
+                        id: r._id,
+                        school_id: r.schoolid,
+                        route_name: r.routename,
+                        route_content: r.routecontent
+                    };
+                    list.push(listone);
+                });
+
+                return callback(null, list);
+            })
+        })
+
 };

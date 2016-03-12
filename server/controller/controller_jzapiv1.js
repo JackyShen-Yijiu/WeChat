@@ -41,7 +41,6 @@ exports.getSchoolList = function (req, res) {
         count: req.query.count ? parseInt(req.query.count) : 10,
         //schoolname: req.query.schoolname ? req.query.school_name : ""
     }
-    console.log(q.cityname);
     service.getSchoolList(q, function (err, data) {
         if (err) {
             return res.json(new BaseReturnInfo(0, err, []));
@@ -74,7 +73,6 @@ exports.getSchoolCoach = function (req, res) {
         name: req.query.name,
         classId: req.query.class_id
     }
-    //sconsole.log(coachinfo);
     if (coachinfo.schoolid === undefined || coachinfo.index === undefined) {
         return res.json(
             new BaseReturnInfo(0, "parms is wrong", ""));
@@ -126,7 +124,6 @@ exports.getSchoolTrainingField = function (req, res) {
 //获取教练信息
 exports.getCoachInfo = function (req, res) {
     var userId = req.params.coach_id;
-    console.log("调用 coachid = " + userId);
     service.getCoachInfoServer(userId, function (err, data) {
         if (err) {
             return res.json(new BaseReturnInfo(0, err, {}));
@@ -151,10 +148,8 @@ exports.fetchCode = function (req, res) {
             new BaseReturnInfo(0, "手机号错误", "")
         );
     }
-    //  console.log("fetchCode mobile:"+mobile)
     service.getCodebyMolile(mobile, function (err) {
         if (err) {
-            // console.log(number+"fabushi");
             return res.json(
                 new BaseReturnInfo(0, err, ""));
         }
@@ -187,6 +182,18 @@ exports.searchList = function (req, res) {
         name: req.query.name ? req.query.name : ""
     };
     service.searchList(q, function (err, data) {
+        if (err) {
+            return res.json(new BaseReturnInfo(0, err, []));
+        } else {
+            return res.json(new BaseReturnInfo(1, "", data));
+        }
+    });
+};
+
+// 获取班车列表
+exports.getSchoolBus = function (req, res) {
+    var schoolId = req.params.school_id;
+    service.getSchoolBus(schoolId, function (err, data) {
         if (err) {
             return res.json(new BaseReturnInfo(0, err, []));
         } else {
