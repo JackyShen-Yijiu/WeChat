@@ -511,7 +511,6 @@ exports.getSchoolInfoserver = function (schoolid, callback) {
                     if (err) {
                         return callback("查询出错：" + err);
                     } else {
-                        console.log(count);
                         busList.bus_num = count;
                         cb(err, busList);
                     }
