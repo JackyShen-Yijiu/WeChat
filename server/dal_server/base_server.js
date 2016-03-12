@@ -164,7 +164,11 @@ exports.getSchoolList = function (searchinfo, callback) {
                                     if (searchinfo.ordertype == 0 || searchinfo.ordertype == 1) {
                                         driveschoollist = _.sortBy(driveschoollist, "distance")
                                     }
-                                    callback(null, driveschoollist);
+                                    var data1 = {
+                                        list: driveschoollist,
+                                        city_name: cityName
+                                    };
+                                    callback(null, data1);
                                 });
                             }
                         })
@@ -294,7 +298,7 @@ exports.getSchoolInfoserver = function (schoolid, callback) {
             var searchInfo = {
                 "driveschool": new mongodb.ObjectId(schoolid),
                 "is_validation": true
-            }
+            };
             trainingfiledModel.find(searchInfo).count()
                 .exec(function (err, count) {
                     if (err) {
@@ -391,34 +395,61 @@ exports.getSchoolCoach = function (coachinfo, callback) {
 exports.postUserApplySchool = function (applyinfo, callback) {
 }
 
+var getfildbus=function(fildid,buslist){
+    var fildbuslist=[];
+    for(var i=0 ;i<buslist.length;i++){
+        if (buslist[i].training_id==fildid){
+            fildbuslist.push(fildbuslist);
+        }
+    }
+    return fildbuslist;
+}
 // 获取驾校下面的练车场
 exports.getSchoolTrainingField = function (schoolid, callback) {
-    var searchInfo = {
-        "driveschool": new mongodb.ObjectId(schoolid),
-        is_validation: true
-    };
-    trainingfiledModel.find(searchInfo)
-        .exec(function (err, data) {
-            if (err || !data) {
-                return callback("查询出错：" + err);
-            }
-            process.nextTick(function () {
-                var list = [];
-                data.forEach(function (r, index) {
-                    var listone = {
-                        id: r._id,
-                        name: r.fieldname,
-                        address: r.address,
-                        //班车
-                        school_bus: "暂无"
+    //var searchInfo = {
+    //    "driveschool": new mongodb.ObjectId(schoolid),
+    //    is_validation: true
+    //};
+    //trainingfiledModel.find(searchInfo)
+    //    .exec(function (err, data) {
+    //        if (err || !data) {
+    //            return callback("查询出错：" + err);
+    //        }
+    //        process.nextTick(function () {
+    //            var list = [];
+    //            data.forEach(function (r, index) {
+    //                var listone = {
+    //                    id: r._id,
+    //                    name: r.fieldname,
+    //                    address: r.address,
+    //                    //班车
+    //                    school_bus: "暂无"
+    //                };
+    //                list.push(listone);
+    //            })
+    //
+    //            return callback(null, list);
+    //        })
+    //    })
+            // 获取驾校练车场
+            cachedata.getSchooltrainingfiled(schoolid, function (err, filddata) {
+               cachedata.getSchoolBusRoute(schoolid, function (err, busdata) {
+                   var a=[];
+                    for (var i = 0;i < filddata.length;i ++) {
+                        var training_id = filddata[i]._id;
+                        var fildbus= getfildbus(training_id, busdata);
+                        var b={
+                            id : filddata[i]._id,
+                            name : filddata[i].fieldname,
+                            address : filddata[i].address,
+                            bus_list : fildbus
+                        };
+                        a.push(b);
                     }
-                    list.push(listone);
-                })
-
-                return callback(null, list);
-            })
-        })
-}
+                    return callback(null,a);
+                });
+            });
+};
 
 //获取教练详情
 exports.getCoachInfoServer = function (userid, callback) {

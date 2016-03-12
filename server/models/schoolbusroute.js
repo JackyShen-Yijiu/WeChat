@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var SchoolBusRouteSchema=new Schema({
     schoolid :{type: Schema.Types.ObjectId, ref: 'DriveSchool'},   //学校id
+    training_id : {type: String,default:""}, //班车id
     routename:{type:String,default:""},  // 路线名称
     routecontent:{type:String,default:""}  // 路线详情
 });

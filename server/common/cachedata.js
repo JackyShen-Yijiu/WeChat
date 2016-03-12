@@ -40,6 +40,22 @@ var basedataFunc = {
                 return callback(null,data);
             }
         })
+    },
+    getTrainingBusRoute: function (training_id, callback) {
+        cache.get("trainingbusroute" + training_id, function (err, data) {
+            //console.log(data);
+            if (!data || data.length == 0) {
+                //console.log(data);
+                trainingfiledModel.find({"training_id": new mongodb.ObjectId(training_id)}, function (err, trainingbusroute) {
+                    cache.set("trainingbusroute" + training_id, trainingbusroute, 60 * 5, function (err) {
+                    });
+                    return callback(null, trainingbusroute);
+                })
+            }
+            else {
+                return callback(null, data);
+            }
+        })
     }
 }
 
