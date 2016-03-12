@@ -231,7 +231,11 @@ exports.getSchoolList = function (searchinfo, callback) {
                             if (searchinfo.ordertype == 0 || searchinfo.ordertype == 1) {
                                 driveschoollist = _.sortBy(driveschoollist, "distance")
                             }
-                            callback(null, driveschoollist);
+                            var data1 = {
+                                list: driveschoollist,
+                                city_name: searchinfo.cityname
+                            };
+                            callback(null, data1);
                         });
                     }
                 })
