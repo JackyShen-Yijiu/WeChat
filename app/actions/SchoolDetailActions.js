@@ -10,7 +10,7 @@ class SchoolDetailActions {
 
     getSchoolDetail(schoolId) {
     	$.ajax({
-            url: '/jzapi/v1/getschoolinfo/' + schoolId
+            url: '/jzapi/v1/getSchoolInfo/' + schoolId
         })
         .done(response => {
             if(response.type === 1) {

@@ -10,7 +10,7 @@ class CoachDetailActions {
 
     getCoachDetail(coachId) {
     	$.ajax({
-            url: '/jzapi/v1/getschoolinfo/' + schoolId
+            url: '/jzapi/v1/getCoachInfo/' + coachId
         })
         .done(response => {
             if(response.type === 1) {

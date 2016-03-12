@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 
 import SortBar from './SortBar';
 import School from './common/School';
@@ -27,35 +28,39 @@ class SchoolList extends React.Component {
     }
 
     handleSort(index) {
-        SchoolListActions.getSchoolList({ ordertype: index + 1 });
+        let payload = Object.assign(this.props.params, { order_type: index + 1 });
+        SchoolListActions.getSchoolList(payload);
     }
 
     render() {
-        let schoolListNodes = this.state.schoolList.map((school) => {
+        let list = this.state.list ? this.state.list.map((school) => {
             return (
                 <School key={school.id} school={school} />
             );
-        });
+        }) : 'asdfasdf';
 
         return (
             <div className="sl-wrap">
                 <header className="sl-header">
                     <div className="address">
-                        <a href="cities" className="city">北京市 <i className="fa fa-angle-down"></i></a>
+                        <Link to="/cities" className="city">
+                            {this.props.params.city_name || '北京市'}
+                            <i className="icon-more_down"></i>
+                        </Link>
                     </div>
                     <div className="searchbar">
-                        <a href="search" className="search">
-                            <i className="fa fa-search"></i> 请输入驾校或教练进行搜索
-                        </a>
+                        <Link to="search" className="search">
+                            <i className="icon-search"></i> 请输入驾校或教练进行搜索
+                        </Link>
                     </div>
                     <div className="user">
-                        <a href="user"><i className="fa fa-user"></i></a>
+                        <Link to="/user"><i className="icon-user"></i></Link>
                     </div>
                 </header>
-                <SortBar sortType="0" handleSort={this.handleSort}/>
+                <SortBar sortType="0" handleSort={this.handleSort.bind(this)}/>
                 <div className="sl-main">
                     <div className="sl-list">
-                        {schoolListNodes}
+                        {list}
                     </div>
                     <a href="#" className="list-footer">加载更多</a>
                 </div>

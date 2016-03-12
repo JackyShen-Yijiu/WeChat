@@ -4,11 +4,11 @@ import SchoolListActions from '../actions/SchoolListActions';
 class SchoolListStore {
     constructor() {
         this.bindActions(SchoolListActions);
-        this.schoolList = [];
+        this.list = [];
     }
 
     onGetSchoolListSuccess(data) {
-        this.schoolList = data;
+        this.list = data;
     }
 
     onGetSchoolListFail(errorMessage) {

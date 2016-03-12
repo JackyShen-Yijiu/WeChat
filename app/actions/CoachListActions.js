@@ -11,13 +11,12 @@ class CoachListActions {
     getCoachList(payload) {
         let params = {
             index: 1,
-            count: 10
+            count: 1000,
+            class_id: payload.lesson_id
         };
-
-        Object.assign(params, payload);
         
         $.ajax({
-            url: '/jzapi/v1/getSchoolCoach/' + payload.id,
+            url: '/jzapi/v1/getSchoolCoach/' + payload.school_id,
             data: params
         })
         .done(response => {

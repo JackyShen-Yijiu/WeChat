@@ -14,7 +14,7 @@ class SortBar extends React.Component {
     }
 
     render() {
-        let sortBtns = ['评分最高', '距离最近', '价格最低'].map((sort, index) => {
+        let sortBtns = ['距离最近', '评分最高', '价格最低'].map((sort, index) => {
             let isActive = this.state.sortType == index ? 'active' : '';
             return (
                 <a key={index} 

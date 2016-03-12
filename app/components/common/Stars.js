@@ -11,11 +11,11 @@ class Stars extends React.Component {
         for (var i = 1; i <= 5; i++) {
         	if(i <= level)
 	        	stars.push(
-	        		<i key={i} className="fa fa-star active"></i>
+	        		<i key={i} className="icon-star_fill"></i>
 	        	);
 	        else 
 	        	stars.push(
-	        		<i key={i} className="fa fa-star"></i>
+	        		<i key={i} className="icon-star"></i>
 	        	);
         }
 
