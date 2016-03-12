@@ -68,7 +68,20 @@ exports.getSchoolCoach = function (req, res) {
     });
 
 };
-
+// 获取用户可以使用的F吗
+exports.getUserAvailableFcode=function(req,res){
+    var openid=req.query.openid;
+    if (openid===undefined){
+        return res.json(
+            new BaseReturnInfo(0,"参数不完整",""));
+    }
+    service.getUserAvailableFcode(openid,function(err,data){
+        if(err){
+            return res.json(new BaseReturnInfo(0,err,[]));
+        }
+        return res.json(new BaseReturnInfo(1,"",data));
+    })
+}
 // 用户报名接口
 exports.postUserApplySchool=function(req,res){
     var applyinfo= {
@@ -87,9 +100,37 @@ exports.postUserApplySchool=function(req,res){
         return res.json(
             new BaseReturnInfo(0,"参数不完整",""));
     };
-
-
-
+    service.postUserApplySchool(applyinfo,function(err,data){
+        if(err){
+            return res.json(new BaseReturnInfo(0,err,[]));
+        }
+        return res.json(new BaseReturnInfo(1,"",data));
+    })
+};
+function getClientIp(req) {
+    return req.headers['x-forwarded-for'] ||
+        req.connection.remoteAddress ||
+        req.socket.remoteAddress ||
+        req.connection.socket.remoteAddress;
+};
+// 生成用户支付订单
+exports.postUserCreateOrder=function(req,res){
+    var applyinfo= {
+        fcode : req.body.Ycode,
+        paytype:req.body.paytype?req.body.paytype:1,  // 支付方式 1  线下支付  2 线上支付
+        openid:req.body.openid,
+        clientip:getClientIp(req)
+    };
+    if (applyinfo.openid===undefined){
+        return res.json(
+            new BaseReturnInfo(0,"参数不完整",""));
+    }
+    service.postUserCreateOrder(applyinfo,function(err,data){
+        if(err){
+            return res.json(new BaseReturnInfo(0,err,[]));
+        }
+        return res.json(new BaseReturnInfo(1,"",data));
+    })
 }
 
 // 获取驾校下面的训练场

@@ -13,5 +13,7 @@ Router.get("/getjssign",weixincontroller.weiXinJsSdkSign);
 Router.get("/authorizeUser",weixincontroller.authorizeUser);
 // 微信回传
 Router.get("/authorizeUsercallback",weixincontroller.authorizeUsercallback);
+//微信支付回调
+Router.post("/paycallback",weixincontroller.paycallback);
 
 module.exports = Router;

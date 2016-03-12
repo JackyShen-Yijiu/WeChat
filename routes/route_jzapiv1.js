@@ -20,6 +20,11 @@ Router.get("/getSchoolCoach/:schoolid", baseController.getSchoolCoach);
 
 // 用户报名
 Router.post("/userApplySchool",baseController.postUserApplySchool);
+// 用户支付生成订单
+Router.post("/userCreateOrder",baseController.postUserCreateOrder);
+// 获取我领取的F吗
+Router.get("/getUserAvailableFcode",baseController.getUserAvailableFcode);
+
 
 // 获取训练场地
 Router.get("/getSchoolTrainingField/:schoolid", baseController.getSchoolTrainingField);
