@@ -297,7 +297,11 @@ exports.getSchoolInfoserver = function (schoolid, callback) {
         },
         //获取该驾校的训练场数目
         function (trainList, cb) {
-            trainingfiledModel.find({"driveschool": new mongodb.ObjectId(schoolid)}).count()
+            var searchInfo = {
+                "driveschool": new mongodb.ObjectId(schoolid),
+                "is_validation": true
+            }
+            trainingfiledModel.find(searchInfo).count()
                 .exec(function (err, count) {
                 if (err) {
                     return callback("查询出错：" + err);
@@ -394,8 +398,12 @@ exports.postUserApplySchool = function (applyinfo, callback) {
 
 // 获取驾校下面的练车场
 exports.getSchoolTrainingField = function (schoolid, callback) {
-    trainingfiledModel.find({"driveschool": new mongodb.ObjectId(schoolid)}, function (err, data) {
-        console.log(data);
+    var searchInfo = {
+        "driveschool": new mongodb.ObjectId(schoolid),
+        is_validation:true
+    };
+    trainingfiledModel.find(searchInfo)
+        .exec(function (err, data) {
         if (err || !data) {
             return callback("查询出错：" + err);
         }

@@ -43,7 +43,6 @@ exports.close = function () {
 }
 exports.CityiInfoModel = require("../models/cityinfo");
 exports.DriveSchoolModel = require('../models/driveschool');
-exports.TrainingFieldModel = require('../models/trainingfield');
 exports.SchoolBusRouteModel = require("../models/schoolbusroute");
 exports.VipServerModel = require("../models/vipserver");
 exports.ClassTypeModel = require('../models/calsstype');
