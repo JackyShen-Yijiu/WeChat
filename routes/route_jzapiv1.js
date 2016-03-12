@@ -5,8 +5,9 @@ var express = require("express");
 var Router = express.Router();
 var baseController = require('../server/controller/controller_jzapiv1.js');
 
-//定位城市
+// 定位城市
 Router.get("/getCityByPosition", baseController.getCityByPosition);
+
 // 获取城市列表
 Router.get("/getCity", baseController.getCity);
 
@@ -20,6 +21,7 @@ Router.get("/getSchoolInfo/:school_id", baseController.getSchoolInfo);
 Router.get("/getSchoolCoach/:school_id", baseController.getSchoolCoach);
 
 // 用户报名
+
 Router.post("/userApplySchool",baseController.postUserApplySchool);
 // 用户支付生成订单
 Router.post("/userCreateOrder",baseController.postUserCreateOrder);
@@ -36,11 +38,14 @@ Router.get("/getCoachInfo/:coach_id", baseController.getCoachInfo);
 // 获取验证码
 Router.get("/code/:mobile", baseController.fetchCode);
 
-//获取二维码
-Router.get("/createQrCode",baseController.createQrCode);
+// 获取二维码
+Router.get("/createQrCode", baseController.createQrCode);
 
-//搜索驾校和教练
+// 搜索驾校和教练
 Router.get("/searchList", baseController.searchList);
+
+// 获取班车列表
+Router.get("/getSchoolBus/:school_id", baseController.getSchoolBus);
 
 //根据班型ID查询班型
 //Router.get("/searchClass/:class_id", baseController.searchClass);
