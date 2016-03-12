@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 
 import Stars from './Stars';
 
@@ -32,7 +33,7 @@ class School extends React.Component {
         }
 
 		return (
-			<a href={ '/school/' + school.id} className="school-item">
+			<Link to={ '/school/' + school.id} className="school-item">
                 <div className="left">
                     <img src={imgUrl} alt=""/>
                 </div>
@@ -46,7 +47,7 @@ class School extends React.Component {
                     <div className="distance">{distance}</div>
                     <div className="coach">{school.coach_count}名认证教练</div>
                 </div>
-            </a>
+            </Link>
 		);
 	}
 }

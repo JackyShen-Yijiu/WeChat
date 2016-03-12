@@ -11,16 +11,17 @@ class SchoolListActions {
     getSchoolList(payload) {
         let params = {
             index: 1,
-            count: 10,
+            count: 10000,
             latitude: '40.096263',
             longitude: '116.1270',
-            ordertype: 1
+            order_type: 1,
+            city_name: '北京市'
         };
 
         Object.assign(params, payload);
 
         $.ajax({
-            url: '/jzapi/v1/searchSchool',
+            url: '/jzapi/v1/getSchoolList',
             data: params
         })
         .done(response => {

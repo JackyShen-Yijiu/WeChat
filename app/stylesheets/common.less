@@ -11,6 +11,18 @@ a {
     }
 }
 
+.mt20 {
+    margin-top: 20px;
+}
+
+.mb20 {
+    margin-bottom: 20px;
+}
+
+.nofloat {
+    float: none !important;
+}
+
 .text() {
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -21,15 +33,12 @@ a {
     overflow: hidden;
     margin-bottom: 12px;
     margin-top: 4px;
-    width: 75px;
+    width: 80px;
     float: right;
     i {
         float: left;
         margin-right: 2px;
-        color: @gray-light;
-        &.active {
-            color: @red;
-        }
+        color: @orange;
     }
 }
 
@@ -266,7 +275,8 @@ a {
     }
     .footer {
         position: relative;
-        .lesson,.time {
+        .lesson,
+        .time {
             color: @gray;
             font-size: 16px;
             line-height: 30px;
@@ -293,7 +303,6 @@ a {
         i {
             line-height: 20px;
             color: @gray-light;
-            font-size: 20px;
         }
     }
 }
@@ -322,9 +331,7 @@ a {
         .title {
             color: @gray;
         }
-        .icon {
-
-        }
+        .icon {}
     }
 }
 
@@ -335,18 +342,19 @@ a {
         border-left: 0;
         border-right: 0;
         .school-info {
-            overflow: hidden;
+            /*overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
             -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
+            -webkit-box-orient: vertical;*/
             color: @gray;
         }
     }
 }
 
-.lesson-list-group, 
-.order-list-group { // 班型列表/订单列表
+.lesson-list-group,
+.order-list-group {
+    // 班型列表/订单列表
     margin-bottom: 0;
     .list-group-item {
         border-radius: 0;
@@ -370,21 +378,28 @@ a {
     }
 }
 
-.ground-list-group { // 训练场地
+.simple-list-group {
+    // 训练场地
     .list-group-item {
-        .title,.address,.desc {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        .title,
+        .address,
+        .desc {
             line-height: 24px;
         }
         .title {
             font-size: 16px;
             font-weight: 600;
         }
-        .address,.desc {
+        .address,
+        .desc {
             color: @gray;
         }
         .desc {
             span {
-                margin-left: 74px;
+                //margin-left: 74px;
                 color: @gray;
             }
         }
@@ -424,8 +439,8 @@ a {
     .list-group-item {
         position: relative;
         border-radius: 0;
-        border-left: 0;
-        border-right: 0;
+        border-left: none;
+        border-right: none;
         border-top: none;
         padding-left: 80px;
         margin-bottom: 0;
@@ -458,9 +473,42 @@ a {
     }
 }
 
+.city-list-group {
+    // 城市列表
+    background-color: @white;
+    border-bottom: 1px @gray-darker solid;
+    border-top: 1px @gray-darker solid;
+    .list-group-item { 
+        position: relative;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        border-top: none;
+        margin-bottom: 0;
+        line-height: 40px;
+        min-height: 60px;
+        .title {
+            float: left;
+        }
+        .items {
+            margin-left: 80px;
+        }
+        .item {
+            line-height: 40px;
+            padding: 6px 12px;
+            color: @white;
+            background-color: @blue-base;
+            border-radius: 4px;
+            margin-right: 30px;
+            margin-bottom: 10px; 
+        }
+    }
+
+}
+
 .list-footer {
     // 列表页脚
-    display: block;
+    display: none;
     color: #333;
     height: 44px;
     text-align: center;
@@ -471,5 +519,3 @@ a {
         color: #333;
     }
 }
-
-

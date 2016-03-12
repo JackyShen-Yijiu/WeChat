@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 
 class Lesson extends React.Component {
 	constructor(props) {
@@ -7,17 +8,20 @@ class Lesson extends React.Component {
 
 	render() {
 		let lesson = this.props.lesson;
+		let schoolId = this.props.schoolId;
+		let coachId = this.props.coachId;
+
 		return (
 			<li className="list-group-item">
             	<div className="lesson-item">
             		<div className="header">
-	                    <span className="title">{lesson.carmodel.code} {lesson.classname}</span>
-	                    <span className="price">¥ {lesson.onsaleprice}</span>
+	                    <span className="title">{lesson.car_model.code} {lesson.name}</span>
+	                    <span className="price">¥ {lesson.price}</span>
 	                </div>
-	                <div className="info">{lesson.classdesc}</div>
+	                <div className="info">{lesson.desc}</div>
 	                <div className="footer">
-	                    <span className="time"><i className="fa fa-clock-o"></i> {lesson.classchedule}</span>
-                        <a href={'/signup/' + lesson.classid} className="btn btn-default btn-signup">报名</a>
+	                    <span className="time"><i className="icon-time"></i> {lesson.schedule}</span>
+                        <Link to={'/signup/' + schoolId + '/' + coachId + '/' + lesson.id} className="btn btn-default btn-signup">报名</Link>
 	                </div>
             	</div>
             </li>

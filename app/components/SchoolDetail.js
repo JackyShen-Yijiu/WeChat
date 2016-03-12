@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 
 import SchoolDetailActions from '../actions/SchoolDetailActions';
 import SchoolDetailStore from '../stores/SchoolDetailStore';
@@ -30,9 +31,9 @@ class SchoolDetail extends React.Component {
 		let detail = this.state.detail;
 
 		// 班型列表
-		let lessonList = detail.class_list ? detail.class_ist.map((lesson) => {
+		let lessonList = detail.class_list ? detail.class_list.map((lesson) => {
 			return (
-				<Lesson key={lesson.id} lesson={lesson}/>
+				<Lesson key={lesson.id} lesson={lesson} schoolId={detail.id} coachId={0}/>
 			);
 		}) : '';
 
@@ -47,6 +48,43 @@ class SchoolDetail extends React.Component {
             price = '¥' + minPrice + '~¥' + maxPrice; 
         }
 
+        // 营业时间
+        let hours = detail.hours || '暂无信息';
+
+        // 教练信息 ／ 班车信息 ／ 场地信息
+        let coachCount = detail.coach_count;
+        let groundCount = detail.ground_count;
+        let shuttleCount = detail.bus_count;
+
+        let coachLink = (
+        	<Link to={'/school/' + detail.id + '/coachs'} className="list-group-item">教练信息 <i className="icon-more_right pull-right"></i></Link>
+        );
+        if(coachCount <= 0) {
+        	coachLink = (
+	        	<li  className="list-group-item">教练信息 <span className="pull-right">暂无信息</span></li>
+	        );
+        }
+
+        let shuttleLink = (
+        	<Link to={'/school/' + detail.id + '/shuttles'} className="list-group-item">班车信息 <i className="icon-more_right pull-right"></i></Link>
+        );
+        if(shuttleCount <= 0) {
+        	shuttleLink = (
+	        	<li  className="list-group-item">班车信息 <span className="pull-right">暂无信息</span></li>
+	        );
+        }
+
+        let groundLink = (
+        	<Link to={'/school/' + detail.id + '/grounds/'} className="list-group-item">训练场地信息 <i className="icon-more_right pull-right"></i></Link>
+        );
+        if(groundCount <= 0) {
+        	groundLink = (
+	        	<li  className="list-group-item">训练场地信息 <span className="pull-right">暂无信息</span></li>
+	        );
+        }
+
+
+
 		return (
 			<div className="sd-wrap">
 		        <header className="sd-header">
@@ -57,38 +95,38 @@ class SchoolDetail extends React.Component {
 
 		        <ul className="list-group prop-list-group">
 		            <li className="list-group-item">
-		            	<span className="icon"><i className="fa fa-circle-o"></i></span>
+		            	<span className="icon"><i className="icon-money"></i></span>
 		            	<span className="title">价格：</span>
 		            	<span className="info">{price}</span>
 		            </li>
 		            <li className="list-group-item">
-		            	<span className="icon"><i className="fa fa-circle-o"></i></span>
+		            	<span className="icon"><i className="icon-location"></i></span>
 		            	<span className="title">地址：</span>
 		            	<span className="info">{detail.address}</span>
 		            </li>
 		            <li className="list-group-item">
-		            	<span className="icon"><i className="fa fa-rmb"></i></span>
+		            	<span className="icon"><i className="icon-pass"></i></span>
 		            	<span className="title">通过率：</span>
 		            	<span className="info">{detail.pass_rate}%</span>
 		            </li>
 		            <li className="list-group-item">
-		            	<span className="icon"><i className="fa fa-clock-o"></i></span>
+		            	<span className="icon"><i className="icon-time"></i></span>
 		            	<span className="title">营业时间：</span>
-		            	<span className="info">{detail.hours}</span>
+		            	<span className="info">{hours}</span>
 		            </li>
 		        </ul>
 
 		        <ul className="list-group info-list-group">
 		            <li className="list-group-item">驾校简介</li>
 		            <li className="list-group-item">
-		                <div className="school-info">{detail.introduction}</div>
+		                <div className="school-info">{detail.introduction || '暂无描述'}</div>
 		            </li>
 		        </ul>
 
 		        <ul className="list-group link-list-group">
-		            <a href={'/coachs/' + detail.id} className="list-group-item">教练信息 <i className="fa fa-angle-right pull-right"></i></a>
-		            <a href={'/shuttles/' + detail.id} className="list-group-item">班车信息 <i className="fa fa-angle-right pull-right"></i></a>
-		            <a href={'/grounds/' + detail.id} className="list-group-item">训练场地信息 <i className="fa fa-angle-right pull-right"></i></a>
+					{coachLink}
+					{shuttleLink}
+					{groundLink}		            
 		        </ul>
 				
 				<ul className="list-group lesson-list-group">

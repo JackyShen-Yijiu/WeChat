@@ -26,10 +26,12 @@ class CoachList extends React.Component {
     }
 
 	render() {
+		let lessonId = this.props.params.lesson_id;
+		let schoolId = this.props.params.school_id;
 		// 教练列表
-		let coachList = this.state.coachList.map((coach) => {
+		let list = this.state.list.map((coach) => {
 			return (
-				<Coach key={coach.id} coach={coach} />
+				<Coach key={coach.id} coach={coach} schoolId={schoolId} lessonId={lessonId}/>
 			);
 		});
 
@@ -37,7 +39,7 @@ class CoachList extends React.Component {
 			<div className="cl-wrap">
 		        <div className="cl-main">
 		            <div className="cl-list">
-		            	{coachList}
+		            	{list}
 		            </div>
 		        </div>
 		    </div>

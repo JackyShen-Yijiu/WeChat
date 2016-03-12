@@ -4,11 +4,11 @@ import CoachListActions from '../actions/CoachListActions';
 class CoachListStore {
     constructor() {
         this.bindActions(CoachListActions);
-        this.coachList = [];
+        this.list = [];
     }
 
     onGetCoachListSuccess(data) {
-        this.coachList = data;
+        this.list = data;
     }
 
     onGetCoachListFail(errorMessage) {

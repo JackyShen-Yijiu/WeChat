@@ -1,7 +1,7 @@
 import alt from '../alt';
 import CoachDetailActions from '../actions/CoachDetailActions';
 
-class SchoolDetailStore {
+class CoachDetailStore {
     constructor() {
         this.bindActions(CoachDetailActions);
         this.detail = {};
@@ -16,4 +16,4 @@ class SchoolDetailStore {
     }
 }
 
-export default alt.createStore(SchoolDetailStore);
+export default alt.createStore(CoachDetailStore);
