@@ -19,7 +19,6 @@ Router.get("/getSchoolInfo/:school_id", baseController.getSchoolInfo);
 // 获取教练列表
 Router.get("/getSchoolCoach/:school_id", baseController.getSchoolCoach);
 
-
 // 用户报名
 Router.post("/userApplySchool",baseController.postUserApplySchool);
 

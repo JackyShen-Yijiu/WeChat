@@ -19,7 +19,7 @@ var smsVerifyCodeModel = mongodb.SmsVerifyCodeModel;
 var resendTimeout = 60;
 var addtestsmscode = require('../Common/sendsmscode').addsmscode;
 var smscodemodule = require('../Common/sendsmscode').sendsmscode;
-
+var schoolBusRouteModel = mongodb.SchoolBusRouteModel;
 //  定位城市
 exports.getCityByPosition = function (q, callback) {
     var latitude = q.latitude || 0;
@@ -280,22 +280,45 @@ exports.getSchoolInfoserver = function (schoolid, callback) {
                 });
         },
         //获取该驾校的教练数
-        function(classList, cb) {
+        function (classList, cb) {
             var searchinfo = {
                 "driveschool": new mongodb.ObjectId(schoolid), "is_lock": false,
                 "is_validation": true
             };
             coachmode.find(searchinfo).count()
                 .exec(function (err, count) {
+                    if (err) {
+                        return callback("查询出错：" + err);
+                    } else {
+                        classList.coach_num = count;
+                        cb(err, classList);
+                    }
+                });
+        },
+        //获取该驾校的训练场数目
+        function (trainList, cb) {
+            trainingfiledModel.find({"driveschool": new mongodb.ObjectId(schoolid)}).count()
+                .exec(function (err, count) {
                 if (err) {
                     return callback("查询出错：" + err);
                 } else {
-                        cb(err, {class_list:classList,coach_num:count});
+                    trainList.training_num = count;
+                    cb(err,trainList);
                 }
-            });
+            })
         },
-        //获取该驾校的训练场数目
         //获取该驾校的班车信息
+        function (trainList, cb) {
+            schoolBusRouteModel.find({"driveschool": new mongodb.ObjectId(schoolid)}).count()
+                .exec(function (err, count) {
+                    if (err) {
+                        return callback("查询出错：" + err);
+                    } else {
+                        trainList.bus_num = count;
+                        cb(err,trainList);
+                    }
+                })
+        },
         function (schoolClass, cb) {
             schoolModel.findById(new mongodb.ObjectId(schoolid), function (err, schooldata) {
                 if (err || !schooldata) {
@@ -303,7 +326,9 @@ exports.getSchoolInfoserver = function (schoolid, callback) {
                 }
                 var data = new resbaseschoolinfomode(schooldata);
                 data.class_list = schoolClass.class_list;
-                data.coach_num = schoolClass.coach_num;
+                data.coach_count = schoolClass.coach_num;
+                data.ground_count = schoolClass.training_num;
+                data.bus_count = schoolClass.bus_num;
                 return cb(null, data);
             });
         }
@@ -530,25 +555,3 @@ exports.searchList = function (q, callback) {
         return callback(err, result);
     });
 };
-
-// 查询驾校下的教练数
-var coachCount = function (schoolId, callback) {
-    var searchinfo = {
-        "driveschool": new mongodb.ObjectId(schoolId), "is_lock": false,
-        "is_validation": true
-    };
-    coachmode.find(searchinfo).count()
-        .exec(function (err, count) {
-            callback(null, count);
-        });
-}
-
-//// 查询驾校下的班车数
-//var coachCount = function (schoolId, callback) {
-//
-//};
-//// 查询驾校下的场地数
-//var coachCount = function (schoolId, callback) {
-//
-//};
-// 根据班型ID查新班型信息
