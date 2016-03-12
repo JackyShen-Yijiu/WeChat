@@ -113,8 +113,9 @@ exports.postUserApplySchool = function (req, res) {
         classtypeid: req.body.classtypeid,
         openid: req.body.openid
     };
+    //console.log(applyinfo);
     if (applyinfo.name === undefined ||
-        applyinfo.mobile === undefined || applyinfo.userid === undefined
+        applyinfo.mobile === undefined
         || applyinfo.schoolid === undefined || applyinfo.coachid === undefined
         || applyinfo.openid === undefined || applyinfo.classtypeid === undefined) {
         return res.json(
@@ -122,7 +123,7 @@ exports.postUserApplySchool = function (req, res) {
     };
     service.postUserApplySchool(applyinfo,function(err,data){
         if(err){
-            return res.json(new BaseReturnInfo(0,err,[]));
+            return res.json(new BaseReturnInfo(0,err,""));
         }
         return res.json(new BaseReturnInfo(1,"",data));
     })
@@ -141,6 +142,15 @@ exports.postUserCreateOrder=function(req,res){
         openid:req.body.openid,
         clientip:getClientIp(req)
     };
+    if (applyinfo.clientip.length < 15)
+    {
+        applyinfo.clientip = applyinfo.clientip;
+    }
+    else
+    {
+        var nyIP = applyinfo.clientip.slice(7);
+        applyinfo.clientip = nyIP;
+    }
     if (applyinfo.openid===undefined){
         return res.json(
             new BaseReturnInfo(0,"参数不完整",""));

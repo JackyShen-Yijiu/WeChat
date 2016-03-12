@@ -19,6 +19,7 @@ function getWeXinInfo() {
 
 export default (
     <Route component={App}>
+        <Route path='/jzapi/weixin/authorizeUsercallback' onEnter={getWeXinInfo} component={SchoolList} />
         <Route path='/' onEnter={getWeXinInfo} component={SchoolList} />
         <Route path='/cities' component={CityList} />
         <Route path=':city_name/schools' component={SchoolList} />

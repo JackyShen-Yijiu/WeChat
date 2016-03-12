@@ -91,7 +91,7 @@ exports.authorizeUsercallback=function(req,res,next){
                         if (err) {
                             next({openid:openid});
                         } else {
-
+                            //res.redirect("http://nodeweixin.tunnel.qydev.com?opend="+openid);
                             next({openid:openid});
                         }
                     });

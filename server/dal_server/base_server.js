@@ -20,8 +20,10 @@ var smsVerifyCodeModel=mongodb.SmsVerifyCodeModel;
 var userModel=mongodb.UserModel;
 var userAvailableFcodeModel=mongodb.UserAvailableFcodeModel;
 var UserPayModel=mongodb.UserModel;
+var userCountModel=mongodb.UserCountModel;
 var wenpay=require("../weixin_server/wenxinpay")
 require('date-utils');
+var timeout = 60 * 5;
 
 var  getUserCount=function(callback){
     userCountModel.getUserCountInfo(function(err,data){
@@ -80,7 +82,7 @@ var defautfun= {
         newuser.mobile = applyinfo.mobile;
         newuser.create = new Date();
         newuser.openid = applyinfo.openid;
-        newuser.password = "";
+        newuser.password = "93e6bf49e71743b00cee035c0f3fc92f";
         newuser.loc.coordinates = [0, 0];
         newuser.source = 2;
         getUserCount(function (err, usercoutinfo) {
@@ -99,15 +101,15 @@ var defautfun= {
     },
     // 保存报名信息
     saveUserApplyinfo: function (userid, applyinfo, callback) {
-        usermodel.findById(new mongodb.ObjectId(applyinfo.userid), function (err, userdata) {
-            if (err | !userdata) {
+        userModel.findById(new mongodb.ObjectId(userid), function (err, userdata) {
+            if (err || !userdata) {
                 return callback("不能找到此用户");
             }
             //判断用户状态
             if (userdata.is_lock == true) {
                 return callback("此用户已锁定，请联系客服");
             }
-            if (userdata.applystate > appTypeEmun.ApplyState.Applying) {
+            if (userdata.applystate >=1) {
                 return callback("您已经报名成功，请不要重复报名");
             }
 
@@ -158,9 +160,9 @@ var defautfun= {
                             userdata.applyclasstypeinfo.price = classtypedata.price;
                             userdata.applyclasstypeinfo.onsaleprice = classtypedata.onsaleprice;
                             userdata.vipserverlist = classtypedata.vipserverlist;
-                            userdata.applystate = appTypeEmun.ApplyState.Applying;
+                            userdata.applystate = 1;
                             userdata.applyinfo.applytime = new Date();
-                            userdata.applyinfo.handelstate = appTypeEmun.ApplyHandelState.NotHandel;
+                            userdata.applyinfo.handelstate = 0;
                             userdata.scanauditurl = "http://api.yibuxueche.com/validation/applyvalidation?userid="
                                 + userdata._id;
                             userdata.weixinopenid = applyinfo.openid;
@@ -172,9 +174,11 @@ var defautfun= {
                                     return callback("保存申请信息错误：" + err);
                                 }
                                 classtypedata.applycount = classtypedata.applycount + 1;
-                                coachdata.studentcoount = coachdata.studentcoount + 1;
+                                if(coachdata ){
+                                    coachdata.studentcoount = coachdata.studentcoount + 1;
+                                    coachdata.save();
+                                }
                                 classtypedata.save();
-                                //coachdata.save();
                                 return callback(null, "success");
                             });
                         })
@@ -621,12 +625,12 @@ exports.postUserCreateOrder=function(applyinfo,callback){
             if (!userData) {
                 return callback("没有查询到用户信息");
             }
-            if (!userData.applystate!=1){
+            if (userData.applystate!=1){
                 return callback("该用户无法支付");
             }
-            userModel.referrerfcode=applyinfo.fcode;
-            userModel.paytype=applyinfo.paytype;
-            userModel.save(function(err,data){
+            userData.referrerfcode=applyinfo.fcode;
+            userData.paytype=applyinfo.paytype;
+            userData.save(function(err,data){
                 if  (applyinfo.paytype==1){  // 线下报名
                     redisSchoolInfo(data.applyschool,function(err,schooldata){
                     var returndata={
@@ -667,14 +671,14 @@ exports.postUserCreateOrder=function(applyinfo,callback){
                             }
                             var weixinpayinfo={
                                 body: data.applyschoolinfo.name+" "+data.applyclasstypeinfo.name,
-                                out_trade_no: orderdata._id,
+                                out_trade_no: orderdata._id.toString(),
                                 total_fee: orderdata.paymoney,
                                 spbill_create_ip: applyinfo.clientip,
                                 notify_url: 'http://wxpay_notify_url',
                                 trade_type: 'JSAPI',
                                 openid: applyinfo.openid,
-                            }
-                            wenpay.createJsUnifiedOrder(weixinpayinfo,function(err,weixinpaydata){
+                            };
+                            wenpay.createUnifiedOrder(weixinpayinfo,function(err,weixinpaydata){
                                 if(err){
                                     return callback("创建微信订单失败："+err);
                                 }
@@ -687,6 +691,7 @@ exports.postUserCreateOrder=function(applyinfo,callback){
                                         timeStamp: Math.floor(Date.now()/1000)+"",
                                         nonceStr: weixinpaydata.nonce_str,
                                         package: "prepay_id="+weixinpaydata.prepay_id,
+                                        sign:weixinpaydata.sign,
                                         signType: "MD5"
                                     };
                                     reqparam.paySign = wenpay.sign(reqparam);
@@ -725,6 +730,7 @@ exports.postUserApplySchool=function (applyinfo, callback){
             }
             // 存在微信 用户
             if(userData){
+                console.log("查找 到微信用户");
                 if(userData.mobile==applyinfo.mobile){
                     // 判断是否可以报名
                    if( userData.applystate>0){
@@ -739,18 +745,24 @@ exports.postUserApplySchool=function (applyinfo, callback){
                     return callback("您暂时无法使用手机号报名");
                 }
             }else{
+                console.log("没有查找 到微信用户");
                 userModel.findOne({"mobile":applyinfo.mobile},function(err,userData){
                     if(err){
                         return callback("查找用户出错");
                     }
                     if(userData){
+                        console.log("没有查找 到微信用户 ：查找到手机号用户");
                         // 判断是否可以报名
                         if( userData.applystate>0){
                             return callback("您已经正在报名，请先取消报名结果");
                         }
                         //用户报名
+                        defautfun.saveUserApplyinfo(userData._id,applyinfo,function(err,data) {
+                            return callback(err, data);
+                        })
                     }
                     else{
+                        console.log("没有查找 到微信用户 ：重新注册用户");
                         // 添加用户
                         defautfun.addWeiXinUser(applyinfo,function(err,data){
                             if (err){
