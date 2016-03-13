@@ -6,6 +6,9 @@ class CostPayStore {
 	constructor() {
         this.bindActions(CostPayActions);
         this.school = [];
+        this.payType = 2;
+        this.ycode = '';
+        this.bcode = '';
     }
 
     onGetSchoolSuccess(data) {
@@ -22,6 +25,14 @@ class CostPayStore {
 
     onDoPayFail(errorMessage) {
     	console.log(errorMessage);
+    }
+
+    onUpdateBcode(event) {
+        this.bcode = event.target.value;
+    }
+
+    onUpdateYcode(event) {
+        this.ycode = event.target.value;
     }
 
 }

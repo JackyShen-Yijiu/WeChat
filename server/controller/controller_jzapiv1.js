@@ -111,7 +111,7 @@ exports.postUserApplySchool = function (req, res) {
         classtypeid: req.body.classtypeid,
         openid: req.body.openid
     };
-    //console.log(applyinfo);
+    console.log(applyinfo);
     if (applyinfo.name === undefined ||
         applyinfo.mobile === undefined
         || applyinfo.schoolid === undefined || applyinfo.coachid === undefined
@@ -123,6 +123,7 @@ exports.postUserApplySchool = function (req, res) {
         if(err){
             return res.json(new BaseReturnInfo(0,err,""));
         }
+        console.log('########' + data);
         return res.json(new BaseReturnInfo(1,"",data));
     })
 };

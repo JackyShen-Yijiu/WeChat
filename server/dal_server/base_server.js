@@ -127,6 +127,7 @@ var defautfun= {
             } else {
                 searchcoachinfo._id = new mongodb.ObjectId(applyinfo.coachid)
             }
+            console.log('检查报名驾校和教练')
             // 检查报名驾校和教练
             coachmode.findOne(searchcoachinfo, function (err, coachdata) {
                 if (err) {
@@ -138,7 +139,7 @@ var defautfun= {
                     if (err || !schooldata) {
                         return callback("不能找到报名的驾校");
                     }
-                    ;
+                    
                     // 检查所报的课程类型
                     classtypeModel.findById(new mongodb.ObjectId(applyinfo.classtypeid))
                         .populate("vipserverlist")
@@ -160,7 +161,7 @@ var defautfun= {
                             userdata.applyclasstypeinfo.price = classtypedata.price;
                             userdata.applyclasstypeinfo.onsaleprice = classtypedata.onsaleprice;
                             userdata.vipserverlist = classtypedata.vipserverlist;
-                            userdata.applystate = 1;
+                            userdata.applystate = 0;
                             userdata.applyinfo.applytime = new Date();
                             userdata.applyinfo.handelstate = 0;
                             userdata.scanauditurl = "http://api.yibuxueche.com/validation/applyvalidation?userid="
@@ -170,6 +171,7 @@ var defautfun= {
                             //console.log(userdata);
                             // 保存 申请信息
                             userdata.save(function (err, newuserdata) {
+                                //console.log('保存 申请信息');
                                 if (err) {
                                     return callback("保存申请信息错误：" + err);
                                 }
@@ -179,6 +181,8 @@ var defautfun= {
                                     coachdata.save();
                                 }
                                 classtypedata.save();
+
+                                console.log('保存申请信息 success');
                                 return callback(null, "success");
                             });
                         })
@@ -628,13 +632,13 @@ exports.postUserCreateOrder=function(applyinfo,callback){
                 return callback("没有查询到用户信息");
             }
             if (userData.applystate!=1){
-                return callback("该用户无法支付");
+                //return callback("该用户无法支付");
             }
             userData.referrerfcode=applyinfo.fcode;
             userData.paytype=applyinfo.paytype;
             userData.save(function(err,data){
                 if  (applyinfo.paytype==1){  // 线下报名
-                    redisSchoolInfo(data.applyschool,function(err,schooldata){
+                    defautfun.redisSchoolInfo(data.applyschool,function(err,schooldata){
                     var returndata={
                         applyschoolinfo:data.applyschoolinfo,
                         applyclasstypeinfo:data.applyclasstypeinfo,
@@ -740,6 +744,7 @@ exports.postUserApplySchool=function (applyinfo, callback){
                    }
                     //用户报名
                     defautfun.saveUserApplyinfo(userData._id,applyinfo,function(err,data){
+                        console.log('报名：' + data);
                         return callback(err,data);
                     })
                 }

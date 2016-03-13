@@ -23,15 +23,15 @@ class SignUpStore {
         console.log(data);
     }
 
-    onSignUpFail(data) {
-        console.log(data);
+    onSignUpFail(errorMessage) {
+        toastr.error(errorMessage);
     }
 
     onGetCodeSuccess(data) {
         if(data == 'send success')
             toastr.info('短信验证码发送成功！');
         else 
-            toastr.warning(data);
+            toastr.error(data);
     }
 
     onGetCodeFail(errorMessage) {

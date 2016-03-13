@@ -35,6 +35,7 @@ exports.sendsmscode=function(mobile,callback) {
                 return callback(err);
             }
         }
+        console.log(smscode);
       //  var sms = '您的饭应验证码是' + smscode + '。请在五分钟之内完成验证。本条信息无需回复。如非本人操作，请忽略。【为爱吃狂】';
         var sms ="【"+config.companyname+"】"+smscode+", 您的"+config.appname+"注册／登陆验证码，三分钟内有效";
         var options  = {

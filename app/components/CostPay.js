@@ -23,6 +23,38 @@ class CostPay extends React.Component {
 		CostPayStore.unlisten(this.onChange);
 	}
 
+	changePayType(payType) {
+		this.setState({payType: payType});
+	}
+
+	handlePay(event) {
+		event.preventDefault();
+		// 发起支付
+		// Ycode
+		// paytype 支付方式 1  线下支付  2 线上支付
+		// openid
+		// bcode 
+		let ycode = this.state.ycode;
+		let payType = this.state.payType;
+		let bcode = this.state.bcode;
+		let openid = localStorage.getItem('openid');
+
+		console.log('ycode = ', this.state.ycode);
+		console.log('payType = ', this.state.payType);
+		console.log('bcode = ', this.state.bcode);
+
+		CostPayActions.doPay({
+			params: {
+				openid: openid,
+				ycode: ycode,
+				paytype: payType,
+				bcode: bcode
+			},
+			history: this.props.history
+		});
+
+	}
+
 	render() {
 		let coachId = this.props.params.coach_id;
 		let schoolId = this.props.params.school_id;
@@ -75,18 +107,18 @@ class CostPay extends React.Component {
 		            <a href="#" className="list-group-item">
 		                <span className="title">Y码返现</span>
 		                <span className="ycode">
-		                	请选择一张你领取的Y码券
+		                	<input type="text" className="form-control" disabled value={this.state.ycode} onChange={CostPayActions.updateYcode} placeholder="请选择一张你领取的Y码券" />
 		                	<i className="icon-more_right pull-right"></i>
 		                </span>
 		            </a>
 		            <li className="list-group-item">
 		                <span className="title">邀请码</span>
-		                <input type="text" className="form-control" placeholder="请输入邀请码（选填）"/>
+		                <input type="text" className="form-control"  value={this.state.bcode} onChange={CostPayActions.updateBcode} placeholder="请输入邀请码（选填）"/>
 		            </li>
 		        </ul>
 		        <ul className="list-group pay-list-group mt20">
 		            <li className="list-group-item">付款方式</li>
-		            <li className="list-group-item">
+		            <li className="list-group-item" onClick={this.changePayType.bind(this, 2)}>
 		                <div className="left">
 		                    <img src="/img/wechat.png" alt=""/>
 		                </div>
@@ -95,10 +127,10 @@ class CostPay extends React.Component {
 		                    <div className="tips">推荐开通微信支付的用户使用</div>
 		                </div>
 		                <div className="right">
-		                    <span><i className="icon-sure"></i></span>
+		                    <span><i className={this.state.payType == 2 ? 'icon-sure': 'icon-pay_off'}></i></span>
 		                </div>
 		            </li>
-		            <li className="list-group-item">
+		            <li className="list-group-item" onClick={this.changePayType.bind(this, 1)}>
 		                <div className="left">
 		                    <img src="/img/scene.png" alt=""/>
 		                </div>
@@ -107,15 +139,15 @@ class CostPay extends React.Component {
 		                    <div className="tips">到指定现场了解更多后支付</div>
 		                </div>
 		                <div className="right">
-		                    <span><i className="icon-sure"></i></span>
+		                    <span><i className={this.state.payType == 1 ? 'icon-sure': 'icon-pay_off'}></i></span>
 		                </div>
 		            </li>
 		        </ul>
 
 		        <footer className="cp-footer">
 		            <div className="btn-group btn-group-justified">
-		                <a href="#" className="btn btn-default btn-lg disabled">合计 ¥3600</a>
-		                <a href="#" className="btn btn-default btn-lg btn-pay">确认报名</a>
+		                <a className="btn btn-default btn-lg disabled">合计 ¥3600</a>
+		                <a className="btn btn-default btn-lg btn-pay" onClick={this.handlePay.bind(this)}>确认报名</a>
 		            </div>
 		        </footer>
 		    </div>

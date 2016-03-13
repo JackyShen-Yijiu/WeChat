@@ -41,9 +41,9 @@ class SignUp extends React.Component {
 		let schoolId = this.props.params.school_id;
 		let lessonId = this.props.params.lesson_id;
 
-		this.props.history.pushState(null, '/pay/' + schoolId + '/' + coachId + '/' + lessonId);
+		//this.props.history.pushState(null, '/pay/' + schoolId + '/' + coachId + '/' + lessonId);
 
-		/* 测试
+		/* 测试 */
 		let name = this.state.name.trim();
     	let mobile = this.state.mobile;
     	let code = this.state.code;
@@ -72,7 +72,7 @@ class SignUp extends React.Component {
     			params,
     			history: this.props.history
     		});
-    	}*/
+    	}
 
 	}
 

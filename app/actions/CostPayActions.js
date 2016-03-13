@@ -6,7 +6,9 @@ class CostPayActions {
         	'getSchoolSuccess',
         	'getSchoolFail',
             'doPaySuccess',
-            'doPayFail'
+            'doPayFail',
+            'updateBcode',
+            'updateYcode'
         );
     }
 
@@ -26,8 +28,23 @@ class CostPayActions {
         });
     }
 
-    doPay() {
-
+    doPay(payload) {
+        $.ajax({
+            url: '/jzapi/v1/userCreateOrder/',
+            data: payload.params,
+            type: 'POST'
+        })
+        .done(response => {
+            console.log(response);
+            if(response.type === 1) {
+                this.actions.doPaySuccess(response.data);
+            } else {
+                this.actions.doPayFail(response.msg);
+            }
+        })
+        .fail(jqXhr => {
+            this.actions.doPayFail('fail');
+        });
     }
 
 
