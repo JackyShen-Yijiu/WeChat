@@ -33,7 +33,7 @@ class SchoolDetail extends React.Component {
 		// 班型列表
 		let lessonList = detail.class_list ? detail.class_list.map((lesson) => {
 			return (
-				<Lesson key={lesson.id} lesson={lesson} schoolId={detail.id} coachId={0}/>
+				<Lesson key={lesson.id} lesson={lesson} schoolId={detail.id} coachId={-1}/>
 			);
 		}) : '';
 

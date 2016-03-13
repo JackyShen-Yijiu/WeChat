@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
+import {assign} from 'underscore';
 
 import SortBar from './SortBar';
 import School from './common/School';
@@ -18,9 +19,64 @@ class SchoolList extends React.Component {
         this.setState(state);
     }
 
+    isWeixn(){
+        var ua = navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i)=="micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     componentDidMount() {
         SchoolListStore.listen(this.onChange);
-        SchoolListActions.getSchoolList(this.props.params);
+
+        let {query} = this.props.location;
+        let openid = query.openid;
+        if(openid) {
+            localStorage.setItem('openid', openid);
+        }
+
+        let params = this.props.params;
+
+        // 判断是否在微信中
+        if(this.isWeixn()) {
+            SchoolListActions.getWeixinConfig(location.href, (config) => {
+                wx.config({
+                    debug: false,
+                    appId: config.appId,
+                    timestamp: config.timestamp,
+                    nonceStr: config.nonceStr,
+                    signature: config.signature,
+                    jsApiList: [
+                        'previewImage',
+                        'getLocation'
+                    ]
+                });
+
+                wx.ready(function(){
+                    // 定位
+                    wx.getLocation({
+                        type: 'wgs84',
+                        success: function (res) {
+
+                            assign(params, {
+                                latitude: res.latitude,
+                                longitude: res.longitude,
+                            });
+
+                            SchoolListActions.getSchoolList(params);
+                        }
+                    });
+                });
+
+                wx.error(function(res){
+                    SchoolListActions.getSchoolList(params);
+                });
+            });
+        } else {
+            SchoolListActions.getSchoolList(params);
+        }
     }
 
     componentWillUnmount() {
@@ -28,23 +84,23 @@ class SchoolList extends React.Component {
     }
 
     handleSort(index) {
-        let payload = Object.assign(this.props.params, { order_type: index + 1 });
+        let payload = assign(this.props.params, { order_type: index + 1 });
         SchoolListActions.getSchoolList(payload);
     }
 
     render() {
-        let list = this.state.list ? this.state.list.map((school) => {
+        let list = this.state.list.map((school) => {
             return (
                 <School key={school.id} school={school} />
             );
-        }) : 'asdfasdf';
+        });
 
         return (
             <div className="sl-wrap">
                 <header className="sl-header">
                     <div className="address">
                         <Link to="/cities" className="city">
-                            {this.props.params.city_name || '北京市'}
+                            {this.props.params.city_name || this.state.city || '定位中'}
                             <i className="icon-more_down"></i>
                         </Link>
                     </div>

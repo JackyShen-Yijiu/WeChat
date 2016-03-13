@@ -54,11 +54,17 @@ class SignUpActions {
         let params = payload.params;
         $.ajax({
             url: '/jzapi/v1/userApplySchool',
-            data: params
+            data: params,
+            type: 'POST'
         })
         .done(response => {
             if(response.type === 1) {
                 this.actions.signUpSuccess(response.data);
+
+                // 缓存订单信息并调整到支付页面
+                localStorage.setItem('order', params);
+                this.props.history.pushState(null, '/pay/' + params.schoolid + '/' + params.coachid + '/' + params.classtypeid);
+
             } else {
                 this.actions.signUpFail(response.msg);
             }

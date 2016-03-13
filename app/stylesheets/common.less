@@ -84,7 +84,7 @@ a {
         .price {
             font-weight: bolder;
             color: @red;
-            font-size: 15px;
+            font-size: 14px;
         }
     }
     .right {
@@ -478,7 +478,7 @@ a {
     background-color: @white;
     border-bottom: 1px @gray-darker solid;
     border-top: 1px @gray-darker solid;
-    .list-group-item { 
+    .list-group-item {
         position: relative;
         border-radius: 0;
         border-left: none;
@@ -500,10 +500,43 @@ a {
             background-color: @blue-base;
             border-radius: 4px;
             margin-right: 30px;
-            margin-bottom: 10px; 
+            margin-bottom: 10px;
         }
     }
+}
 
+.pay-list-group {
+    // 代标题的信息
+    .list-group-item {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        .left {
+            position: absolute;
+            img {
+                height: 40px;
+                width: 40px;
+            }
+        }
+        .middle {
+            margin-left: 50px;
+            .title {
+                font-size: 16px;
+            }
+            .tips {
+                font-size: 12px;
+                color: @gray;
+            }
+        }
+        .right {
+            position: absolute;
+            right: 15px;
+            top: 18px;
+            i {
+                font-size: 24px;
+            }
+        }
+    }
 }
 
 .list-footer {

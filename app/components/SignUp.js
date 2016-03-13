@@ -41,6 +41,9 @@ class SignUp extends React.Component {
 		let schoolId = this.props.params.school_id;
 		let lessonId = this.props.params.lesson_id;
 
+		this.props.history.pushState(null, '/pay/' + schoolId + '/' + coachId + '/' + lessonId);
+
+		/* 测试
 		let name = this.state.name.trim();
     	let mobile = this.state.mobile;
     	let code = this.state.code;
@@ -52,19 +55,24 @@ class SignUp extends React.Component {
     	} else if (!this.regexCode.test(code)) {
     		SignUpActions.invalidCode();
     	} else {
+    		let openid = localStorage.getItem('openid');
+    		let params = {
+				name,
+				mobile,
+				smscode: code,
+				schoolid: schoolId,
+				coachid: coachId,
+				classtypeid: lessonId,
+				openid
+			};
+			// 缓存数据
+
     		// 报名
     		SignUpActions.signUp({
-    			params: {
-    				name,
-    				mobile,
-    				smscode: code,
-    				schoolid: schoolId,
-    				coachid: coachId,
-    				classtypeid: lessonId
-    			},
+    			params,
     			history: this.props.history
     		});
-    	}
+    	}*/
 
 	}
 

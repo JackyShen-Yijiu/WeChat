@@ -10,16 +10,11 @@ import GroundList from './components/GroundList';
 import CityList from './components/CityList';
 import UserCenter from './components/UserCenter';
 import SignUp from './components/SignUp';
-
-function getWeXinInfo() {
-    console.log('---- getWeXinInfo ----');
-
-    
-}
+import CostPay from './components/CostPay';
 
 export default (
     <Route component={App}>
-        <Route path='/' onEnter={getWeXinInfo} component={SchoolList} />
+        <Route path='/' component={SchoolList} />
         <Route path='/cities' component={CityList} />
         <Route path=':city_name/schools' component={SchoolList} />
         <Route path='/school/:id' component={SchoolDetail} />
@@ -30,5 +25,6 @@ export default (
         <Route path='/school/:school_id/grounds' component={GroundList} />
         <Route path='/user' component={UserCenter} />
         <Route path='/signup/:school_id/:coach_id/:lesson_id' component={SignUp} />
+        <Route path='/pay/:school_id/:coach_id/:lesson_id' component={CostPay} />
     </Route>
 );

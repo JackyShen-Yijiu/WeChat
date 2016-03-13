@@ -26,7 +26,7 @@ class CityList extends React.Component {
 
 	render() {
 		let list = this.state.list.filter((city) => {
-			return city.id != 131;
+			return city.name != localStorage.getItem('city');;
 		}).map((city, index) => {
 			if(index%2 == 0)
 				return (

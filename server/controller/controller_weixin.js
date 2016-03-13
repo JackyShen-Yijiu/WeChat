@@ -35,16 +35,7 @@ exports.weixinAck=function(req,res){
 };
 
 exports.weiXinJsSdkSign=function(req,res){
-    var url = "http://nodeweixin.tunnel.qydev.com/weixin/getjssign";
-    var keys = ['body', 'query', 'params'];
-    //1.获取传入的URL
-    for (var i = 0; i < keys.length; i++) {
-        var k = keys[i];
-        if (req[k] && req[k].url) {
-            url = req[k].url;
-            break;
-        }
-    }
+    var url = req.query.url;
     singature.getSignature(weixinconfig,url,function(err,data){
         if(err){
             return res.json(new BaseReturnInfo(0, "获取签名出错"));
@@ -57,7 +48,7 @@ exports.weiXinJsSdkSign=function(req,res){
 };
 
 exports.authorizeUser=function(req,res){
-    var url = client.getAuthorizeURL('http://nodeweixin.tunnel.qydev.com/jzapi/weixin/authorizeUsercallback','','snsapi_userinfo');
+    var url = client.getAuthorizeURL('http://moodpo.tunnel.qydev.com/jzapi/weixin/authorizeUsercallback','','snsapi_userinfo');
     res.redirect(url);
 };
 
@@ -78,7 +69,7 @@ exports.authorizeUsercallback=function(req,res,next){
         //console.log('openid=' + openid);
 
         weiXinUserModel.findOne({"openid":openid}, function(err, user){
-            console.log('微信回调后，User.find_by_openid(openid) 返回的user = ' + user);
+            console.log('微信回调后，User.find_by_openid(openid) 返回的user = ', user);
             if(err ||!user){
 
                 client.getUser(openid, function (err, result) {
@@ -90,16 +81,13 @@ exports.authorizeUsercallback=function(req,res,next){
                         if (err) {
                             next({openid:openid});
                         } else {
-
-                            next({openid:openid});
+                            res.redirect('http://moodpo.tunnel.qydev.com?openid=' + openid);
                         }
                     });
-
                 });
             }else{
-                console.log('根据openid查询，用户已经存在');
-                next({openid:openid});
-
+                console.log('根据openid查询，用户已经存在', user);
+                res.redirect('http://moodpo.tunnel.qydev.com?openid=' + openid);
             }
         });
     });

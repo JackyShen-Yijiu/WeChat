@@ -21,7 +21,6 @@ class SignUpStore {
 
     onSignUpSuccess(data) {
         console.log(data);
-        // this.props.history.pushState(null, path);
     }
 
     onSignUpFail(data) {

@@ -1,4 +1,5 @@
 import alt from '../alt';
+import {assign} from 'underscore';
 
 class SchoolListActions {
     constructor() {
@@ -8,17 +9,31 @@ class SchoolListActions {
         );
     }
 
+    getWeixinConfig(url, callback) {
+        $.ajax({
+            url: '/jzapi/weixin/getjssign?url=' + url
+        }).done(response => {
+            if(response.type === 1) {
+                callback(response.data);
+            } else {
+                console.log(response.msg);
+            }
+        })
+        .fail(jqXhr => {
+            console.log('getWeixinConfig fail');
+        });
+    }
+
     getSchoolList(payload) {
         let params = {
             index: 1,
             count: 10000,
             latitude: '40.096263',
             longitude: '116.1270',
-            order_type: 1,
-            city_name: '北京市'
+            order_type: 1
         };
 
-        Object.assign(params, payload);
+        assign(params, payload);
 
         $.ajax({
             url: '/jzapi/v1/getSchoolList',
