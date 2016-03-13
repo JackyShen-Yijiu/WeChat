@@ -1,7 +1,17 @@
 exports.weixinconfig = {
     id: 'wxf8337b6f556b0bb8',
     secret: 'cd8fccf9052a3bccae25f3fa398fe44c',
+    //id: 'wx59f87fdc85ee66c9',
+    //secret: 'd4624c36b6795d1d99dcf0547af5443d',
+    //id: 'wxb815a53dcb2faf06',
+    //secret: '2637931343bdd1d1991fcef1b28a187a',
     token: 'jizhijiafuweixin'
+};
+
+
+exports.merchant = {
+    id: "1317721101",
+    key: "JIZHIjiafu20150810andyibukejiinn"
 };
 
 exports.dbconfig = {

@@ -9,6 +9,7 @@ var singature=require("../weixin_server/signature");
 var OAuth = require('wechat-oauth');
 var client = new OAuth(weixinconfig.id, weixinconfig.secret);
 var  weiXinUserModel=mongodb.WeiXinUserModel;
+var weixinpay=require("../weixin_server/wenxinpay");
 
 
 
@@ -82,6 +83,8 @@ exports.authorizeUsercallback=function(req,res,next){
                             next({openid:openid});
                         } else {
                             res.redirect('http://moodpo.tunnel.qydev.com?openid=' + openid);
+                            //res.redirect("http://nodeweixin.tunnel.qydev.com?opend="+openid);
+                            //next({openid:openid});
                         }
                     });
                 });
@@ -92,3 +95,5 @@ exports.authorizeUsercallback=function(req,res,next){
         });
     });
 };
+
+exports.paycallback=weixinpay.paycallback;

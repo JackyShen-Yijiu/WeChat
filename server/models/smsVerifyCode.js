@@ -2,11 +2,13 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var SmsVeirfyCodeSchema = new Schema({
-    mobile: {type: String, unique: true},
+
+    mobile: { type: String, unique: true},
     smsCode: String,
-    createdTime: {type: Date, default: Date.now},
-    verified: {type: Boolean, default: false}
+    createdTime: { type: Date, default: Date.now },
+    verified: { type: Boolean, default: false}
 });
+
 
 SmsVeirfyCodeSchema.statics.findByMobile = function (_mobile, _date_min, _date_max, callback) {
 
@@ -20,6 +22,7 @@ SmsVeirfyCodeSchema.statics.findByMobile = function (_mobile, _date_min, _date_m
         //if(result != null) console.log('found: ' + _mobile);
         callback(err, result, _mobile);
     });
+
 
 };
 
