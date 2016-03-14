@@ -15,8 +15,9 @@ exports.weixinconfig = {
 
 
 exports.merchant = {
-    id: "1317721101",
-    key: "JIZHIjiafu20150810andyibukejiinn"
+    id: "1321096401",
+    key: "JIZHIjiafu20150810andyibukejiinn",
+    notify_url:"http://jzapi.yibuxueche.com/paynotice/weixin"
 };
 
 exports.dbconfig = {

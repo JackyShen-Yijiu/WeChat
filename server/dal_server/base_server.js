@@ -19,7 +19,7 @@ var trainingfiledModel = mongodb.TrainingFieldModel;
 var smsVerifyCodeModel=mongodb.SmsVerifyCodeModel;
 var userModel=mongodb.UserModel;
 var userAvailableFcodeModel=mongodb.UserAvailableFcodeModel;
-var UserPayModel=mongodb.UserModel;
+var UserPayModel=mongodb.UserPayModel;
 var userCountModel=mongodb.UserCountModel;
 var weixinUserModel=mongodb.WeiXinUserModel;
 var wenpay=require("../weixin_server/wenxinpay")
@@ -706,7 +706,7 @@ exports.postUserCreateOrder=function(applyinfo,callback){
                     var returndata={
                         applyschoolinfo:data.applyschoolinfo,
                         applyclasstypeinfo:data.applyclasstypeinfo,
-                        aytype:data.paytype,
+                        paytype:data.paytype,
                         applytime:data.applyinfo.applytime.toFormat("YYYY/MM/DD"),
                         scanauditurl:data.scanauditurl,
                         orderid:data._id,
@@ -760,11 +760,12 @@ exports.postUserCreateOrder=function(applyinfo,callback){
                                         appId: app.id,
                                         timeStamp: Math.floor(Date.now()/1000)+"",
                                         nonceStr: weixinpaydata.nonce_str,
-                                        package: "prepay_id="+weixinpaydata.prepay_id,
+                                        prepayid:weixinpaydata.prepay_id,
                                         sign:weixinpaydata.sign,
+                                        package: "Sign=WXPay",
                                         signType: "MD5"
                                     };
-                                    reqparam.paySign = wenpay.sign(reqparam);
+                                    //reqparam.paySign = wenpay.sign(reqparam);
                                     var returndata={
                                         applyschoolinfo:data.applyschoolinfo,
                                         applyclasstypeinfo:data.applyclasstypeinfo,
@@ -773,7 +774,8 @@ exports.postUserCreateOrder=function(applyinfo,callback){
                                         orderid:orderdata._id,
                                          weixinpay :reqparam,
                                     }
-
+                                    UserPayModel.update({"_id":orderdata._id},
+                                        {$set:{weixinpayinfo:JSON.stringify(reqparam)}},function(err,data){});
                                     return callback(null,returndata);
                                 }
                             })

@@ -67,7 +67,7 @@ function getToken(config, cb) {
         + config.id + '&secret=' + config.secret;
     rediscache.get("accessToken"+config.id,function(err,tokendata){
         if(tokendata){
-            cb(null, token);
+            cb(null, tokendata);
         }
         else {
             request.get(tokenUrl, function(error, response, body) {
