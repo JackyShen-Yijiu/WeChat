@@ -11,7 +11,7 @@ var client = new OAuth(weixinconfig.id, weixinconfig.secret);
 var  weiXinUserModel=mongodb.WeiXinUserModel;
 var weixinpay=require("../weixin_server/wenxinpay");
 
-
+var jizhijiafu = "http://weixin.jizhijiafu.cn";
 
 
 exports.weixinAck=function(req,res){
@@ -50,7 +50,7 @@ exports.weiXinJsSdkSign=function(req,res){
 
 exports.authorizeUser=function(req,res){
     var bcode=req.query.bcode;
-    var url = client.getAuthorizeURL('http://moodpo.tunnel.qydev.com/jzapi/weixin/authorizeUsercallback?bcode='+bcode,'','snsapi_userinfo');
+    var url = client.getAuthorizeURL(jizhijiafu + '/jzapi/weixin/authorizeUsercallback?bcode='+bcode,'','snsapi_userinfo');
     res.redirect(url);
 };
 
@@ -83,7 +83,7 @@ exports.authorizeUsercallback=function(req,res,next){
                         if (err) {
                             next({openid:openid});
                         } else {
-                            res.redirect('http://moodpo.tunnel.qydev.com?openid=' + openid+"&bcode="+bcode);
+                            res.redirect(jizhijiafu + '?openid=' + openid+"&bcode="+bcode);
                             //res.redirect("http://nodeweixin.tunnel.qydev.com?opend="+openid);
                             //next({openid:openid});
                         }
@@ -91,7 +91,7 @@ exports.authorizeUsercallback=function(req,res,next){
                 });
             }else{
                 console.log('根据openid查询，用户已经存在', user);
-                res.redirect('http://moodpo.tunnel.qydev.com?openid=' + openid+"&bcode="+bcode);
+                res.redirect(jizhijiafu + '?openid=' + openid+"&bcode="+bcode);
             }
         });
     });
