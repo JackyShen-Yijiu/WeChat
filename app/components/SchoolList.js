@@ -73,13 +73,17 @@ class SchoolList extends React.Component {
                             params.latitude = res.latitude;
                             params.longitude = res.longitude;
 
+                            console.log('----location---')
+
                             SchoolListActions.getSchoolList(params);
                         }
                     });
                 });
 
                 wx.error(function(res){
-                    SchoolListActions.getSchoolList(params);
+                    console.log('----location error---')
+
+                    //SchoolListActions.getSchoolList(params);
                 });
             });
         } else {
