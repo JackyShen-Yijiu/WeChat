@@ -44,17 +44,20 @@ class CostPayActions {
                 } else {
                     let weixinpay = response.data.weixinpay;
                     // 发起微信支付
-                    wx.chooseWXPay({
-                        timestamp:  weixinpay.timeStamp, 
-                        nonceStr: weixinpay.nonceStr, 
-                        package: 'prepay_id=' + weixinpay.prepayid, 
-                        signType: weixinpay.signType,
-                        paySign: weixinpay.sign,
-                        success: function (res) {
-                            console.log(res);
-                            toastr.info('微信支付成功！');
-                            payload.history.replaceState(null, '/wechatsuccessful');
-                        }
+                    wx.ready(function() {
+                            wx.chooseWXPay({
+                            appId: weixin.pay.appId,
+                            timestamp:  weixinpay.timeStamp, 
+                            nonceStr: weixinpay.nonceStr, 
+                            package: 'prepay_id=' + weixinpay.prepayid, 
+                            signType: weixinpay.signType,
+                            paySign: weixinpay.sign,
+                            success: function (res) {
+                                console.log(res);
+                                toastr.info('微信支付成功！');
+                                payload.history.replaceState(null, '/wechatsuccessful');
+                            }
+                        });
                     });
                 }
             } else {
