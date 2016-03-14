@@ -46,7 +46,7 @@ class CostPayActions {
                     // 发起微信支付
                     wx.ready(function() {
                             wx.chooseWXPay({
-                            appId: weixin.pay.appId,
+                            appId: weixinpay.pay.appId,
                             timestamp:  weixinpay.timeStamp, 
                             nonceStr: weixinpay.nonceStr, 
                             package: 'prepay_id=' + weixinpay.prepayid, 
