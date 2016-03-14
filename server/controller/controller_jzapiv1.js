@@ -158,7 +158,7 @@ exports.postUserCreateOrder=function(req,res){
     }
     service.postUserCreateOrder(applyinfo,function(err,data){
         if(err){
-            return res.json(new BaseReturnInfo(0,err,[]));
+            return res.json(new BaseReturnInfo(0,err,{}));
         }
         return res.json(new BaseReturnInfo(1,"",data));
     })
