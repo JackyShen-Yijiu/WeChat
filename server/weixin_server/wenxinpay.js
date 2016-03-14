@@ -14,19 +14,29 @@ var wxpay = WXPay({
     pfx: fs.readFileSync('./apiclient_cert.p12'), //微信商户平台证书
 });
 
-//wxpay.createUnifiedOrder({
-//    body: '扫码支付测试',
-//    out_trade_no: '20140703'+Math.random().toString().substr(2, 10),
-//    total_fee: 1,
-//    spbill_create_ip: '192.168.2.210',
-//    notify_url: 'http://wxpay_notify_url',
-//    trade_type: 'APP',
-//    product_id: '1234567890'
-//}, function(err, result){
-//    console.log(err);
-//    console.log(result);
-//});
-
+wxpay.createUnifiedOrder({
+    body: '扫码支付测试',
+    out_trade_no: '20140703'+Math.random().toString().substr(2, 10),
+    total_fee: 1,
+    spbill_create_ip: '192.168.2.210',
+    notify_url: 'http://wxpay_notify_url',
+    trade_type: 'JSAPI',
+    product_id: '1234567890',
+    openid:"o-3c4t3jih2KzY_V25ug_nPt8tWs"
+}, function(err, result){
+    console.log(err);
+    console.log(result);
+});
+// 返回参数
+//{ return_code: 'SUCCESS',
+//    return_msg: 'OK',
+//    appid: 'wxc360e212be5b3bb4',
+//    mch_id: '1321096401',
+//    nonce_str: 'OkmnNcbs77YmXGjd',
+//    sign: 'DCF7B59706C7583B9174AB2F3B9CEBF8',
+//    result_code: 'SUCCESS',
+//    prepay_id: 'wx201603141735317d227fc19f0870670307',
+//    trade_type: 'JSAPI' }
 exports.createUnifiedOrder=function(payinfo,callback){
     wxpay.createUnifiedOrder(payinfo,function(err,data){
         callback(err,data);

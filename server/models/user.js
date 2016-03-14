@@ -45,7 +45,7 @@ var  UserSchema=new Schema({
     scanauditurl:String,
     // 报名信息
     applyinfo:{applytime:{type:Date,default:Date.now()},
-     handelstate:{type:Number,default:0}, //处理状态 0 未处理 1 处理中 2 处理成功
+        handelstate:{type:Number,default:0}, //处理状态 0 未处理 1 处理中 2 处理成功
         handelmessage:[String],
         handeltime:Date
     },
@@ -64,7 +64,7 @@ var  UserSchema=new Schema({
     is_lock: { type: Boolean, default: false},  //用户是否锁定
     idcardnumber:String, // 身份证
     telephone:String,  // 电话
-   // 喜欢的教练
+    // 喜欢的教练
     favorcoach: [{type: Schema.Types.ObjectId, default:null, ref: 'coach'}],
     // 喜欢的驾校
     favorschool: [{type: Schema.Types.ObjectId, default:null, ref: 'DriveSchool'}],
@@ -81,6 +81,7 @@ var  UserSchema=new Schema({
     //科目二上课信息
     subjecttwo:{
         totalcourse:{type:Number,default:24},
+        buycoursecount:{type:Number,default:0}, //购买学时数
         reservation:{type:Number,default:0},
         finishcourse:{type:Number,default:0},// 学习进度
         missingcourse:{type:Number,default:0}, // 漏课数量
@@ -92,6 +93,7 @@ var  UserSchema=new Schema({
     subjectthree:{
         totalcourse:{type:Number,default:16},
         reservation:{type:Number,default:0},
+        buycoursecount:{type:Number,default:0}, //购买学时数
         finishcourse:{type:Number,default:0},
         missingcourse:{type:Number,default:0}, // 漏课数量
         progress:{type:String,default:"未开始"}, // 学习进度
@@ -113,7 +115,7 @@ var  UserSchema=new Schema({
     is_enrollverification :{ type: Boolean, default: false},
     // 报考信息学号还有准考证号
     enrollverificationinfo:{studentid:String,
-     ticketnumber:String},
+        ticketnumber:String},
     // 考试信息：
     examinationinfo:{
         subjecttwo:{
