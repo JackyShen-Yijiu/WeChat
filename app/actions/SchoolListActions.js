@@ -40,6 +40,7 @@ class SchoolListActions {
             data: params
         })
         .done(response => {
+            $('.location-loading').hide();
             if(response.type === 1) {
                 this.actions.getSchoolListSuccess(response.data);
             } else {
@@ -47,6 +48,7 @@ class SchoolListActions {
             }
         })
         .fail(jqXhr => {
+            $('.location-loading').hide();
             this.actions.getSchoolListFail('fail');
         });
     }

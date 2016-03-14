@@ -13,6 +13,7 @@ class CostPayStore {
 
     onGetSchoolSuccess(data) {
         this.school = data;
+        this.bcode = localStorage.getItem('bcode')
     }
 
     onGetSchoolFail(errorMessage) {

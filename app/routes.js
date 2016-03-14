@@ -11,6 +11,7 @@ import CityList from './components/CityList';
 import UserCenter from './components/UserCenter';
 import SignUp from './components/SignUp';
 import CostPay from './components/CostPay';
+import SceneSuccess from './components/SceneSuccess';
 
 export default (
     <Route component={App}>
@@ -26,5 +27,6 @@ export default (
         <Route path='/user' component={UserCenter} />
         <Route path='/signup/:school_id/:coach_id/:lesson_id' component={SignUp} />
         <Route path='/pay/:school_id/:coach_id/:lesson_id' component={CostPay} />
+        <Route path='/successful' component={SceneSuccess} />
     </Route>
 );
