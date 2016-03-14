@@ -37,6 +37,7 @@ exports.weixinAck=function(req,res){
 
 exports.weiXinJsSdkSign=function(req,res){
     var url = req.query.url;
+    console.log('###### ' + url);
     singature.getSignature(weixinconfig,url,function(err,data){
         if(err){
             return res.json(new BaseReturnInfo(0, "获取签名出错"));
