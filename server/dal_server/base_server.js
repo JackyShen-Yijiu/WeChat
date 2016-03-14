@@ -4,6 +4,7 @@
 var mongodb = require('../common/mongodb.js');
 
 var  app=require("../../config").weixinconfig;
+var  merchant=require("../../config").merchant;
 var _ = require("underscore");
 var cityInfoModel = mongodb.CityiInfoModel;
 var cache = require("../common/cache");
@@ -744,7 +745,7 @@ exports.postUserCreateOrder=function(applyinfo,callback){
                                 out_trade_no: orderdata._id.toString(),
                                 total_fee: orderdata.paymoney,
                                 spbill_create_ip: applyinfo.clientip,
-                                notify_url: 'http://wxpay_notify_url',
+                                notify_url: merchant.notify_url,
                                 trade_type: 'JSAPI',
                                 openid: applyinfo.openid,
                             };
