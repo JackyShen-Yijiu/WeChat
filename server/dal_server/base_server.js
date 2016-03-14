@@ -760,13 +760,11 @@ exports.postUserCreateOrder=function(applyinfo,callback){
                                     var reqparam = {
                                         appId: app.id,
                                         timeStamp: Math.floor(Date.now()/1000)+"",
-                                        nonceStr: weixinpaydata.nonce_str,
-                                        prepayid:weixinpaydata.prepay_id,
-                                        sign:weixinpaydata.sign,
-                                        package: "Sign=WXPay",
+                                        nonceStr: eixinpaydata.nonce_str,
+                                        package: "prepay_id="+dweixinpaydata.prepay_id,
                                         signType: "MD5"
                                     };
-                                    //reqparam.paySign = wenpay.sign(reqparam);
+                                    reqparam.paySign = wenpay.sign(reqparam);
                                     var returndata={
                                         applyschoolinfo:data.applyschoolinfo,
                                         applyclasstypeinfo:data.applyclasstypeinfo,
