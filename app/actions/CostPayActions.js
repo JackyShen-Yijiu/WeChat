@@ -35,9 +35,11 @@ class CostPayActions {
             type: 'POST'
         })
         .done(response => {
-            console.log(response);
             if(response.type === 1) {
                 this.actions.doPaySuccess(response.data);
+                // 缓存订单信息
+                localStorage.setItem('order', JSON.stringify(response.data));
+                payload.history.replaceState(null, '/successful');
             } else {
                 this.actions.doPayFail(response.msg);
             }

@@ -104,7 +104,7 @@ class CostPay extends React.Component {
 		                <span className="title">支付费用</span>
 		                <span className="price">¥{price}</span>
 		            </li>
-		            <a href="#" className="list-group-item">
+		            <a href="#" className="list-group-item ycode-item">
 		                <span className="title">Y码返现</span>
 		                <span className="ycode">
 		                	<input type="text" className="form-control" disabled value={this.state.ycode} onChange={CostPayActions.updateYcode} placeholder="请选择一张你领取的Y码券" />

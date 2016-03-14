@@ -672,7 +672,7 @@ exports.postUserCreateOrder=function(applyinfo,callback){
                         scanauditurl:data.scanauditurl,
                         orderid:data._id,
                     }
-                        returndata.applyschoolinfo.logimg=schooldata.logoimg.originalpic;
+                        //returndata.applyschoolinfo.logimg=schooldata.logoimg.originalpic;
                         return callback(null, returndata);
                     })
 

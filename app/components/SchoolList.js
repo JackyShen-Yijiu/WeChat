@@ -33,8 +33,17 @@ class SchoolList extends React.Component {
 
         let {query} = this.props.location;
         let openid = query.openid;
+        let bcode = query.bcode;
+        if(bcode) {
+            localStorage.setItem('bcode', bcode);
+        } else {
+            localStorage.setItem('bcode', '');
+        }
+        
         if(openid) {
             localStorage.setItem('openid', openid);
+        } else {
+            localStorage.setItem('openid', 'o-3c4t8u5R2dbBr3AXcp-57PZ06E');
         }
 
         let params = this.props.params;
@@ -100,7 +109,8 @@ class SchoolList extends React.Component {
                 <header className="sl-header">
                     <div className="address">
                         <Link to="/cities" className="city">
-                            {this.props.params.city_name || this.state.city || '定位中'}
+                            {this.props.params.city_name || this.state.city}
+                            <img className="location-loading" src="/img/location.gif" />
                             <i className="icon-more_down"></i>
                         </Link>
                     </div>
