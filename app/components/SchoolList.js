@@ -47,6 +47,7 @@ class SchoolList extends React.Component {
         }
 
         let params = this.props.params;
+        console.log(params);
 
         // 判断是否在微信中
         if(this.isWeixn()) {
@@ -68,11 +69,9 @@ class SchoolList extends React.Component {
                     wx.getLocation({
                         type: 'wgs84',
                         success: function (res) {
-
-                            assign(params, {
-                                latitude: res.latitude,
-                                longitude: res.longitude,
-                            });
+                            
+                            params.latitude = res.latitude;
+                            params.longitude = res.longitude;
 
                             SchoolListActions.getSchoolList(params);
                         }
