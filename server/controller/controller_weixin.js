@@ -49,13 +49,14 @@ exports.weiXinJsSdkSign=function(req,res){
 };
 
 exports.authorizeUser=function(req,res){
-    var url = client.getAuthorizeURL('http://moodpo.tunnel.qydev.com/jzapi/weixin/authorizeUsercallback','','snsapi_userinfo');
+    var bcode=req.query.bcode;
+    var url = client.getAuthorizeURL('http://moodpo.tunnel.qydev.com/jzapi/weixin/authorizeUsercallback?bcode='+bcode,'','snsapi_userinfo');
     res.redirect(url);
 };
 
 exports.authorizeUsercallback=function(req,res,next){
     var code = req.query.code;
-
+    var bcode=req.query.bcode;
     //var User = req.model.UserModel;
 
     client.getAccessToken(code, function (err, result) {
@@ -82,7 +83,7 @@ exports.authorizeUsercallback=function(req,res,next){
                         if (err) {
                             next({openid:openid});
                         } else {
-                            res.redirect('http://moodpo.tunnel.qydev.com?openid=' + openid);
+                            res.redirect('http://moodpo.tunnel.qydev.com?openid=' + openid+"&bcode="+bcode);
                             //res.redirect("http://nodeweixin.tunnel.qydev.com?opend="+openid);
                             //next({openid:openid});
                         }
