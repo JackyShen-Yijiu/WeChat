@@ -43,7 +43,7 @@ exports.weiXinJsSdkSign=function(req,res){
             return res.json(new BaseReturnInfo(0, "获取签名出错"));
         }
         else{
-            return res.json(new BaseReturnInfo(1, "",data));
+            return res.status(200).json(new BaseReturnInfo(1, "",data));
         }
     })
 

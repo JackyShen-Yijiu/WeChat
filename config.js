@@ -9,7 +9,8 @@ exports.weixinconfig = {
     //secret: '2637931343bdd1d1991fcef1b28a187a',
     
     id: 'wxc360e212be5b3bb4', // 公众号
-    secret: '9a2a6e99d8b44e5b5e39faa17799195c'
+    secret: '9a2a6e99d8b44e5b5e39faa17799195c',
+    token: 'jizhijiafuweixin'
 };
 
 

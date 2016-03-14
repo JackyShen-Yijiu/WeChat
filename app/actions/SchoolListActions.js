@@ -11,7 +11,7 @@ class SchoolListActions {
 
     getWeixinConfig(url, callback) {
         $.ajax({
-            url: '/jzapi/weixin/getjssign?url=' + url
+            url: '/jzapi/weixin/getjssign?url=' + url + '&random=' + new Date()
         }).done(response => {
             if(response.type === 1) {
                 callback(response.data);
