@@ -53,7 +53,7 @@ class CostPayActions {
                         success: function (res) {
                             console.log(res);
                             toastr.info('微信支付成功！');
-                            
+                            payload.history.replaceState(null, '/wechatsuccessful');
                         }
                     });
                 }

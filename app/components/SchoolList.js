@@ -58,7 +58,8 @@ class SchoolList extends React.Component {
                     signature: config.signature,
                     jsApiList: [
                         'previewImage',
-                        'getLocation'
+                        'getLocation',
+                        'chooseWXPay'
                     ]
                 });
 
