@@ -157,7 +157,7 @@ var defautfun= {
                             userdata.applyclasstypeinfo.price = classtypedata.price;
                             userdata.applyclasstypeinfo.onsaleprice = classtypedata.onsaleprice;
                             userdata.vipserverlist = classtypedata.vipserverlist;
-                            userdata.applystate = 0;
+                            userdata.applystate = 1;
                             userdata.applyinfo.applytime = new Date();
                             userdata.applyinfo.handelstate = 0;
                             userdata.scanauditurl = "http://api.yibuxueche.com/validation/applyvalidation?userid="
@@ -617,6 +617,33 @@ exports.getUserAvailableFcode=function(openid,callback){
             })
         })
 };
+//用户取消订单
+exports.userCancelOrder=function(openid,callback){
+    userModel.findOne({"weixinopenid":openid})
+        .exec(function(err,userData) {
+            if (err) {
+                return callback("查找用户出错");
+            }
+            if (!userData) {
+                return callback("没有查询到用户信息");
+            }
+            if (userData.applystate != 1) {
+                return callback("该订单无法取消");
+            }
+            UserPayModel.update({userid:userData._id,userpaystate:0},{userpaystate:4},function(err,excdata){});
+
+                userData.applystate=0;  // 未报名
+                userData.paytypestatus=0;
+                userData.save(function(err,data){
+                    if(err){
+                        return callback("取消订单失败："+err);
+                    }
+                    return  callback(null,"","sucess");
+                })
+            })
+
+
+}
 //生成用户支付订单
 exports.postUserCreateOrder=function(applyinfo,callback){
     userModel.findOne({"weixinopenid":applyinfo.openid})
@@ -628,7 +655,7 @@ exports.postUserCreateOrder=function(applyinfo,callback){
                 return callback("没有查询到用户信息");
             }
             if (userData.applystate!=1){
-                //return callback("该用户无法支付");
+                return callback("该用户无法支付");
             }
             userData.referrerfcode=applyinfo.fcode;
             userData.paytype=applyinfo.paytype;

@@ -127,6 +127,7 @@ exports.postUserApplySchool = function (req, res) {
         return res.json(new BaseReturnInfo(1,"",data));
     })
 };
+
 function getClientIp(req) {
     return req.headers['x-forwarded-for'] ||
         req.connection.remoteAddress ||
@@ -158,6 +159,16 @@ exports.postUserCreateOrder=function(req,res){
     service.postUserCreateOrder(applyinfo,function(err,data){
         if(err){
             return res.json(new BaseReturnInfo(0,err,[]));
+        }
+        return res.json(new BaseReturnInfo(1,"",data));
+    })
+};
+// 用户取消订单
+exports.userCancelOrder=function(req,res){
+    var   openid=req.query.openid;
+    service.userCancelOrder(openid,function(err,data){
+        if(err){
+            return res.json(new BaseReturnInfo(0,err,""));
         }
         return res.json(new BaseReturnInfo(1,"",data));
     })

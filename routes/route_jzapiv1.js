@@ -27,6 +27,8 @@ Router.post("/userApplySchool",baseController.postUserApplySchool);
 Router.post("/userCreateOrder",baseController.postUserCreateOrder);
 // 获取我领取的F吗
 Router.get("/getUserAvailableFcode",baseController.getUserAvailableFcode);
+// 用户取消订单
+Router.get("/userCancelOrder",baseController.userCancelOrder);
 
 
 // 获取训练场地
