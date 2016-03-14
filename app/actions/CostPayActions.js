@@ -46,6 +46,7 @@ class CostPayActions {
                     let weixinParams = {
                         appId: weixinpay.appId,
                         timestamp:  weixinpay.timeStamp, 
+                        timeStamp: weixinpay.timeStamp, 
                         nonceStr: weixinpay.nonceStr, 
                         package: 'prepay_id=' + weixinpay.prepayid, 
                         signType: weixinpay.signType,
