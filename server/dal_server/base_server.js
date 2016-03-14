@@ -643,7 +643,41 @@ exports.userCancelOrder=function(openid,callback){
             })
 
 
+};
+// 获取我的订单
+exports.getMyOrder=function(openid,callback){
+    userModel.findOne({"weixinopenid":openid})
+        .exec(function(err,userData) {
+            if (err) {
+                return callback("查找用户出错");
+            }
+            if (!userData) {
+                return callback("没有查询到用户信息");
+            }
+            if (userData.applystate == 0) {
+                return callback("用户报名");
+            }
+            var returndata={
+                applyschoolinfo:userData.applyschoolinfo,
+                applyclasstypeinfo:userData.applyclasstypeinfo,
+                applytime:userData.applyinfo.applytime.toFormat("YYYY/MM/DD"),
+                scanauditurl:userData.scanauditurl,
+                orderid:userData._id,
+                name:userData.name,
+                mobile:userData.mobile,
+                logimg:userData.headportrait.originalpic,
+                Ycode:"",
+                paytype:userData.paytype,
+                paytypestatus:userData.paytypestatus,
+            }
+            if(userData.applystate == 2){
+                returndata.paytypestatus=20
+            }
+           return  callback(null,returndata);
+        })
 }
+
+
 //生成用户支付订单
 exports.postUserCreateOrder=function(applyinfo,callback){
     userModel.findOne({"weixinopenid":applyinfo.openid})
@@ -672,7 +706,7 @@ exports.postUserCreateOrder=function(applyinfo,callback){
                         scanauditurl:data.scanauditurl,
                         orderid:data._id,
                     }
-                        returndata.applyschoolinfo.logimg=schooldata.logoimg.originalpic;
+                        //returndata.applyschoolinfo.logimg=schooldata.logoimg.originalpic;
                         return callback(null, returndata);
                     })
 

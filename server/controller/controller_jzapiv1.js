@@ -173,6 +173,15 @@ exports.userCancelOrder=function(req,res){
         return res.json(new BaseReturnInfo(1,"",data));
     })
 }
+exports.getMyOrder=function(req,res){
+    var   openid=req.query.openid;
+    service.getMyOrder(openid,function(err,data){
+        if(err){
+            return res.json(new BaseReturnInfo(0,err,""));
+        }
+        return res.json(new BaseReturnInfo(1,"",data));
+    })
+}
 
 // 获取驾校下面的训练场
 exports.getSchoolTrainingField = function (req, res) {
