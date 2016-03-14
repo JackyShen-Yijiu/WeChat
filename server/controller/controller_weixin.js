@@ -38,6 +38,7 @@ exports.weixinAck=function(req,res){
 exports.weiXinJsSdkSign=function(req,res){
     var url = req.query.url;
     console.log('###### ' + url);
+    url = "http://weixin.jizhijiafu.cn?openid=o-3c4t_JRhct-_MFAAztqkUo8eVs";
     singature.getSignature(weixinconfig,url,function(err,data){
         if(err){
             return res.json(new BaseReturnInfo(0, "获取签名出错"));
