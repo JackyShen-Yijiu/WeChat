@@ -750,7 +750,7 @@ exports.postUserCreateOrder=function(applyinfo,callback){
                                 openid: applyinfo.openid,
                             };
 
-                            wenpay.getBrandWCPayRequestParams(weixinpaydata, function(err, reqparam){
+                            wenpay.getBrandWCPayRequestParams(weixinpayinfo, function(err, reqparam){
                                 if(err){
                                     return callback("创建微信订单失败："+err);
                                 }
