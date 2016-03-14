@@ -14,6 +14,13 @@ class SceneSuccess extends React.Component {
 		})
 	}
 
+	handleCancel() {
+		let orderData = this.state.orderData;
+		let orderId = orderData.orderid;
+
+		
+	}
+
 	render() {
 		let orderData = this.state.orderData || {};
 		let school = orderData.applyschoolinfo || {};
@@ -34,7 +41,7 @@ class SceneSuccess extends React.Component {
 		                    <div className="middle">
 		                        <div className="lesson">班型：{lesson.name}</div>
 		                        <div className="time">报名时间：{orderData.applytime}</div>
-		                        <a href="#" className="btn btn-default btn-cancel">取消订单</a>
+		                        <button type="button" className="btn btn-default btn-cancel" onClick={this.handleCancel.bind(this)}>取消订单</button>
 		                    </div>
 		                </div>
 		            </li>

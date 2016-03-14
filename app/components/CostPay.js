@@ -116,7 +116,7 @@ class CostPay extends React.Component {
 		                <input type="text" className="form-control"  value={this.state.bcode} onChange={CostPayActions.updateBcode} placeholder="请输入邀请码（选填）"/>
 		            </li>
 		        </ul>
-		        <ul className="list-group pay-list-group mt20">
+		        <ul className="list-group pay-list-group mt20 mb20">
 		            <li className="list-group-item">付款方式</li>
 		            <li className="list-group-item" onClick={this.changePayType.bind(this, 2)}>
 		                <div className="left">
