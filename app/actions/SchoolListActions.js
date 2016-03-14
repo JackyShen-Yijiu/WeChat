@@ -10,7 +10,6 @@ class SchoolListActions {
     }
 
     getWeixinConfig(url, callback) {
-        $('.location-loading').show();
         $.ajax({
             url: '/jzapi/weixin/getjssign?url=' + url
         }).done(response => {
