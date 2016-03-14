@@ -145,6 +145,7 @@ var defautfun= {
                             userdata.carmodel = classtypedata.carmodel;
                             userdata.applyschoolinfo.id = applyinfo.schoolid;
                             userdata.applyschoolinfo.name = schooldata.name;
+                            userdata.applyschool=applyinfo.schoolid;
                             if (applyinfo.coachid!="") {
                                 userdata.applycoach = applyinfo.coachid;
                                 userdata.applycoachinfo.id = applyinfo.coachid;
@@ -631,9 +632,11 @@ exports.postUserCreateOrder=function(applyinfo,callback){
             }
             userData.referrerfcode=applyinfo.fcode;
             userData.paytype=applyinfo.paytype;
+            userData.bcode=applyinfo.bcode;
             userData.save(function(err,data){
                 if  (applyinfo.paytype==1){  // 线下报名
-                    defautfun.redisSchoolInfo(data.applyschool,function(err,schooldata){
+                    console.log(data);
+                    defautfun.redisSchoolInfo(data.applyschool?data.applyschool:data.applyschoolinfo.id ,function(err,schooldata){
                     var returndata={
                         applyschoolinfo:data.applyschoolinfo,
                         applyclasstypeinfo:data.applyclasstypeinfo,

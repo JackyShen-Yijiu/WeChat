@@ -139,6 +139,7 @@ exports.postUserCreateOrder=function(req,res){
         fcode : req.body.Ycode,
         paytype:req.body.paytype?req.body.paytype:1,  // 支付方式 1  线下支付  2 线上支付
         openid:req.body.openid,
+        bcode:req.body.bcode,   //渠道码
         clientip:getClientIp(req)
     };
     if (applyinfo.clientip.length < 15)
