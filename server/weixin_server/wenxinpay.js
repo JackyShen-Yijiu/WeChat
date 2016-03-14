@@ -44,6 +44,14 @@ exports.createUnifiedOrder=function(payinfo,callback){
     })
 }
 
+exports.getBrandWCPayRequestParams=function(payinfo,callback){
+    wxpay.getBrandWCPayRequestParams(payinfo,function(err,data){
+        console.log(data);
+        callback(err,data);
+    })
+}
+
+
 exports.sign=function(parm){
     return wxpay.sign(parm);
 }
