@@ -91,7 +91,7 @@ exports.authorizeUsercallback=function(req,res,next){
                 });
             }else{
                 console.log('根据openid查询，用户已经存在', user);
-                res.redirect('http://moodpo.tunnel.qydev.com?openid=' + openid);
+                res.redirect('http://moodpo.tunnel.qydev.com?openid=' + openid+"&bcode="+bcode);
             }
         });
     });
