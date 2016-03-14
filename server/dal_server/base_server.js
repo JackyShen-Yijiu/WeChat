@@ -6,7 +6,7 @@ var mongodb = require('../common/mongodb.js');
 var  app=require("../../config").weixinconfig;
 var _ = require("underscore");
 var cityInfoModel = mongodb.CityiInfoModel;
-var cache = require("../Common/cache");
+var cache = require("../common/cache");
 var schoolModel = mongodb.DriveSchoolModel;
 var geolib = require('geolib');
 var async = require('async');
@@ -120,13 +120,7 @@ var defautfun= {
             } else {
                 searchcoachinfo._id = new mongodb.ObjectId(applyinfo.coachid)
             }
-            var searchcoachinfo = {};
-            if (applyinfo.coachid == -1 || applyinfo.coachid == "-1" || applyinfo.coachid.length < 5) {
-                searchcoachinfo.driveschool = new mongodb.ObjectId(applyinfo.schoolid);
-                searchcoachinfo.is_validation = true
-            } else {
-                searchcoachinfo._id = new mongodb.ObjectId(applyinfo.coachid)
-            }
+
             console.log('检查报名驾校和教练')
             // 检查报名驾校和教练
             coachmode.findOne(searchcoachinfo, function (err, coachdata) {
@@ -134,6 +128,7 @@ var defautfun= {
                     return callback("不能找到报名的教练");
                 }
                 applyinfo.coachid = coachdata ? coachdata._id : "";
+                console.log(applyinfo.coachid);
                 // 检查教练
                 schoolModel.findById(new mongodb.ObjectId(applyinfo.schoolid), function (err, schooldata) {
                     if (err || !schooldata) {
@@ -150,11 +145,11 @@ var defautfun= {
                             userdata.carmodel = classtypedata.carmodel;
                             userdata.applyschoolinfo.id = applyinfo.schoolid;
                             userdata.applyschoolinfo.name = schooldata.name;
-
-                            userdata.applycoach = applyinfo.coachid;
-                            userdata.applycoachinfo.id = applyinfo.coachid;
-                            userdata.applycoachinfo.name = coachdata ? coachdata.name : "";
-
+                            if (applyinfo.coachid!="") {
+                                userdata.applycoach = applyinfo.coachid;
+                                userdata.applycoachinfo.id = applyinfo.coachid;
+                                userdata.applycoachinfo.name = coachdata ? coachdata.name : "";
+                            }
                             userdata.applyclasstype = classtypedata._id;
                             userdata.applyclasstypeinfo.id = classtypedata._id;
                             userdata.applyclasstypeinfo.name = classtypedata.classname;
