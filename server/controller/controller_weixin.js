@@ -11,7 +11,7 @@ var client = new OAuth(weixinconfig.id, weixinconfig.secret);
 var  weiXinUserModel=mongodb.WeiXinUserModel;
 var weixinpay=require("../weixin_server/wenxinpay");
 
-var jizhijiafu = "http://weixin.jizhijiafu.cn";
+var jizhijiafu = weixinconfig.domain;
 
 
 exports.weixinAck=function(req,res){
@@ -37,8 +37,6 @@ exports.weixinAck=function(req,res){
 
 exports.weiXinJsSdkSign=function(req,res){
     var url = req.query.url;
-    console.log('###### ' + url);
-    url = "http://weixin.jizhijiafu.cn?openid=o-3c4t_JRhct-_MFAAztqkUo8eVs";
     singature.getSignature(weixinconfig,url,function(err,data){
         if(err){
             return res.json(new BaseReturnInfo(0, "获取签名出错"));
@@ -51,14 +49,16 @@ exports.weiXinJsSdkSign=function(req,res){
 };
 
 exports.authorizeUser=function(req,res){
-    var bcode=req.query.bcode;
-    var url = client.getAuthorizeURL(jizhijiafu + '/jzapi/weixin/authorizeUsercallback?bcode='+bcode,'','snsapi_userinfo');
+    var bcode=req.query.bcode || '';
+
+    var url = client.getAuthorizeURL(jizhijiafu + '/jzapi/weixin/authorizeUsercallback?type=' + bcode,'STATE','snsapi_userinfo');
     res.redirect(url);
 };
 
 exports.authorizeUsercallback=function(req,res,next){
     var code = req.query.code;
-    var bcode=req.query.bcode;
+    var bcode=req.query.type;
+    console.log('bcode = ' + bcode);
     //var User = req.model.UserModel;
 
     client.getAccessToken(code, function (err, result) {
@@ -85,7 +85,7 @@ exports.authorizeUsercallback=function(req,res,next){
                         if (err) {
                             next({openid:openid});
                         } else {
-                            res.redirect(jizhijiafu + '?openid=' + openid+"&bcode="+bcode);
+                            res.redirect(jizhijiafu + '?openid=' + openid + '#bcode' + bcode );
                             //res.redirect("http://nodeweixin.tunnel.qydev.com?opend="+openid);
                             //next({openid:openid});
                         }
@@ -93,7 +93,7 @@ exports.authorizeUsercallback=function(req,res,next){
                 });
             }else{
                 console.log('根据openid查询，用户已经存在', user);
-                res.redirect(jizhijiafu + '?openid=' + openid+"&bcode="+bcode);
+                res.redirect(jizhijiafu + '?openid=' + openid + '#bcode=' + bcode);
             }
         });
     });

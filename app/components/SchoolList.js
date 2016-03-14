@@ -32,8 +32,9 @@ class SchoolList extends React.Component {
         SchoolListStore.listen(this.onChange);
 
         let {query} = this.props.location;
+        let hash = this.props.location.hash;
         let openid = query.openid;
-        let bcode = query.bcode;
+        let bcode = hash.split('=')[1];
         if(bcode) {
             localStorage.setItem('bcode', bcode);
         } else {
@@ -47,11 +48,10 @@ class SchoolList extends React.Component {
         }
 
         let params = this.props.params;
-        console.log(params);
 
         // 判断是否在微信中
         if(this.isWeixn()) {
-            SchoolListActions.getWeixinConfig(location.href, (config) => {
+            SchoolListActions.getWeixinConfig(location.href.split('#')[0], (config) => {
                 wx.config({
                     debug: true,
                     appId: config.appId,
