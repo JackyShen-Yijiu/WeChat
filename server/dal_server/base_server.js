@@ -21,6 +21,7 @@ var userModel=mongodb.UserModel;
 var userAvailableFcodeModel=mongodb.UserAvailableFcodeModel;
 var UserPayModel=mongodb.UserModel;
 var userCountModel=mongodb.UserCountModel;
+var weixinUserModel=mongodb.WeiXinUserModel;
 var wenpay=require("../weixin_server/wenxinpay")
 require('date-utils');
 var timeout = 60 * 5;
@@ -77,6 +78,7 @@ var defautfun= {
     },
     // 添加一个用户
     addWeiXinUser: function (applyinfo, callback) {
+        weixinUserModel.findOne({openid:applyinfo.openid},function(err,weixinuser){
         var newuser = new userModel();
         newuser.name = applyinfo.name;
         newuser.mobile = applyinfo.mobile;
@@ -84,6 +86,7 @@ var defautfun= {
         newuser.openid = applyinfo.openid;
         newuser.password = "93e6bf49e71743b00cee035c0f3fc92f";
         newuser.loc.coordinates = [0, 0];
+            newuser.headportrait.originalpic=weixinuser?weixinuser.headimgurl:"";
         newuser.source = 2;
         getUserCount(function (err, usercoutinfo) {
             if (err) {
@@ -97,6 +100,7 @@ var defautfun= {
                 }
                 return callback(null, newinstace);
             });
+        })
         })
     },
     // 保存报名信息
