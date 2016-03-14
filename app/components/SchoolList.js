@@ -53,7 +53,7 @@ class SchoolList extends React.Component {
         if(this.isWeixn()) {
             SchoolListActions.getWeixinConfig(location.href, (config) => {
                 wx.config({
-                    debug: false,
+                    debug: true,
                     appId: config.appId,
                     timestamp: config.timestamp,
                     nonceStr: config.nonceStr,
@@ -69,7 +69,7 @@ class SchoolList extends React.Component {
                     wx.getLocation({
                         type: 'wgs84',
                         success: function (res) {
-                            
+
                             params.latitude = res.latitude;
                             params.longitude = res.longitude;
 
