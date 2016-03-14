@@ -5,6 +5,7 @@ class CityListStore {
     constructor() {
         this.bindActions(CityListActions);
         this.list = [];
+        this.currCity = '北京市';
     }
 
     onGetCityListSuccess(data) {

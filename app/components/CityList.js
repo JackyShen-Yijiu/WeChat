@@ -18,6 +18,9 @@ class CityList extends React.Component {
     componentDidMount() {
         CityListStore.listen(this.onChange);
         CityListActions.getCityList();
+        this.setState({
+        	currCity: localStorage.getItem('city') 
+        });
     }
 
     componentWillUnmount() {
@@ -25,8 +28,9 @@ class CityList extends React.Component {
     }
 
 	render() {
+		let currCity = this.state.currCity || '北京市';
 		let list = this.state.list.filter((city) => {
-			return city.name != localStorage.getItem('city');;
+			return city.name != currCity;
 		}).map((city, index) => {
 			if(index%2 == 0)
 				return (
@@ -48,7 +52,7 @@ class CityList extends React.Component {
 					<li className="list-group-item">
 		            	<span className="title">定位城市：</span>
 		            	<div className="items">
-		            		<Link to={'/北京市/schools'} className="item">北京市</Link>
+		            		<Link to={'/' + currCity + '/schools'} className="item">{currCity}</Link>
 		            	</div>
 					</li>
 					<li className="list-group-item">

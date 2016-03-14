@@ -43,16 +43,17 @@ class SchoolList extends React.Component {
         if(openid) {
             localStorage.setItem('openid', openid);
         } else {
-            localStorage.setItem('openid', 'o-3c4t8u5R2dbBr3AXcp-57PZ06E');
+            localStorage.setItem('openid', '');
         }
 
         let params = this.props.params;
+        console.log(params);
 
         // 判断是否在微信中
         if(this.isWeixn()) {
             SchoolListActions.getWeixinConfig(location.href, (config) => {
                 wx.config({
-                    debug: false,
+                    debug: true,
                     appId: config.appId,
                     timestamp: config.timestamp,
                     nonceStr: config.nonceStr,
@@ -69,10 +70,8 @@ class SchoolList extends React.Component {
                         type: 'wgs84',
                         success: function (res) {
 
-                            assign(params, {
-                                latitude: res.latitude,
-                                longitude: res.longitude,
-                            });
+                            params.latitude = res.latitude;
+                            params.longitude = res.longitude;
 
                             SchoolListActions.getSchoolList(params);
                         }
