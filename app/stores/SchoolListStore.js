@@ -11,9 +11,6 @@ class SchoolListStore {
     onGetSchoolListSuccess(data) {
         this.list = data.list;
         this.city = data.city_name;
-        if(this.city) {
-            localStorage.setItem('city', this.city);
-        }
     }
 
     onGetSchoolListFail(errorMessage) {

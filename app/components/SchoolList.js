@@ -43,7 +43,7 @@ class SchoolList extends React.Component {
         if(openid) {
             localStorage.setItem('openid', openid);
         } else {
-            localStorage.setItem('openid', 'o-3c4t8u5R2dbBr3AXcp-57PZ06E');
+            localStorage.setItem('openid', '');
         }
 
         let params = this.props.params;

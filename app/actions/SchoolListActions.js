@@ -10,6 +10,7 @@ class SchoolListActions {
     }
 
     getWeixinConfig(url, callback) {
+        $('.location-loading').show();
         $.ajax({
             url: '/jzapi/weixin/getjssign?url=' + url
         }).done(response => {
@@ -42,6 +43,9 @@ class SchoolListActions {
         .done(response => {
             $('.location-loading').hide();
             if(response.type === 1) {
+                if(payload.latitude && payload.longitude) {
+                    localStorage.setItem('city', response.data.city_name);
+                }
                 this.actions.getSchoolListSuccess(response.data);
             } else {
                 this.actions.getSchoolListFail(response.msg);
