@@ -15,9 +15,26 @@ class SceneSuccess extends React.Component {
 	}
 
 	handleCancel() {
-		let orderData = this.state.orderData;
-		let orderId = orderData.orderid;
-
+		let openid = localStorage.getItem('openid');
+		let history = this.props.history;
+		$.ajax({
+            url: '/jzapi/v1/userCancelOrder',
+            data: {
+            	openid
+            }
+        })
+        .done(response => {
+            if(response.type === 1) {
+            	toastr.info('订单取消成功！');
+            	localStorage.setItem('order', null);
+                history.replaceState(null, '/?openid=' + openid);
+            } else {
+                console.log(response.msg);
+            }
+        })
+        .fail(jqXhr => {
+            console.log('fail');
+        });
 		
 	}
 

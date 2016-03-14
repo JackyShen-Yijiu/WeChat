@@ -37,9 +37,26 @@ class CostPayActions {
         .done(response => {
             if(response.type === 1) {
                 this.actions.doPaySuccess(response.data);
-                // 缓存订单信息
+                // 缓存订单信息 用于成功页面展示
                 localStorage.setItem('order', JSON.stringify(response.data));
-                payload.history.replaceState(null, '/successful');
+                if(payload.params.paytype == 1) { // 线下支付
+                    payload.history.replaceState(null, '/successful');
+                } else {
+                    let weixinpay = response.data.weixinpay;
+                    // 发起微信支付
+                    wx.chooseWXPay({
+                        timestamp:  weixinpay.timeStamp, 
+                        nonceStr: weixinpay.nonceStr, 
+                        package: 'prepay_id=' + weixinpay.prepayid, 
+                        signType: weixinpay.signType,
+                        paySign: weixinpay.sign,
+                        success: function (res) {
+                            console.log(res);
+                            toastr.info('微信支付成功！');
+                            
+                        }
+                    });
+                }
             } else {
                 this.actions.doPayFail(response.msg);
             }
