@@ -51,7 +51,7 @@ class SchoolList extends React.Component {
         if(this.isWeixn()) {
             SchoolListActions.getWeixinConfig(location.href.split('#')[0], (config) => {
                 wx.config({
-                    debug: false,
+                    debug: true,
                     appId: config.appId,
                     timestamp: config.timestamp,
                     nonceStr: config.nonceStr,
