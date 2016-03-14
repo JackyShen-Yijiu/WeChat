@@ -48,9 +48,9 @@ class CostPayActions {
                         timestamp:  weixinpay.timeStamp, 
                         timeStamp: weixinpay.timeStamp, 
                         nonceStr: weixinpay.nonceStr, 
-                        package: 'prepay_id=' + weixinpay.prepayid, 
+                        package: weixinpay.package, 
                         signType: weixinpay.signType,
-                        paySign: weixinpay.sign,
+                        paySign: weixinpay.paySign,
                         success: function (res) {
                             console.log(res);
                             toastr.info('微信支付成功！');
