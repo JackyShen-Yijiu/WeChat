@@ -87,6 +87,7 @@ var defautfun= {
         newuser.password = "93e6bf49e71743b00cee035c0f3fc92f";
         newuser.loc.coordinates = [0, 0];
             newuser.headportrait.originalpic=weixinuser?weixinuser.headimgurl:"";
+            newuser.nickname=weixinuser?weixinuser.nickname:"";
         newuser.source = 2;
         getUserCount(function (err, usercoutinfo) {
             if (err) {
@@ -216,8 +217,8 @@ var defautfun= {
 var resbasecoachinfomode = require("../models/returncoachinfo").resBaseCoachInfo;
 var smsVerifyCodeModel = mongodb.SmsVerifyCodeModel;
 var resendTimeout = 60;
-var addtestsmscode = require('../Common/sendsmscode').addsmscode;
-var smscodemodule = require('../Common/sendsmscode').sendsmscode;
+var addtestsmscode = require('../common/sendsmscode').addsmscode;
+var smscodemodule = require('../common/sendsmscode').sendsmscode;
 var schoolBusRouteModel = mongodb.SchoolBusRouteModel;
 //  定位城市
 exports.getCityByPosition = function (q, callback) {
