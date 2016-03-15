@@ -754,7 +754,7 @@ exports.postUserCreateOrder = function (applyinfo, callback) {
                                 openid: applyinfo.openid,
                             };
 
-                            wenpay.getBrandWCPayRequestParams(weixinpayinfo, function (err, reqparam) {
+                            wenpay.createUnifiedOrder(weixinpayinfo, function (err, weixinpaydata) {
                                 if (err) {
                                     return callback("创建微信订单失败：" + err);
                                 }
@@ -765,8 +765,8 @@ exports.postUserCreateOrder = function (applyinfo, callback) {
                                     var reqparam = {
                                         appId: app.id,
                                         timeStamp: Math.floor(Date.now() / 1000) + "",
-                                        nonceStr: eixinpaydata.nonce_str,
-                                        package: "prepay_id=" + dweixinpaydata.prepay_id,
+                                        nonceStr: weixinpaydata.nonce_str,
+                                        package: "prepay_id=" + weixinpaydata.prepay_id,
                                         signType: "MD5"
                                     };
                                     reqparam.paySign = wenpay.sign(reqparam);
