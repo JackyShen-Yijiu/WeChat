@@ -754,12 +754,12 @@ exports.postUserCreateOrder = function (applyinfo, callback) {
                                 openid: applyinfo.openid,
                             };
 
-                            wenpay.createUnifiedOrder(weixinpayinfo, function (err, reqparam) {
+                            wenpay.createUnifiedOrder(weixinpayinfo, function (err, weixinpaydata) {
                                 if (err) {
                                     return callback("创建微信订单失败：" + err);
                                 }
-                                if (reqparam.return_code == "FAIL") {
-                                    return callback("创建微信订单失败：" + reqparam.return_msg);
+                                if (weixinpaydata.return_code == "FAIL") {
+                                    return callback("创建微信订单失败：" + weixinpaydata.return_msg);
                                 }
 
                                 var reqparam = {
