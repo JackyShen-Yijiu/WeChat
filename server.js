@@ -10,11 +10,13 @@ var swig = require('swig');
 var React = require('react');
 var ReactDOM = require('react-dom/server');
 var Router = require('react-router');
+var DocumentTitle = require('react-document-title');
 
 var routes = require('./app/routes');
 
 var weinxinRouter = require("./routes/route_weixin");
 var apiRouter = require("./routes/route_jzapiv1");
+var messageRouter = require('./routes/route_message');
 
 var app = express();
 
@@ -35,6 +37,7 @@ app.use(function(req, res, next) {
 });
 app.use("/jzapi/weixin", weinxinRouter);
 app.use("/jzapi/v1", apiRouter);
+app.use('/wechat', messageRouter.wechat);
 
 app.use(function(req, res) {
     Router.match({ routes: routes.default, location: req.url }, function(err, redirectLocation, renderProps) {
@@ -44,6 +47,7 @@ app.use(function(req, res) {
             res.status(302).redirect(redirectLocation.pathname + redirectLocation.search)
         } else if (renderProps) {
             var html = ReactDOM.renderToString(React.createElement(Router.RoutingContext, renderProps));
+            DocumentTitle.rewind();
             var page = swig.renderFile('views/index.html', { html: html });
             res.status(200).send(page);
         } else {

@@ -1,4 +1,5 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 
 import SignUpStore from '../stores/SignUpStore';
 import SignUpActions from '../actions/SignUpActions';
@@ -94,43 +95,45 @@ class SignUp extends React.Component {
 		let price = selectLesson ? selectLesson.price : '';
 
 		return (
-			<div className="si-wrap">
-				<ul className="list-group signup-list-group">
-					<li className="list-group-item">
-						<span>报考驾校</span>
-						<span className="pull-right">{school.name}</span>
-					</li>
-					<li className="list-group-item">
-						<span>报考教练</span>
-						<span className="pull-right">智能匹配</span>
-					</li>
-					<li className="list-group-item">
-						<span>班级类型</span>
-						<span className="pull-right">{carModel} {lessonName} <em>¥ {price}</em></span>
-					</li>
-				</ul>
+			<DocumentTitle title="报名信息">
+				<div className="si-wrap">
+					<ul className="list-group signup-list-group">
+						<li className="list-group-item">
+							<span>报考驾校</span>
+							<span className="pull-right">{school.name}</span>
+						</li>
+						<li className="list-group-item">
+							<span>报考教练</span>
+							<span className="pull-right">智能匹配</span>
+						</li>
+						<li className="list-group-item">
+							<span>班级类型</span>
+							<span className="pull-right">{carModel} {lessonName} <em>¥ {price}</em></span>
+						</li>
+					</ul>
 
-				<ul className="list-group input-list-group">
-					<li className="list-group-item">
-						<span className="title">您的姓名</span>
-						<input type="text" className="form-control" ref="nameTextField" placeholder="请填写您的真实姓名" value={this.state.name} onChange={SignUpActions.updateName}/>
-					</li>
-					<li className="list-group-item">
-						<span className="title">电话号码</span>
-						<input type="text" className="form-control" ref="mobileTextField" placeholder="请填写您的电话号码" value={this.state.mobile} onChange={SignUpActions.updateMobile}/>
-					</li>
-					<li className="list-group-item">
-						<span className="title">验证码</span>
-						<input type="text" className="form-control" ref="codeTextField" placeholder="请填写您收到的验证码" value={this.state.code} onChange={SignUpActions.updateCode}/>
-						<button className="btn btn-default btn-sendcode" type="button" onClick={this.handleSend.bind(this)}>发送验证码</button>
-					</li>
-				</ul>
+					<ul className="list-group input-list-group">
+						<li className="list-group-item">
+							<span className="title">您的姓名</span>
+							<input type="text" className="form-control" ref="nameTextField" placeholder="请填写您的真实姓名" value={this.state.name} onChange={SignUpActions.updateName}/>
+						</li>
+						<li className="list-group-item">
+							<span className="title">电话号码</span>
+							<input type="text" className="form-control" ref="mobileTextField" placeholder="请填写您的电话号码" value={this.state.mobile} onChange={SignUpActions.updateMobile}/>
+						</li>
+						<li className="list-group-item">
+							<span className="title">验证码</span>
+							<input type="text" className="form-control" ref="codeTextField" placeholder="请填写您收到的验证码" value={this.state.code} onChange={SignUpActions.updateCode}/>
+							<button className="btn btn-default btn-sendcode" type="button" onClick={this.handleSend.bind(this)}>发送验证码</button>
+						</li>
+					</ul>
 
-				<footer className="si-footer">
-					<button className="btn btn-default btn-lg btn-block btn-signup" type="button" onClick={this.handleSubmit.bind(this)}>提交</button>
-				</footer>
+					<footer className="si-footer">
+						<button className="btn btn-default btn-lg btn-block btn-signup" type="button" onClick={this.handleSubmit.bind(this)}>提交</button>
+					</footer>
 
-			</div>
+				</div>
+			</DocumentTitle>
 		);
 	}
 }

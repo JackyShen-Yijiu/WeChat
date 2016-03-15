@@ -1,4 +1,5 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 
 import Coach from './common/Coach';
 
@@ -36,13 +37,15 @@ class CoachList extends React.Component {
 		});
 
 		return (
-			<div className="cl-wrap">
-		        <div className="cl-main">
-		            <div className="cl-list">
-		            	{list}
-		            </div>
-		        </div>
-		    </div>
+			<DocumentTitle title="教练列表">
+				<div className="cl-wrap">
+			        <div className="cl-main">
+			            <div className="cl-list">
+			            	{list}
+			            </div>
+			        </div>
+			    </div>
+		    </DocumentTitle>
 		);
 	}
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
+import DocumentTitle from 'react-document-title';
 
 import UserCenterStore from '../stores/UserCenterStore';
 import UserCenterActions from '../actions/UserCenterActions';
@@ -65,20 +66,22 @@ class UserCenter extends React.Component {
 		})();
 
 		return (
-			<div className="pc-wrap">
-				<div className="user-item">
-		            <div className="left">
-		                <img className="img-circle" src={orderData.logimg || 'http://placehold.it/80x80'} alt=""/>
-		            </div>
-		            <div className="middle">
-		                <div className="name">{orderData.name}</div>
-		                <div className="mobile">{orderData.mobile || '暂无'}</div>
-		                <div className="ycode">我的Y码：{orderData.Ycode || '暂无'}</div>
-		            </div>
-		        </div>
+			<DocumentTitle title="个人中心">
+				<div className="pc-wrap">
+					<div className="user-item">
+			            <div className="left">
+			                <img className="img-circle" src={orderData.logimg || 'http://placehold.it/80x80'} alt=""/>
+			            </div>
+			            <div className="middle">
+			                <div className="name">{orderData.name}</div>
+			                <div className="mobile">{orderData.mobile || '暂无'}</div>
+			                <div className="ycode">我的Y码：{orderData.Ycode || '暂无'}</div>
+			            </div>
+			        </div>
 
-		        {orderNode}
-			</div>
+			        {orderNode}
+				</div>
+			</DocumentTitle>
 		);
 	}
 }

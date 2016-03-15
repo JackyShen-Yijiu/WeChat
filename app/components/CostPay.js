@@ -1,4 +1,5 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 
 import CostPayStore from '../stores/CostPayStore';
 import CostPayActions from '../actions/CostPayActions';
@@ -84,73 +85,75 @@ class CostPay extends React.Component {
 		let price = selectLesson ? selectLesson.price : '';
 
 		return (
-			<div className="cp-wrap">
-		        <div className="school-item">
-		            <div className="left">
-		                <img src={imgUrl} alt=""/>
-		            </div>
-		            <div className="middle">
-		                <div className="title">{school.name}</div>
-		                <div className="address">{school.address}</div>
-		                <div className="coach">报考教练：{selectCoachName}</div>
-		            </div>
-		        </div>
-		        <ul className="list-group input-list-group mt20">
-		            <li className="list-group-item">
-		                <span className="title">报名班型</span>
-		                <span className="lesson">{carModel} {lessonName}</span>
-		            </li>
-		            <li className="list-group-item">
-		                <span className="title">支付费用</span>
-		                <span className="price">¥{price}</span>
-		            </li>
-		            <a href="#" className="list-group-item ycode-item">
-		                <span className="title">Y码返现</span>
-		                <span className="ycode">
-		                	<input type="text" className="form-control" disabled value={this.state.ycode} onChange={CostPayActions.updateYcode} placeholder="请选择一张你领取的Y码券" />
-		                	<i className="icon-more_right pull-right"></i>
-		                </span>
-		            </a>
-		            <li className="list-group-item">
-		                <span className="title">邀请码</span>
-		                <input type="text" className="form-control"  value={this.state.bcode} onChange={CostPayActions.updateBcode} placeholder="请输入邀请码（选填）"/>
-		            </li>
-		        </ul>
-		        <ul className="list-group pay-list-group mt20 mb20">
-		            <li className="list-group-item">付款方式</li>
-		            <li className="list-group-item" onClick={this.changePayType.bind(this, 2)}>
-		                <div className="left">
-		                    <img src="/img/wechat.png" alt=""/>
-		                </div>
-		                <div className="middle">
-		                    <div className="title">微信支付</div>
-		                    <div className="tips">推荐开通微信支付的用户使用</div>
-		                </div>
-		                <div className="right">
-		                    <span><i className={this.state.payType == 2 ? 'icon-sure': 'icon-pay_off'}></i></span>
-		                </div>
-		            </li>
-		            <li className="list-group-item" onClick={this.changePayType.bind(this, 1)}>
-		                <div className="left">
-		                    <img src="/img/scene.png" alt=""/>
-		                </div>
-		                <div className="middle">
-		                    <div className="title">现场支付</div>
-		                    <div className="tips">到指定现场了解更多后支付</div>
-		                </div>
-		                <div className="right">
-		                    <span><i className={this.state.payType == 1 ? 'icon-sure': 'icon-pay_off'}></i></span>
-		                </div>
-		            </li>
-		        </ul>
+			<DocumentTitle title="费用支付">
+				<div className="cp-wrap">
+			        <div className="school-item">
+			            <div className="left">
+			                <img src={imgUrl} alt=""/>
+			            </div>
+			            <div className="middle">
+			                <div className="title">{school.name}</div>
+			                <div className="address">{school.address}</div>
+			                <div className="coach">报考教练：{selectCoachName}</div>
+			            </div>
+			        </div>
+			        <ul className="list-group input-list-group mt20">
+			            <li className="list-group-item">
+			                <span className="title">报名班型</span>
+			                <span className="lesson">{carModel} {lessonName}</span>
+			            </li>
+			            <li className="list-group-item">
+			                <span className="title">支付费用</span>
+			                <span className="price">¥{price}</span>
+			            </li>
+			            <a href="#" className="list-group-item ycode-item">
+			                <span className="title">Y码返现</span>
+			                <span className="ycode">
+			                	<input type="text" className="form-control" disabled value={this.state.ycode} onChange={CostPayActions.updateYcode} placeholder="请选择一张你领取的Y码券" />
+			                	<i className="icon-more_right pull-right"></i>
+			                </span>
+			            </a>
+			            <li className="list-group-item">
+			                <span className="title">邀请码</span>
+			                <input type="text" className="form-control"  value={this.state.bcode} onChange={CostPayActions.updateBcode} placeholder="请输入邀请码（选填）"/>
+			            </li>
+			        </ul>
+			        <ul className="list-group pay-list-group mt20 mb20">
+			            <li className="list-group-item">付款方式</li>
+			            <li className="list-group-item" onClick={this.changePayType.bind(this, 2)}>
+			                <div className="left">
+			                    <img src="/img/wechat.png" alt=""/>
+			                </div>
+			                <div className="middle">
+			                    <div className="title">微信支付</div>
+			                    <div className="tips">推荐开通微信支付的用户使用</div>
+			                </div>
+			                <div className="right">
+			                    <span><i className={this.state.payType == 2 ? 'icon-sure': 'icon-pay_off'}></i></span>
+			                </div>
+			            </li>
+			            <li className="list-group-item" onClick={this.changePayType.bind(this, 1)}>
+			                <div className="left">
+			                    <img src="/img/scene.png" alt=""/>
+			                </div>
+			                <div className="middle">
+			                    <div className="title">现场支付</div>
+			                    <div className="tips">到指定现场了解更多后支付</div>
+			                </div>
+			                <div className="right">
+			                    <span><i className={this.state.payType == 1 ? 'icon-sure': 'icon-pay_off'}></i></span>
+			                </div>
+			            </li>
+			        </ul>
 
-		        <footer className="cp-footer">
-		            <div className="btn-group btn-group-justified">
-		                <a className="btn btn-default btn-lg disabled">合计 ¥{price}</a>
-		                <a className="btn btn-default btn-lg btn-pay" onClick={this.handlePay.bind(this)}>确认报名</a>
-		            </div>
-		        </footer>
-		    </div>
+			        <footer className="cp-footer">
+			            <div className="btn-group btn-group-justified">
+			                <a className="btn btn-default btn-lg disabled">合计 ¥{price}</a>
+			                <a className="btn btn-default btn-lg btn-pay" onClick={this.handlePay.bind(this)}>确认报名</a>
+			            </div>
+			        </footer>
+			    </div>
+			</DocumentTitle>
 		);
 	}
 
