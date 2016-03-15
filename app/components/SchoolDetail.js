@@ -85,57 +85,55 @@ class SchoolDetail extends React.Component {
         }
 
 		return (
-			<DocumentTitle title="驾校详情">
-				<div className="sd-wrap">
-			        <header className="sd-header">
-			        	<img src={imgUrl} />
-			            <div className="title">{detail.name}</div>
-			            <Stars level={detail.level}/>
-			        </header>
+			<div className="sd-wrap">
+				<DocumentTitle title="驾校详情"></DocumentTitle>
+		        <header className="sd-header">
+		        	<img src={imgUrl} />
+		            <div className="title">{detail.name}</div>
+		            <Stars level={detail.level}/>
+		        </header>
 
-			        <ul className="list-group prop-list-group">
-			            <li className="list-group-item">
-			            	<span className="icon"><i className="icon-money"></i></span>
-			            	<span className="title">价格：</span>
-			            	<span className="info">{price}</span>
-			            </li>
-			            <li className="list-group-item">
-			            	<span className="icon"><i className="icon-location"></i></span>
-			            	<span className="title">地址：</span>
-			            	<span className="info">{detail.address}</span>
-			            </li>
-			            <li className="list-group-item">
-			            	<span className="icon"><i className="icon-pass"></i></span>
-			            	<span className="title">通过率：</span>
-			            	<span className="info">{detail.pass_rate}%</span>
-			            </li>
-			            <li className="list-group-item">
-			            	<span className="icon"><i className="icon-time"></i></span>
-			            	<span className="title">营业时间：</span>
-			            	<span className="info">{hours}</span>
-			            </li>
-			        </ul>
+		        <ul className="list-group prop-list-group">
+		            <li className="list-group-item">
+		            	<span className="icon"><i className="icon-money"></i></span>
+		            	<span className="title">价格：</span>
+		            	<span className="info">{price}</span>
+		            </li>
+		            <li className="list-group-item">
+		            	<span className="icon"><i className="icon-location"></i></span>
+		            	<span className="title">地址：</span>
+		            	<span className="info">{detail.address}</span>
+		            </li>
+		            <li className="list-group-item">
+		            	<span className="icon"><i className="icon-pass"></i></span>
+		            	<span className="title">通过率：</span>
+		            	<span className="info">{detail.pass_rate}%</span>
+		            </li>
+		            <li className="list-group-item">
+		            	<span className="icon"><i className="icon-time"></i></span>
+		            	<span className="title">营业时间：</span>
+		            	<span className="info">{hours}</span>
+		            </li>
+		        </ul>
 
-			        <ul className="list-group info-list-group">
-			            <li className="list-group-item">驾校简介</li>
-			            <li className="list-group-item">
-			                <div className="school-info">{detail.introduction || '暂无描述'}</div>
-			            </li>
-			        </ul>
+		        <ul className="list-group info-list-group">
+		            <li className="list-group-item">驾校简介</li>
+		            <li className="list-group-item">
+		                <div className="school-info">{detail.introduction || '暂无描述'}</div>
+		            </li>
+		        </ul>
 
-			        <ul className="list-group link-list-group">
-						{coachLink}
-						{shuttleLink}
-						{groundLink}		            
-			        </ul>
-					
-					<ul className="list-group lesson-list-group">
-			            <li className="list-group-item">课程班型</li>
-			           	{lessonList}
-			        </ul>
-					
-			    </div>
-		    </DocumentTitle>
+		        <ul className="list-group link-list-group">
+					{coachLink}
+					{shuttleLink}
+					{groundLink}		            
+		        </ul>
+				
+				<ul className="list-group lesson-list-group">
+		            <li className="list-group-item">课程班型</li>
+		           	{lessonList}
+		        </ul>
+		    </div>
 		);
 	}
 }

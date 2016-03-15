@@ -37,15 +37,14 @@ class CoachList extends React.Component {
 		});
 
 		return (
-			<DocumentTitle title="教练列表">
-				<div className="cl-wrap">
-			        <div className="cl-main">
-			            <div className="cl-list">
-			            	{list}
-			            </div>
-			        </div>
-			    </div>
-		    </DocumentTitle>
+			<div className="cl-wrap">
+				<DocumentTitle title="教练列表"></DocumentTitle>
+		        <div className="cl-main">
+		            <div className="cl-list">
+		            	{list}
+		            </div>
+		        </div>
+		    </div>
 		);
 	}
 }

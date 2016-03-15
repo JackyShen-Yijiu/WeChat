@@ -26,14 +26,15 @@ class ShuttleList extends React.Component {
 
     render() {
     	return (
-            <DocumentTitle title="班车列表">
+            <div>
+                <DocumentTitle title="班车列表"></DocumentTitle>
                 <ul className="list-group simple-list-group">
                     <li className="list-group-item">
                         <div className="title">龙泉驾校第一训练场</div>
                         <div className="address">地址：北京市海淀区海淀大街27号</div>
                     </li>
                 </ul>
-            </DocumentTitle>
+            </div>
     	);
     }
 }

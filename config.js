@@ -14,7 +14,8 @@ exports.weixinconfig = {
     id: 'wxc360e212be5b3bb4', // 公众号
     secret: '9a2a6e99d8b44e5b5e39faa17799195c',
     token: 'jizhijiafuweixin',
-    domain: 'http://weixin.jizhijiafu.cn'
+    domain: 'http://weixin.jizhijiafu.cn',
+    encodingAESKey: 'iJ1qGRzr2QV5ILX0DvSMR2NVXvYhRfG0FxePXkQiRd7'
 };
 
 

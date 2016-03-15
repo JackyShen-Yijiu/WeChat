@@ -48,24 +48,23 @@ class CityList extends React.Component {
 		});
 
 		return (
-			<DocumentTitle title="城市列表">
-				<div className="cl-wrap">
-					<ul className="list-group city-list-group">
-						<li className="list-group-item">
-			            	<span className="title">定位城市：</span>
-			            	<div className="items">
-			            		<Link to={'/' + currCity + '/schools'} className="item">{currCity}</Link>
-			            	</div>
-						</li>
-						<li className="list-group-item">
-			            	<span className="title">热门城市：</span>
-			            	<div className="items">
-			            		{list}
-			            	</div>
-						</li>
-					</ul>
-				</div>
-			</DocumentTitle>
+			<div className="cl-wrap">
+				<DocumentTitle title="城市列表"></DocumentTitle>
+				<ul className="list-group city-list-group">
+					<li className="list-group-item">
+		            	<span className="title">定位城市：</span>
+		            	<div className="items">
+		            		<Link to={'/' + currCity + '/schools'} className="item">{currCity}</Link>
+		            	</div>
+					</li>
+					<li className="list-group-item">
+		            	<span className="title">热门城市：</span>
+		            	<div className="items">
+		            		{list}
+		            	</div>
+					</li>
+				</ul>
+			</div>
 		);
 	}
 }

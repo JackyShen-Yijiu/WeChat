@@ -36,11 +36,12 @@ class GroundList extends React.Component {
         });
         
     	return (
-            <DocumentTitle title="训练场地">
+            <div>
+                <DocumentTitle title="训练场地"></DocumentTitle>
                 <ul className="list-group simple-list-group">
                     {list}
                 </ul>
-            </DocumentTitle>
+            </div>
     	);
     }
 }

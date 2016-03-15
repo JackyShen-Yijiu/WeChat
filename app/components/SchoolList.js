@@ -110,34 +110,33 @@ class SchoolList extends React.Component {
         });
 
         return (
-            <DocumentTitle title="驾校列表">
-                <div className="sl-wrap">
-                    <header className="sl-header">
-                        <div className="address">
-                            <Link to="/cities" className="city">
-                                {this.props.params.city_name || this.state.city}
-                                <img className="location-loading" src="/img/location.gif" />
-                                <i className="icon-more_down"></i>
-                            </Link>
-                        </div>
-                        <div className="searchbar">
-                            <Link to="search" className="search">
-                                <i className="icon-search"></i> 请输入驾校或教练进行搜索
-                            </Link>
-                        </div>
-                        <div className="user">
-                            <Link to="/user"><i className="icon-user"></i></Link>
-                        </div>
-                    </header>
-                    <SortBar sortType="0" handleSort={this.handleSort.bind(this)}/>
-                    <div className="sl-main">
-                        <div className="sl-list">
-                            {list}
-                        </div>
-                        <a href="#" className="list-footer">加载更多</a>
+            <div className="sl-wrap">
+                <DocumentTitle title="驾校列表"></DocumentTitle>
+                <header className="sl-header">
+                    <div className="address">
+                        <Link to="/cities" className="city">
+                            {this.props.params.city_name || this.state.city}
+                            <img className="location-loading" src="/img/location.gif" />
+                            <i className="icon-more_down"></i>
+                        </Link>
                     </div>
+                    <div className="searchbar">
+                        <Link to="search" className="search">
+                            <i className="icon-search"></i> 请输入驾校或教练进行搜索
+                        </Link>
+                    </div>
+                    <div className="user">
+                        <Link to="/user"><i className="icon-user"></i></Link>
+                    </div>
+                </header>
+                <SortBar sortType="0" handleSort={this.handleSort.bind(this)}/>
+                <div className="sl-main">
+                    <div className="sl-list">
+                        {list}
+                    </div>
+                    <a href="#" className="list-footer">加载更多</a>
                 </div>
-            </DocumentTitle>
+            </div>
         );
     }
 }
