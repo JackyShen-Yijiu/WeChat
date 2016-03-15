@@ -19,7 +19,7 @@ exports.getCityByPosition = function (req, res) {
             return res.json(new BaseReturnInfo(1, "", data));
         }
     });
-}
+};
 // 获取城市列表
 exports.getCity = function (req, res) {
     service.getCityList(function (err, data) {
@@ -28,7 +28,7 @@ exports.getCity = function (req, res) {
         }
         return res.json(new BaseReturnInfo(1, "", data));
     });
-}
+};
 
 // 搜索驾校列表
 exports.getSchoolList = function (req, res) {
@@ -38,9 +38,9 @@ exports.getSchoolList = function (req, res) {
         cityname: req.query.city_name ? req.query.city_name : "",
         ordertype: req.query.order_type ? parseInt(req.query.order_type) : 0,
         index: req.query.index ? parseInt(req.query.index) : 1,
-        count: req.query.count ? parseInt(req.query.count) : 10,
+        count: req.query.count ? parseInt(req.query.count) : 10
         //schoolname: req.query.schoolname ? req.query.school_name : ""
-    }
+    };
     service.getSchoolList(q, function (err, data) {
         if (err) {
             return res.json(new BaseReturnInfo(0, err, []));
@@ -48,7 +48,7 @@ exports.getSchoolList = function (req, res) {
             return res.json(new BaseReturnInfo(1, "", data));
         }
     });
-}
+};
 
 // 获取驾校详情
 exports.getSchoolInfo = function (req, res) {
@@ -86,20 +86,22 @@ exports.getSchoolCoach = function (req, res) {
     });
 
 };
+
 // 获取用户可以使用的F吗
-exports.getUserAvailableFcode=function(req,res){
-    var openid=req.query.openid;
-    if (openid===undefined){
+exports.getUserAvailableFcode = function (req, res) {
+    var openid = req.query.openid;
+    if (openid === undefined) {
         return res.json(
-            new BaseReturnInfo(0,"参数不完整",""));
+            new BaseReturnInfo(0, "参数不完整", ""));
     }
-    service.getUserAvailableFcode(openid,function(err,data){
-        if(err){
-            return res.json(new BaseReturnInfo(0,err,[]));
+    service.getUserAvailableFcode(openid, function (err, data) {
+        if (err) {
+            return res.json(new BaseReturnInfo(0, err, []));
         }
-        return res.json(new BaseReturnInfo(1,"",data));
+        return res.json(new BaseReturnInfo(1, "", data));
     })
-}
+};
+
 // 用户报名接口
 exports.postUserApplySchool = function (req, res) {
     var applyinfo = {
@@ -117,14 +119,14 @@ exports.postUserApplySchool = function (req, res) {
         || applyinfo.schoolid === undefined || applyinfo.coachid === undefined
         || applyinfo.openid === undefined || applyinfo.classtypeid === undefined) {
         return res.json(
-            new BaseReturnInfo(0,"参数不完整",""));
-    };
-    service.postUserApplySchool(applyinfo,function(err,data){
-        if(err){
-            return res.json(new BaseReturnInfo(0,err,""));
+            new BaseReturnInfo(0, "参数不完整", ""));
+    }
+    service.postUserApplySchool(applyinfo, function (err, data) {
+        if (err) {
+            return res.json(new BaseReturnInfo(0, err, ""));
         }
         console.log('########' + data);
-        return res.json(new BaseReturnInfo(1,"",data));
+        return res.json(new BaseReturnInfo(1, "", data));
     })
 };
 
@@ -133,55 +135,53 @@ function getClientIp(req) {
         req.connection.remoteAddress ||
         req.socket.remoteAddress ||
         req.connection.socket.remoteAddress;
-};
+}
 // 生成用户支付订单
-exports.postUserCreateOrder=function(req,res){
-    var applyinfo= {
-        fcode : req.body.Ycode,
-        paytype:req.body.paytype?req.body.paytype:1,  // 支付方式 1  线下支付  2 线上支付
-        openid:req.body.openid,
-        bcode:req.body.bcode,   //渠道码
-        clientip:getClientIp(req)
+exports.postUserCreateOrder = function (req, res) {
+    var applyinfo = {
+        fcode: req.body.Ycode,
+        paytype: req.body.paytype ? req.body.paytype : 1,  // 支付方式 1  线下支付  2 线上支付
+        openid: req.body.openid,
+        bcode: req.body.bcode,   //渠道码
+        clientip: getClientIp(req)
     };
-    if (applyinfo.clientip.length < 15)
-    {
+    if (applyinfo.clientip.length < 15) {
         applyinfo.clientip = applyinfo.clientip;
     }
-    else
-    {
+    else {
         var nyIP = applyinfo.clientip.slice(7);
         applyinfo.clientip = nyIP;
     }
-    if (applyinfo.openid===undefined){
+    if (applyinfo.openid === undefined) {
         return res.json(
-            new BaseReturnInfo(0,"参数不完整",""));
+            new BaseReturnInfo(0, "参数不完整", ""));
     }
-    service.postUserCreateOrder(applyinfo,function(err,data){
-        if(err){
-            return res.json(new BaseReturnInfo(0,err,{}));
+    service.postUserCreateOrder(applyinfo, function (err, data) {
+        if (err) {
+            return res.json(new BaseReturnInfo(0, err, {}));
         }
-        return res.json(new BaseReturnInfo(1,"",data));
+        return res.json(new BaseReturnInfo(1, "", data));
     })
 };
 // 用户取消订单
-exports.userCancelOrder=function(req,res){
-    var   openid=req.query.openid;
-    service.userCancelOrder(openid,function(err,data){
-        if(err){
-            return res.json(new BaseReturnInfo(0,err,""));
+exports.userCancelOrder = function (req, res) {
+    var openid = req.query.openid;
+    service.userCancelOrder(openid, function (err, data) {
+        if (err) {
+            return res.json(new BaseReturnInfo(0, err, ""));
         }
-        return res.json(new BaseReturnInfo(1,"",data));
+        return res.json(new BaseReturnInfo(1, "", data));
     })
-}
-exports.getMyOrder=function(req,res){
-    var   openid=req.query.openid;
-    service.getMyOrder(openid,function(err,data){
-        if(err){
-            return res.json(new BaseReturnInfo(0,err,""));
+};
+exports.getMyOrder = function (req, res) {
+    var openid = req.query.openid;
+    service.getMyOrder(openid, function (err, data) {
+        if (err) {
+            return res.json(new BaseReturnInfo(0, err, ""));
         }
-        return res.json(new BaseReturnInfo(1,"",data));
+        return res.json(new BaseReturnInfo(1, "", data));
     })
-}
+};
 
 // 获取驾校下面的训练场
 exports.getSchoolTrainingField = function (req, res) {
@@ -192,7 +192,7 @@ exports.getSchoolTrainingField = function (req, res) {
         }
         return res.json(new BaseReturnInfo(1, "", data));
     })
-}
+};
 
 //获取教练信息
 exports.getCoachInfo = function (req, res) {
@@ -204,7 +204,7 @@ exports.getCoachInfo = function (req, res) {
         return res.json(new BaseReturnInfo(1, "", data));
     })
 
-}
+};
 
 // 获取验证码
 exports.fetchCode = function (req, res) {
@@ -266,8 +266,8 @@ exports.searchList = function (req, res) {
 // 获取班车列表
 exports.getSchoolBus = function (req, res) {
     var q = {
-        schoolId : req.params.school_id
-    }
+        schoolId: req.params.school_id
+    };
     service.getSchoolBus(q, function (err, data) {
         if (err) {
             return res.json(new BaseReturnInfo(0, err, []));
@@ -275,4 +275,4 @@ exports.getSchoolBus = function (req, res) {
             return res.json(new BaseReturnInfo(1, "", data));
         }
     });
-}
+};
