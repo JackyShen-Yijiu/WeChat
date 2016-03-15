@@ -847,14 +847,14 @@ exports.postUserApplySchool = function (applyinfo, callback) {
                             defautfun.saveUserApplyinfo(data._id, applyinfo, function (err, data) {
                                 return callback(err, data);
                             })
-                        });
+                        })
                         // 用户报名
                     }
-                });
+                })
                 // 不存在微信用户
             }
         })
-    });
+    })
     // 验证微信id
     // 验证手机号
 };
@@ -868,7 +868,7 @@ var getfildbus = function (fildid, buslist) {
         }
     }
     return fildbuslist;
-};
+}
 // 获取驾校下面的练车场
 exports.getSchoolTrainingField = function (schoolid, callback) {
     //var searchInfo = {
@@ -1008,7 +1008,7 @@ exports.searchList = function (q, callback) {
                                 max_price: r.maxprice,
                                 min_price: r.minprice,
                                 passing_rate: r.passingrate
-                            };
+                            }
                             driveschoollist.push(oneschool);
                         });
                         cb(err, {school_list: driveschoollist});
@@ -1038,7 +1038,7 @@ exports.searchList = function (q, callback) {
                                     pass_rate: r.passrate,
                                     seniority: r.Seniority,
                                     subjects: r.subject
-                                };
+                                }
                                 rescoachlist.push(returnmodel);
                             });
                             data.coach_list = rescoachlist;
