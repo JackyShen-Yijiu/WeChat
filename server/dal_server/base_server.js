@@ -747,7 +747,7 @@ exports.postUserCreateOrder = function (applyinfo, callback) {
                             var weixinpayinfo = {
                                 body: data.applyschoolinfo.name + " " + data.applyclasstypeinfo.name,
                                 out_trade_no: orderdata._id.toString(),
-                                total_fee: orderdata.paymoney,
+                                total_fee: orderdata.paymoney*100,
                                 spbill_create_ip: applyinfo.clientip,
                                 notify_url: merchant.notify_url,
                                 trade_type: 'JSAPI',
