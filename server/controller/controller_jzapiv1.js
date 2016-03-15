@@ -38,9 +38,9 @@ exports.getSchoolList = function (req, res) {
         cityname: req.query.city_name ? req.query.city_name : "",
         ordertype: req.query.order_type ? parseInt(req.query.order_type) : 0,
         index: req.query.index ? parseInt(req.query.index) : 1,
-        count: req.query.count ? parseInt(req.query.count) : 10,
+        count: req.query.count ? parseInt(req.query.count) : 10
         //schoolname: req.query.schoolname ? req.query.school_name : ""
-    }
+    };
     service.getSchoolList(q, function (err, data) {
         if (err) {
             return res.json(new BaseReturnInfo(0, err, []));
@@ -48,7 +48,7 @@ exports.getSchoolList = function (req, res) {
             return res.json(new BaseReturnInfo(1, "", data));
         }
     });
-}
+};
 
 // 获取驾校详情
 exports.getSchoolInfo = function (req, res) {
