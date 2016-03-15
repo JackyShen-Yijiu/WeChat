@@ -146,7 +146,7 @@ class CostPay extends React.Component {
 
 		        <footer className="cp-footer">
 		            <div className="btn-group btn-group-justified">
-		                <a className="btn btn-default btn-lg disabled">合计 ¥3600</a>
+		                <a className="btn btn-default btn-lg disabled">合计 ¥{price}</a>
 		                <a className="btn btn-default btn-lg btn-pay" onClick={this.handlePay.bind(this)}>确认报名</a>
 		            </div>
 		        </footer>
