@@ -754,7 +754,7 @@ exports.postUserCreateOrder = function (applyinfo, callback) {
                                 openid: applyinfo.openid,
                             };
 
-                            wenpay.createUnifiedOrder(weixinpayinfo, function (err, weixinpaydata) {
+                            wenpay.createUnifiedOrder(weixinpayinfo, function (err, reqparam) {
                                 if (err) {
                                     return callback("创建微信订单失败：" + err);
                                 }
@@ -782,21 +782,6 @@ exports.postUserCreateOrder = function (applyinfo, callback) {
                                     {$set: {weixinpayinfo: JSON.stringify(reqparam)}}, function (err, data) {
                                     });
                                 return callback(null, returndata);
-
-                                var returndata = {
-                                    applyschoolinfo: data.applyschoolinfo,
-                                    applyclasstypeinfo: data.applyclasstypeinfo,
-                                    paytype: data.paytype,
-                                    applytime: data.applyinfo.applytime.toFormat("YYYY/MM/DD"),
-                                    orderid: orderdata._id,
-                                    weixinpay: reqparam,
-                                }
-                                UserPayModel.update({"_id": orderdata._id},
-                                    {$set: {weixinpayinfo: JSON.stringify(reqparam)}}, function (err, data) {
-                                    });
-                                return callback(null, returndata);
-
-
                             });
 
                         });
