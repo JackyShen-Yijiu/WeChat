@@ -754,13 +754,22 @@ exports.postUserCreateOrder = function (applyinfo, callback) {
                                 openid: applyinfo.openid,
                             };
 
-                            wenpay.getBrandWCPayRequestParams(weixinpayinfo, function (err, reqparam) {
+                            wenpay.createUnifiedOrder(weixinpayinfo, function (err, weixinpaydata) {
                                 if (err) {
                                     return callback("创建微信订单失败：" + err);
                                 }
-                                if (reqparam.return_code == "FAIL") {
-                                    return callback("创建微信订单失败：" + reqparam.return_msg);
+                                if (weixinpaydata.return_code == "FAIL") {
+                                    return callback("创建微信订单失败：" + weixinpaydata.return_msg);
                                 }
+
+                                var reqparam = {
+                                    appId: app.id,
+                                    timeStamp: Math.floor(Date.now() / 1000) + "",
+                                    nonceStr: weixinpaydata.nonce_str,
+                                    package: "prepay_id=" + weixinpaydata.prepay_id,
+                                    signType: "MD5"
+                                };
+                                reqparam.paySign = wenpay.sign(reqparam);
                                 var returndata = {
                                     applyschoolinfo: data.applyschoolinfo,
                                     applyclasstypeinfo: data.applyclasstypeinfo,
