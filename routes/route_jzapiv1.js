@@ -21,16 +21,19 @@ Router.get("/getSchoolInfo/:school_id", baseController.getSchoolInfo);
 Router.get("/getSchoolCoach/:school_id", baseController.getSchoolCoach);
 
 // 用户报名
+Router.post("/userApplySchool", baseController.postUserApplySchool);
 
-Router.post("/userApplySchool",baseController.postUserApplySchool);
 // 用户支付生成订单
-Router.post("/userCreateOrder",baseController.postUserCreateOrder);
+Router.post("/userCreateOrder", baseController.postUserCreateOrder);
+
 // 获取我领取的F吗
-Router.get("/getUserAvailableFcode",baseController.getUserAvailableFcode);
+Router.get("/getUserAvailableFcode", baseController.getUserAvailableFcode);
+
 // 用户取消订单
-Router.get("/userCancelOrder",baseController.userCancelOrder);
+Router.get("/userCancelOrder", baseController.userCancelOrder);
+
 // 获取我的订单
-Router.get("/getMyOrder",baseController.getMyOrder);
+Router.get("/getMyOrder", baseController.getMyOrder);
 
 
 // 获取训练场地

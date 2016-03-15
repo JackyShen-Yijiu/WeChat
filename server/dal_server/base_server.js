@@ -3,8 +3,8 @@
  */
 var mongodb = require('../common/mongodb.js');
 
-var  app=require("../../config").weixinconfig;
-var  merchant=require("../../config").merchant;
+var app = require("../../config").weixinconfig;
+var merchant = require("../../config").merchant;
 var _ = require("underscore");
 var cityInfoModel = mongodb.CityiInfoModel;
 var cache = require("../common/cache");
@@ -17,40 +17,40 @@ var classtypeModel = mongodb.ClassTypeModel;
 var coachmode = mongodb.CoachModel;
 var baiDuUtil = require('../common/baidu_util.js');
 var trainingfiledModel = mongodb.TrainingFieldModel;
-var smsVerifyCodeModel=mongodb.SmsVerifyCodeModel;
-var userModel=mongodb.UserModel;
-var userAvailableFcodeModel=mongodb.UserAvailableFcodeModel;
-var UserPayModel=mongodb.UserPayModel;
-var userCountModel=mongodb.UserCountModel;
-var weixinUserModel=mongodb.WeiXinUserModel;
-var wenpay=require("../weixin_server/wenxinpay")
+var smsVerifyCodeModel = mongodb.SmsVerifyCodeModel;
+var userModel = mongodb.UserModel;
+var userAvailableFcodeModel = mongodb.UserAvailableFcodeModel;
+var UserPayModel = mongodb.UserPayModel;
+var userCountModel = mongodb.UserCountModel;
+var weixinUserModel = mongodb.WeiXinUserModel;
+var wenpay = require("../weixin_server/wenxinpay")
 require('date-utils');
 var timeout = 60 * 5;
 
-var  getUserCount=function(callback){
-    userCountModel.getUserCountInfo(function(err,data){
+var getUserCount = function (callback) {
+    userCountModel.getUserCountInfo(function (err, data) {
         //userCountModel.findAndModify({}, [],{$inc:{'displayid':1},$inc:{'invitationcode':1}},
         //  {new: true, upsert: true},function(err,data){
-        if(err){
-            return  callback(err)}
+        if (err) {
+            return callback(err)
+        }
         // console.log("get user count:"+ data);
         //  console.log("get user count:"+ data.value.displayid);
-        if(!data)
-        {
-            var usercountinfo=new userCountModel();
-            usercountinfo.save(function(errsave,savedata){
-                if (errsave){
+        if (!data) {
+            var usercountinfo = new userCountModel();
+            usercountinfo.save(function (errsave, savedata) {
+                if (errsave) {
                     return callback(errsave);
                 }
-                return callback(null,savedata);
+                return callback(null, savedata);
             });
         }
-        else{
-            return  callback(null,data);
+        else {
+            return callback(null, data);
         }
     });
-}
-var defautfun= {
+};
+var defautfun = {
     checkSmsCode: function (mobile, code, callback) {
         smsVerifyCodeModel.findOne({mobile: mobile, smsCode: code, verified: false}, function (err, instace) {
             if (err) {
@@ -79,30 +79,30 @@ var defautfun= {
     },
     // 添加一个用户
     addWeiXinUser: function (applyinfo, callback) {
-        weixinUserModel.findOne({openid:applyinfo.openid},function(err,weixinuser){
-        var newuser = new userModel();
-        newuser.name = applyinfo.name;
-        newuser.mobile = applyinfo.mobile;
-        newuser.create = new Date();
-        newuser.openid = applyinfo.openid;
-        newuser.password = "93e6bf49e71743b00cee035c0f3fc92f";
-        newuser.loc.coordinates = [0, 0];
-            newuser.headportrait.originalpic=weixinuser?weixinuser.headimgurl:"";
-            newuser.nickname=weixinuser?weixinuser.nickname:"";
-        newuser.source = 2;
-        getUserCount(function (err, usercoutinfo) {
-            if (err) {
-                return callback(" 获取用户ID出错 :" + err);
-            }
-            newuser.displayuserid = usercoutinfo.value.displayid;
-            newuser.invitationcode = usercoutinfo.value.invitationcode;
-            newuser.save(function (err, newinstace) {
+        weixinUserModel.findOne({openid: applyinfo.openid}, function (err, weixinuser) {
+            var newuser = new userModel();
+            newuser.name = applyinfo.name;
+            newuser.mobile = applyinfo.mobile;
+            newuser.create = new Date();
+            newuser.openid = applyinfo.openid;
+            newuser.password = "93e6bf49e71743b00cee035c0f3fc92f";
+            newuser.loc.coordinates = [0, 0];
+            newuser.headportrait.originalpic = weixinuser ? weixinuser.headimgurl : "";
+            newuser.nickname = weixinuser ? weixinuser.nickname : "";
+            newuser.source = 2;
+            getUserCount(function (err, usercoutinfo) {
                 if (err) {
-                    return callback("保存用户出错" + err);
+                    return callback(" 获取用户ID出错 :" + err);
                 }
-                return callback(null, newinstace);
-            });
-        })
+                newuser.displayuserid = usercoutinfo.value.displayid;
+                newuser.invitationcode = usercoutinfo.value.invitationcode;
+                newuser.save(function (err, newinstace) {
+                    if (err) {
+                        return callback("保存用户出错" + err);
+                    }
+                    return callback(null, newinstace);
+                });
+            })
         })
     },
     // 保存报名信息
@@ -115,7 +115,7 @@ var defautfun= {
             if (userdata.is_lock == true) {
                 return callback("此用户已锁定，请联系客服");
             }
-            if (userdata.applystate >=1) {
+            if (userdata.applystate >= 1) {
                 return callback("您已经报名成功，请不要重复报名");
             }
 
@@ -140,7 +140,7 @@ var defautfun= {
                     if (err || !schooldata) {
                         return callback("不能找到报名的驾校");
                     }
-                    
+
                     // 检查所报的课程类型
                     classtypeModel.findById(new mongodb.ObjectId(applyinfo.classtypeid))
                         .populate("vipserverlist")
@@ -151,8 +151,8 @@ var defautfun= {
                             userdata.carmodel = classtypedata.carmodel;
                             userdata.applyschoolinfo.id = applyinfo.schoolid;
                             userdata.applyschoolinfo.name = schooldata.name;
-                            userdata.applyschool=applyinfo.schoolid;
-                            if (applyinfo.coachid!="") {
+                            userdata.applyschool = applyinfo.schoolid;
+                            if (applyinfo.coachid != "") {
                                 userdata.applycoach = applyinfo.coachid;
                                 userdata.applycoachinfo.id = applyinfo.coachid;
                                 userdata.applycoachinfo.name = coachdata ? coachdata.name : "";
@@ -178,7 +178,7 @@ var defautfun= {
                                     return callback("保存申请信息错误：" + err);
                                 }
                                 classtypedata.applycount = classtypedata.applycount + 1;
-                                if(coachdata ){
+                                if (coachdata) {
                                     coachdata.studentcoount = coachdata.studentcoount + 1;
                                     coachdata.save();
                                 }
@@ -213,7 +213,7 @@ var defautfun= {
             }
         })
     }
-}
+};
 
 var resbasecoachinfomode = require("../models/returncoachinfo").resBaseCoachInfo;
 var smsVerifyCodeModel = mongodb.SmsVerifyCodeModel;
@@ -443,7 +443,7 @@ exports.getSchoolList = function (searchinfo, callback) {
         }
 
     })
-}
+};
 
 // 获取驾校详情
 exports.getSchoolInfoserver = function (schoolid, callback) {
@@ -596,37 +596,37 @@ exports.getSchoolCoach = function (coachinfo, callback) {
 
 
 //  获取我领取的优惠卷
-exports.getUserAvailableFcode=function(openid,callback){
-    userModel.findOne({"weixinopenid":openid})
+exports.getUserAvailableFcode = function (openid, callback) {
+    userModel.findOne({"weixinopenid": openid})
         .select("_id")
-        .exec(function(err,userData){
-            if(err){
+        .exec(function (err, userData) {
+            if (err) {
                 return callback("查找用户出错");
             }
-            if(!userData){
+            if (!userData) {
                 return callback("没有查询到用户信息");
             }
-            userAvailableFcodeModel.find({"userid":userData._id},function(err,data){
-                if(err){
+            userAvailableFcodeModel.find({"userid": userData._id}, function (err, data) {
+                if (err) {
                     return callback("查找可用Y码出错");
                 }
-                var  returndatalist=[];
-                data.forEach(function(r,index){
-                    var Ycode={
+                var returndatalist = [];
+                data.forEach(function (r, index) {
+                    var Ycode = {
                         Ycode: r.fcode,
                         name: r.name,
                         date: r.createtime.toFormat("YYYY/MM/DD")
-                    }
+                    };
                     returndatalist.push(Ycode);
-                })
-                return callback(null,returndatalist);
+                });
+                return callback(null, returndatalist);
             })
         })
 };
 //用户取消订单
-exports.userCancelOrder=function(openid,callback){
-    userModel.findOne({"weixinopenid":openid})
-        .exec(function(err,userData) {
+exports.userCancelOrder = function (openid, callback) {
+    userModel.findOne({"weixinopenid": openid})
+        .exec(function (err, userData) {
             if (err) {
                 return callback("查找用户出错");
             }
@@ -636,24 +636,25 @@ exports.userCancelOrder=function(openid,callback){
             if (userData.applystate != 1) {
                 return callback("该订单无法取消");
             }
-            UserPayModel.update({userid:userData._id,userpaystate:0},{userpaystate:4},function(err,excdata){});
+            UserPayModel.update({userid: userData._id, userpaystate: 0}, {userpaystate: 4}, function (err, excdata) {
+            });
 
-                userData.applystate=0;  // 未报名
-                userData.paytypestatus=0;
-                userData.save(function(err,data){
-                    if(err){
-                        return callback("取消订单失败："+err);
-                    }
-                    return  callback(null,"","sucess");
-                })
+            userData.applystate = 0;  // 未报名
+            userData.paytypestatus = 0;
+            userData.save(function (err, data) {
+                if (err) {
+                    return callback("取消订单失败：" + err);
+                }
+                return callback(null, "", "sucess");
             })
+        })
 
 
 };
 // 获取我的订单
-exports.getMyOrder=function(openid,callback){
-    userModel.findOne({"weixinopenid":openid})
-        .exec(function(err,userData) {
+exports.getMyOrder = function (openid, callback) {
+    userModel.findOne({"weixinopenid": openid})
+        .exec(function (err, userData) {
             if (err) {
                 return callback("查找用户出错");
             }
@@ -663,85 +664,88 @@ exports.getMyOrder=function(openid,callback){
             if (userData.applystate == 0) {
                 return callback("用户报名");
             }
-            var returndata={
-                applyschoolinfo:userData.applyschoolinfo,
-                applyclasstypeinfo:userData.applyclasstypeinfo,
-                applytime:userData.applyinfo.applytime.toFormat("YYYY/MM/DD"),
-                scanauditurl:userData.scanauditurl,
-                orderid:userData._id,
-                name:userData.name,
-                mobile:userData.mobile,
-                logimg:userData.headportrait.originalpic,
-                Ycode:"",
-                paytype:userData.paytype,
-                paytypestatus:userData.paytypestatus,
+            var returndata = {
+                applyschoolinfo: userData.applyschoolinfo,
+                applyclasstypeinfo: userData.applyclasstypeinfo,
+                applytime: userData.applyinfo.applytime.toFormat("YYYY/MM/DD"),
+                scanauditurl: userData.scanauditurl,
+                orderid: userData._id,
+                name: userData.name,
+                mobile: userData.mobile,
+                logimg: userData.headportrait.originalpic,
+                Ycode: "",
+                paytype: userData.paytype,
+                paytypestatus: userData.paytypestatus,
+            };
+            if (userData.applystate == 2) {
+                returndata.paytypestatus = 20
             }
-            if(userData.applystate == 2){
-                returndata.paytypestatus=20
-            }
-           return  callback(null,returndata);
+            return callback(null, returndata);
         })
-}
+};
 
 
 //生成用户支付订单
-exports.postUserCreateOrder=function(applyinfo,callback){
-    userModel.findOne({"weixinopenid":applyinfo.openid})
-        .exec(function(err,userData) {
+exports.postUserCreateOrder = function (applyinfo, callback) {
+    userModel.findOne({"weixinopenid": applyinfo.openid})
+        .exec(function (err, userData) {
             if (err) {
                 return callback("查找用户出错");
             }
             if (!userData) {
                 return callback("没有查询到用户信息");
             }
-            if (userData.applystate!=1){
+            if (userData.applystate != 1) {
                 return callback("该用户无法支付");
             }
-            userData.referrerfcode=applyinfo.fcode;
-            userData.paytype=applyinfo.paytype;
-            userData.bcode=applyinfo.bcode;
-            userData.save(function(err,data){
-                if  (applyinfo.paytype==1){  // 线下报名
+            userData.referrerfcode = applyinfo.fcode;
+            userData.paytype = applyinfo.paytype;
+            userData.bcode = applyinfo.bcode;
+            userData.save(function (err, data) {
+                if (applyinfo.paytype == 1) {  // 线下报名
                     console.log(data);
-                    defautfun.redisSchoolInfo(data.applyschool?data.applyschool:data.applyschoolinfo.id ,function(err,schooldata){
-                    var returndata={
-                        applyschoolinfo:data.applyschoolinfo,
-                        applyclasstypeinfo:data.applyclasstypeinfo,
-                        paytype:data.paytype,
-                        applytime:data.applyinfo.applytime.toFormat("YYYY/MM/DD"),
-                        scanauditurl:data.scanauditurl,
-                        orderid:data._id,
-                    }
+                    defautfun.redisSchoolInfo(data.applyschool ? data.applyschool : data.applyschoolinfo.id, function (err, schooldata) {
+                        var returndata = {
+                            applyschoolinfo: data.applyschoolinfo,
+                            applyclasstypeinfo: data.applyclasstypeinfo,
+                            paytype: data.paytype,
+                            applytime: data.applyinfo.applytime.toFormat("YYYY/MM/DD"),
+                            scanauditurl: data.scanauditurl,
+                            orderid: data._id
+                        };
                         //returndata.applyschoolinfo.logimg=schooldata.logoimg.originalpic;
                         return callback(null, returndata);
                     })
 
                 }
-                else if(applyinfo.paytype==2)  // 微信支付线上报名
+                else if (applyinfo.paytype == 2)  // 微信支付线上报名
                 {
                     // 取消以前未支付的订单
                     // 生成新的订单
                     // 向微信发送支付申请
-                    UserPayModel.update({userid:data._id,userpaystate:0},{userpaystate:4},function(err,excdata){
-                        var  userpayinfo=new  UserPayModel();
-                        userpayinfo.userid=data._id;
-                        userpayinfo.userpaystate=0;
-                        userpayinfo.creattime=new Date();
-                        userpayinfo.payendtime=(new Date()).addDays(3);
-                        userpayinfo.applyschoolinfo=data.applyschoolinfo;
-                        userpayinfo.applyclasstypeinfo.id=data.applyclasstypeinfo.id;
-                        userpayinfo.applyclasstypeinfo.name=data.applyclasstypeinfo.name;
-                        userpayinfo.applyclasstypeinfo.price=data.applyclasstypeinfo.price;
-                        userpayinfo.applyclasstypeinfo.onsaleprice=data.applyclasstypeinfo.onsaleprice?
-                            data.applyclasstypeinfo.onsaleprice:data.applyclasstypeinfo.price;
-                        userpayinfo.paymoney=data.applyclasstypeinfo.onsaleprice;
-                        userpayinfo.paychannel=2;
-                        userpayinfo.save(function(err,orderdata){
-                            if(err){
-                                return callback("生成支付订单失败："+err);
+                    UserPayModel.update({
+                        userid: data._id,
+                        userpaystate: 0
+                    }, {userpaystate: 4}, function (err, excdata) {
+                        var userpayinfo = new UserPayModel();
+                        userpayinfo.userid = data._id;
+                        userpayinfo.userpaystate = 0;
+                        userpayinfo.creattime = new Date();
+                        userpayinfo.payendtime = (new Date()).addDays(3);
+                        userpayinfo.applyschoolinfo = data.applyschoolinfo;
+                        userpayinfo.applyclasstypeinfo.id = data.applyclasstypeinfo.id;
+                        userpayinfo.applyclasstypeinfo.name = data.applyclasstypeinfo.name;
+                        userpayinfo.applyclasstypeinfo.price = data.applyclasstypeinfo.price;
+                        userpayinfo.applyclasstypeinfo.onsaleprice = data.applyclasstypeinfo.onsaleprice ?
+                            data.applyclasstypeinfo.onsaleprice : data.applyclasstypeinfo.price;
+                        userpayinfo.paymoney = data.applyclasstypeinfo.onsaleprice;
+                        userpayinfo.paychannel = 2;
+                        userpayinfo.save(function (err, orderdata) {
+                            if (err) {
+                                return callback("生成支付订单失败：" + err);
                             }
-                            var weixinpayinfo={
-                                body: data.applyschoolinfo.name+" "+data.applyclasstypeinfo.name,
+                            var weixinpayinfo = {
+                                body: data.applyschoolinfo.name + " " + data.applyclasstypeinfo.name,
                                 out_trade_no: orderdata._id.toString(),
                                 total_fee: orderdata.paymoney,
                                 spbill_create_ip: applyinfo.clientip,
@@ -750,33 +754,34 @@ exports.postUserCreateOrder=function(applyinfo,callback){
                                 openid: applyinfo.openid,
                             };
 
-                            wenpay.getBrandWCPayRequestParams(weixinpayinfo, function(err, reqparam){
-                                if(err){
-                                    return callback("创建微信订单失败："+err);
+                            wenpay.getBrandWCPayRequestParams(weixinpayinfo, function (err, reqparam) {
+                                if (err) {
+                                    return callback("创建微信订单失败：" + err);
                                 }
-                                if(weixinpaydata.return_code=="FAIL"){
-                                    return callback("创建微信订单失败："+weixinpaydata.return_msg);
+                                if (weixinpaydata.return_code == "FAIL") {
+                                    return callback("创建微信订单失败：" + weixinpaydata.return_msg);
                                 }
                                 else {
                                     var reqparam = {
                                         appId: app.id,
-                                        timeStamp: Math.floor(Date.now()/1000)+"",
+                                        timeStamp: Math.floor(Date.now() / 1000) + "",
                                         nonceStr: eixinpaydata.nonce_str,
-                                        package: "prepay_id="+dweixinpaydata.prepay_id,
+                                        package: "prepay_id=" + dweixinpaydata.prepay_id,
                                         signType: "MD5"
                                     };
                                     reqparam.paySign = wenpay.sign(reqparam);
-                                    var returndata={
-                                        applyschoolinfo:data.applyschoolinfo,
-                                        applyclasstypeinfo:data.applyclasstypeinfo,
-                                        paytype:data.paytype,
-                                        applytime:data.applyinfo.applytime.toFormat("YYYY/MM/DD"),
-                                        orderid:orderdata._id,
-                                        weixinpay:reqparam,
-                                    }
-                                    UserPayModel.update({"_id":orderdata._id},
-                                        {$set:{weixinpayinfo:JSON.stringify(reqparam)}},function(err,data){});
-                                    return callback(null,returndata);
+                                    var returndata = {
+                                        applyschoolinfo: data.applyschoolinfo,
+                                        applyclasstypeinfo: data.applyclasstypeinfo,
+                                        paytype: data.paytype,
+                                        applytime: data.applyinfo.applytime.toFormat("YYYY/MM/DD"),
+                                        orderid: orderdata._id,
+                                        weixinpay: reqparam
+                                    };
+                                    UserPayModel.update({"_id": orderdata._id},
+                                        {$set: {weixinpayinfo: JSON.stringify(reqparam)}}, function (err, data) {
+                                        });
+                                    return callback(null, returndata);
                                 }
                             });
                         });
@@ -788,82 +793,82 @@ exports.postUserCreateOrder=function(applyinfo,callback){
 };
 // 用户报名
 
-exports.postUserApplySchool=function (applyinfo, callback){
+exports.postUserApplySchool = function (applyinfo, callback) {
     // 验证验证码
-    defautfun.checkSmsCode(applyinfo.mobile,applyinfo.smscode,function(err,data){
-        if(err){
+    defautfun.checkSmsCode(applyinfo.mobile, applyinfo.smscode, function (err, data) {
+        if (err) {
             return callback(err);
         }
-        userModel.findOne({"weixinopenid":applyinfo.openid},function(err,userData){
-            if(err){
+        userModel.findOne({"weixinopenid": applyinfo.openid}, function (err, userData) {
+            if (err) {
                 return callback("查找用户出错");
             }
             // 存在微信 用户
-            if(userData){
+            if (userData) {
                 console.log("查找 到微信用户");
-                if(userData.mobile==applyinfo.mobile){
+                if (userData.mobile == applyinfo.mobile) {
                     // 判断是否可以报名
-                   if( userData.applystate>0){
-                       return callback("您已经正在报名，请先取消报名结果");
-                   }
+                    if (userData.applystate > 0) {
+                        return callback("您已经正在报名，请先取消报名结果");
+                    }
                     //用户报名
-                    defautfun.saveUserApplyinfo(userData._id,applyinfo,function(err,data){
+                    defautfun.saveUserApplyinfo(userData._id, applyinfo, function (err, data) {
                         console.log('报名：' + data);
-                        return callback(err,data);
+                        return callback(err, data);
                     })
                 }
                 else {
                     return callback("您暂时无法使用手机号报名");
                 }
-            }else{
+            } else {
                 console.log("没有查找 到微信用户");
-                userModel.findOne({"mobile":applyinfo.mobile},function(err,userData){
-                    if(err){
+                userModel.findOne({"mobile": applyinfo.mobile}, function (err, userData) {
+                    if (err) {
                         return callback("查找用户出错");
                     }
-                    if(userData){
+                    if (userData) {
                         console.log("没有查找 到微信用户 ：查找到手机号用户");
                         // 判断是否可以报名
-                        if( userData.applystate>0){
+                        if (userData.applystate > 0) {
                             return callback("您已经正在报名，请先取消报名结果");
                         }
                         //用户报名
-                        defautfun.saveUserApplyinfo(userData._id,applyinfo,function(err,data) {
+                        defautfun.saveUserApplyinfo(userData._id, applyinfo, function (err, data) {
                             return callback(err, data);
                         })
                     }
-                    else{
+                    else {
                         console.log("没有查找 到微信用户 ：重新注册用户");
                         // 添加用户
-                        defautfun.addWeiXinUser(applyinfo,function(err,data){
-                            if (err){
-                                return callback("保存信息出错"+err);
+                        defautfun.addWeiXinUser(applyinfo, function (err, data) {
+                            if (err) {
+                                return callback("保存信息出错" + err);
                             }
-                            defautfun.saveUserApplyinfo(data._id,applyinfo,function(err,data){
-                                return callback(err,data);
+                            defautfun.saveUserApplyinfo(data._id, applyinfo, function (err, data) {
+                                return callback(err, data);
                             })
-                        })
+                        });
                         // 用户报名
                     }
-                })
+                });
                 // 不存在微信用户
             }
         })
-    })
+    });
     // 验证微信id
     // 验证手机号
 };
 
 
-var getfildbus=function(fildid,buslist){
-    var fildbuslist=[];
-    for(var i=0 ;i<buslist.length;i++){
-        if (buslist[i].training_id==fildid){
+var getfildbus = function (fildid, buslist) {
+    var fildbuslist = [];
+    for (var i = 0; i < buslist.length; i++) {
+        if (buslist[i].training_id == fildid) {
             fildbuslist.push(fildbuslist);
         }
     }
     return fildbuslist;
-}
+};
 // 获取驾校下面的练车场
 exports.getSchoolTrainingField = function (schoolid, callback) {
     //var searchInfo = {
@@ -891,24 +896,24 @@ exports.getSchoolTrainingField = function (schoolid, callback) {
     //            return callback(null, list);
     //        })
     //    })
-            // 获取驾校练车场
-            cachedata.getSchooltrainingfiled(schoolid, function (err, filddata) {
-               cachedata.getSchoolBusRoute(schoolid, function (err, busdata) {
-                   var a=[];
-                    for (var i = 0;i < filddata.length;i ++) {
-                        var training_id = filddata[i]._id;
-                        var fildbus= getfildbus(training_id, busdata);
-                        var b={
-                            id : filddata[i]._id,
-                            name : filddata[i].fieldname,
-                            address : filddata[i].address,
-                            bus_list : fildbus
-                        };
-                        a.push(b);
-                    }
-                    return callback(null,a);
-                });
-            });
+    // 获取驾校练车场
+    cachedata.getSchooltrainingfiled(schoolid, function (err, filddata) {
+        cachedata.getSchoolBusRoute(schoolid, function (err, busdata) {
+            var a = [];
+            for (var i = 0; i < filddata.length; i++) {
+                var training_id = filddata[i]._id;
+                var fildbus = getfildbus(training_id, busdata);
+                var b = {
+                    id: filddata[i]._id,
+                    name: filddata[i].fieldname,
+                    address: filddata[i].address,
+                    bus_list: fildbus
+                };
+                a.push(b);
+            }
+            return callback(null, a);
+        });
+    });
 };
 
 //获取教练详情
@@ -1003,7 +1008,7 @@ exports.searchList = function (q, callback) {
                                 max_price: r.maxprice,
                                 min_price: r.minprice,
                                 passing_rate: r.passingrate
-                            }
+                            };
                             driveschoollist.push(oneschool);
                         });
                         cb(err, {school_list: driveschoollist});
@@ -1033,7 +1038,7 @@ exports.searchList = function (q, callback) {
                                     pass_rate: r.passrate,
                                     seniority: r.Seniority,
                                     subjects: r.subject
-                                }
+                                };
                                 rescoachlist.push(returnmodel);
                             });
                             data.coach_list = rescoachlist;
