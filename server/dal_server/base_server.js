@@ -758,39 +758,55 @@ exports.postUserCreateOrder = function (applyinfo, callback) {
                                 if (err) {
                                     return callback("创建微信订单失败：" + err);
                                 }
-                                if (weixinpaydata.return_code == "FAIL") {
-                                    return callback("创建微信订单失败：" + weixinpaydata.return_msg);
+                                if (reqparam.return_code == "FAIL") {
+                                    return callback("创建微信订单失败：" + reqparam.return_msg);
                                 }
-                                else {
-                                    var reqparam = {
-                                        appId: app.id,
-                                        timeStamp: Math.floor(Date.now() / 1000) + "",
-                                        nonceStr: weixinpaydata.nonce_str,
-                                        package: "prepay_id=" + weixinpaydata.prepay_id,
-                                        signType: "MD5"
-                                    };
-                                    reqparam.paySign = wenpay.sign(reqparam);
-                                    var returndata = {
-                                        applyschoolinfo: data.applyschoolinfo,
-                                        applyclasstypeinfo: data.applyclasstypeinfo,
-                                        paytype: data.paytype,
-                                        applytime: data.applyinfo.applytime.toFormat("YYYY/MM/DD"),
-                                        orderid: orderdata._id,
-                                        weixinpay: reqparam
-                                    };
-                                    UserPayModel.update({"_id": orderdata._id},
-                                        {$set: {weixinpayinfo: JSON.stringify(reqparam)}}, function (err, data) {
-                                        });
-                                    return callback(null, returndata);
-                                }
-                            });
-                        });
-                    });
-                }
-            })
 
-        })
-};
+                                var reqparam = {
+                                    appId: app.id,
+                                    timeStamp: Math.floor(Date.now() / 1000) + "",
+                                    nonceStr: weixinpaydata.nonce_str,
+                                    package: "prepay_id=" + weixinpaydata.prepay_id,
+                                    signType: "MD5"
+                                };
+                                reqparam.paySign = wenpay.sign(reqparam);
+                                var returndata = {
+                                    applyschoolinfo: data.applyschoolinfo,
+                                    applyclasstypeinfo: data.applyclasstypeinfo,
+                                    paytype: data.paytype,
+                                    applytime: data.applyinfo.applytime.toFormat("YYYY/MM/DD"),
+                                    orderid: orderdata._id,
+                                    weixinpay: reqparam
+                                };
+                                UserPayModel.update({"_id": orderdata._id},
+                                    {$set: {weixinpayinfo: JSON.stringify(reqparam)}}, function (err, data) {
+                                    });
+                                return callback(null, returndata);
+
+                                var returndata = {
+                                    applyschoolinfo: data.applyschoolinfo,
+                                    applyclasstypeinfo: data.applyclasstypeinfo,
+                                    paytype: data.paytype,
+                                    applytime: data.applyinfo.applytime.toFormat("YYYY/MM/DD"),
+                                    orderid: orderdata._id,
+                                    weixinpay: reqparam,
+                                }
+                                UserPayModel.update({"_id": orderdata._id},
+                                    {$set: {weixinpayinfo: JSON.stringify(reqparam)}}, function (err, data) {
+                                    });
+                                return callback(null, returndata);
+
+
+                            });
+
+                        });
+                    })
+
+                }
+
+            })
+        });
+}
 // 用户报名
 
 exports.postUserApplySchool = function (applyinfo, callback) {
