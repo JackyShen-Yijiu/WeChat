@@ -63,7 +63,7 @@ class SignUpActions {
 
                 // 缓存订单信息并调整到支付页面
                 //localStorage.setItem('order', params);
-                payload.history.replaceState(null, '/pay/' + params.schoolid + '/' + params.coachid + '/' + params.classtypeid);
+                payload.history.replaceState(null, '/weixin/pay/' + params.schoolid + '/' + params.coachid + '/' + params.classtypeid);
 
             } else {
                 this.actions.signUpFail(response.msg);

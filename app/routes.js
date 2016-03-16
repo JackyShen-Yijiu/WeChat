@@ -28,7 +28,7 @@ export default (
         <Route path='/school/:school_id/grounds' component={GroundList} />
         <Route path='/user' component={UserCenter} />
         <Route path='/signup/:school_id/:coach_id/:lesson_id' component={SignUp} />
-        <Route path='/pay/:school_id/:coach_id/:lesson_id' component={CostPay} />
+        <Route path='/weixin/pay/:school_id/:coach_id/:lesson_id' component={CostPay} />
         <Route path='/successful' component={SceneSuccess} />
         <Route path='/wechatsuccessful' component={WechatSuccess} />
         <Route path='/search' component={Search} />
