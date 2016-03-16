@@ -8,7 +8,7 @@ var config = {
 };
 
 var normalInfo = {
-	title: '马上学车',
+    title: '马上学车',
     description: '现在报名学车专享优惠码',
     picurl: '',
     url: 'http://weixin.jizhijiafu.cn/jzapi/weixin/authorizeUser'
@@ -86,16 +86,20 @@ exports.wechat = wechat(config, function(req, res) {
 */
 
 /*function invitCode(n) {
-	var chars = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F',
-		'G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-	var res = '';
-	for(var i = 0; i < n; i++) {
-		var id = Math.ceil(Math.random()*35);
-		res += chars[id];
-	}
-	return res;
+    var chars = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F',
+        'G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+    var res = '';
+    for(var i = 0; i < n; i++) {
+        var id = Math.ceil(Math.random()*35);
+        res += chars[id];
+    }
+    return res;
 }*/
-
+// "LTDP32EA"
+// "8XYBPNP6"
+// "AJRYZZU8"
+// "APJP7UDT"
+// "EHFTSLDM"
 // "133UD1ON"
 // "5SVWCYEZ"
 // "7U5657WO"

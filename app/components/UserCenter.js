@@ -127,7 +127,6 @@ class UserCenter extends React.Component {
 		                <div className="ycode">我的Y码：{orderData.Ycode || '暂无'}</div>
 		            </div>
 		        </div>
-
 		        {orderNode}
 			</div>
 		);
