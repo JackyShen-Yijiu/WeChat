@@ -26,19 +26,72 @@ class UserCenter extends React.Component {
 		UserCenterStore.unlisten(this.onChange);
 	}
 
+	handlePreview(imgUrl) {
+		let allUrl = location.origin + imgUrl;
+		console.log(allUrl);
+		wx.previewImage({
+		    current: allUrl,
+		    urls: [allUrl]
+		});
+	}
+
 	render() {
 		let orderData = this.state.order || {};
-		let school = orderData.applyschoolinfo;
-		let lesson = orderData.applyclasstypeinfo;
+		let school = orderData.applyschoolinfo || {};
+		let lesson = orderData.applyclasstypeinfo || {};
 		let payStatus = orderData.paytypestatus; // 0 未 1
+		let payType = orderData.paytype; // 1 现场 2 微信
+
+		let sceneSuccessLink = '/successful/';
+		let wechatSuccessLink = '/wechatsuccessful/';
+		let payLink = '/pay/' + school.id + '/-1/' + lesson.id;
+
+		let orderStateNode = (() => {
+			let link = '';
+			if(payType == 1) { // 现场支付
+				if(payStatus == 1) { // 已支付
+					link = sceneSuccessLink;
+				} else { // 未支付
+					link = sceneSuccessLink;
+				}
+			} else { // 微信支付
+				if(payStatus == 1) { // 已支付
+					link = wechatSuccessLink;
+				} else { // 未支付
+					link = payLink;
+				}
+			}
+
+			return (
+				<li className="list-group-item">
+	            	<Link to={link} className="pay">
+	            		{payType == 1 ? '现场支付' : '微信支付'}
+	            		<span className="pull-right">{payStatus == 1 ? '已支付' : '未支付'}
+	            			<i className="icon-more_right pull-right"></i>
+	            		</span>
+	            	</Link>
+	            </li>
+			);
+		})();
 
 		let orderNode = (() => {
-			if(!school || !lesson) {
+			if(!school.id || !lesson.id) {
 				return (
 					<div></div>
 				);
 			}
 
+			let styleObj = {
+				display: 'none'
+			};
+
+			if(payType == 1) {
+				styleObj = {
+					display: 'block'
+				}
+			}
+
+			let imgUrl = '/jzapi/v1/createQrCode?size=10&text=' + orderData.scanauditurl;
 			return (
 				<ul className="list-group order-list-group mt20">
 		            <li className="list-group-item">
@@ -51,16 +104,12 @@ class UserCenter extends React.Component {
 			                	<div className="lesson">报车班型：{lesson.name}</div>
 			                	<div className="time">报名时间：{orderData.applytime}</div>
 			                	<div className="qr">
-			                		<img src={'/jzapi/v1/createQrCode?size=10&text=' + orderData.scanauditurl}  alt=""/>
+			                		<img style={styleObj} src={imgUrl}  alt="" onClick={this.handlePreview.bind(this, imgUrl)}/>
 			                	</div>
 			                </div>
 		            	</div>
 		            </li>
-		            <li className="list-group-item">
-		            	<Link to={'/pay/' + school.id + '/-1/' + lesson.id} className="pay">微信支付 
-		            		<span className="pull-right">{payStatus == 0 ? '未支付' : '已支付'} <i className="icon-more_right pull-right"></i></span>
-		            	</Link>
-		            </li>
+		            {orderStateNode}
 		        </ul>
 			);
 		})();
