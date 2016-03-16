@@ -57,7 +57,7 @@ class UserCenter extends React.Component {
 		            	</div>
 		            </li>
 		            <li className="list-group-item">
-		            	<Link to={'/pay/' + school.id + '/-1/' + lesson.id} className="pay">微信支付 
+		            	<Link to={'/pay/' + school.id + '/-1/' + lesson.id} className="pay">现场支付 
 		            		<span className="pull-right">{payStatus == 0 ? '未支付' : '已支付'} <i className="icon-more_right pull-right"></i></span>
 		            	</Link>
 		            </li>
