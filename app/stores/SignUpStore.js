@@ -9,6 +9,7 @@ class SignUpStore {
         this.name = '';
         this.mobile = '';
         this.code = '';
+        this.secondsElapsed = '发送验证码';
     }
 
     onGetSchoolSuccess(data) {
@@ -29,7 +30,7 @@ class SignUpStore {
 
     onGetCodeSuccess(data) {
         if(data == 'send success')
-            toastr.info('短信验证码发送成功！');
+            toastr.success('短信验证码发送成功！');
         else 
             toastr.error(data);
     }

@@ -1,17 +1,39 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
-  <meta charset="utf-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-  <title>驾校列表</title>
-  <link rel="stylesheet" href="/css/main.css"/>
-  <script src="https://res.wx.qq.com/open/js/jweixin-1.1.0.js"></script>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <title>驾校列表</title>
+    <link rel="stylesheet" href="/css/main.css" />
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.1.0.js"></script>
 </head>
+
 <body>
-<div id="app">{{html|safe}}</div>
-<script src="/js/vendor.js"></script>
-<script src="/js/vendor.bundle.js"></script>
-<script src="/js/bundle.js"></script>
+    <div id="app">{{html|safe}}</div>
+    <script src="/js/vendor.js"></script>
+    <script src="/js/vendor.bundle.js"></script>
+    <script src="/js/bundle.js"></script>
+    <script type="text/javascript">
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-center",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+    </script>
 </body>
+
 </html>

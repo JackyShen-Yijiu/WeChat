@@ -8,7 +8,10 @@ class Search extends React.Component {
 
 	render() {
 		return (
-			<div></div>
+			<div>
+				<DocumentTitle title="搜索"></DocumentTitle>
+				
+			</div>
 		);
 	}
 }
