@@ -1,4 +1,5 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 
 import GroundListStore from '../stores/GroundListStore';
 import GroundListActions from '../actions/GroundListActions';
@@ -35,9 +36,12 @@ class GroundList extends React.Component {
         });
         
     	return (
-            <ul className="list-group simple-list-group">
-                {list}
-            </ul>
+            <div>
+                <DocumentTitle title="训练场地"></DocumentTitle>
+                <ul className="list-group simple-list-group">
+                    {list}
+                </ul>
+            </div>
     	);
     }
 }

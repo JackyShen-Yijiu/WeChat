@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
+import DocumentTitle from 'react-document-title';
 
 import CityListStore from '../stores/CityListStore'
 import CityListActions from '../actions/CityListActions';
@@ -48,6 +49,7 @@ class CityList extends React.Component {
 
 		return (
 			<div className="cl-wrap">
+				<DocumentTitle title="城市列表"></DocumentTitle>
 				<ul className="list-group city-list-group">
 					<li className="list-group-item">
 		            	<span className="title">定位城市：</span>

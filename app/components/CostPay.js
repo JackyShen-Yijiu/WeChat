@@ -1,4 +1,5 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 
 import CostPayStore from '../stores/CostPayStore';
 import CostPayActions from '../actions/CostPayActions';
@@ -85,6 +86,7 @@ class CostPay extends React.Component {
 
 		return (
 			<div className="cp-wrap">
+				<DocumentTitle title="费用支付"></DocumentTitle>
 		        <div className="school-item">
 		            <div className="left">
 		                <img src={imgUrl} alt=""/>

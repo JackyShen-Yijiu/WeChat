@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
+import DocumentTitle from 'react-document-title';
 
 import SchoolDetailActions from '../actions/SchoolDetailActions';
 import SchoolDetailStore from '../stores/SchoolDetailStore';
@@ -83,10 +84,9 @@ class SchoolDetail extends React.Component {
 	        );
         }
 
-
-
 		return (
 			<div className="sd-wrap">
+				<DocumentTitle title="驾校详情"></DocumentTitle>
 		        <header className="sd-header">
 		        	<img src={imgUrl} />
 		            <div className="title">{detail.name}</div>
@@ -133,7 +133,6 @@ class SchoolDetail extends React.Component {
 		            <li className="list-group-item">课程班型</li>
 		           	{lessonList}
 		        </ul>
-				
 		    </div>
 		);
 	}

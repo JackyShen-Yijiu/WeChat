@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router';
 import {assign} from 'underscore';
+import DocumentTitle from 'react-document-title';
 
 import SortBar from './SortBar';
 import School from './common/School';
@@ -43,6 +44,8 @@ class SchoolList extends React.Component {
         
         if(openid) {
             localStorage.setItem('openid', openid);
+        } else {
+            //localStorage.setItem('openid', 'o-3c4t_JRhct-_MFAAztqkUo8eVs');
         }
 
         let params = this.props.params;
@@ -59,7 +62,9 @@ class SchoolList extends React.Component {
                     jsApiList: [
                         'previewImage',
                         'getLocation',
-                        'chooseWXPay'
+                        'chooseWXPay',
+                        'onMenuShareAppMessage',
+                        'onMenuShareTimeline'
                     ]
                 });
 
@@ -108,6 +113,7 @@ class SchoolList extends React.Component {
 
         return (
             <div className="sl-wrap">
+                <DocumentTitle title="驾校列表"></DocumentTitle>
                 <header className="sl-header">
                     <div className="address">
                         <Link to="/cities" className="city">

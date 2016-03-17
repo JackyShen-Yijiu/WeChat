@@ -2,17 +2,16 @@
  * Created by v-yaf_000 on 2016/3/8.
  */
 var nodeWeixinAuth = require('node-weixin-auth');
-var  weixinconfig=require("../../config").weixinconfig;
+var weixinconfig=require("../../config").weixinconfig;
 var BaseReturnInfo = require('../common/basereturnmodel.js');
 var mongodb = require('../common/mongodb.js');
 var singature=require("../weixin_server/signature");
 var OAuth = require('wechat-oauth');
 var client = new OAuth(weixinconfig.id, weixinconfig.secret);
-var  weiXinUserModel=mongodb.WeiXinUserModel;
+var weiXinUserModel=mongodb.WeiXinUserModel;
 var weixinpay=require("../weixin_server/wenxinpay");
 
 var jizhijiafu = weixinconfig.domain;
-
 
 exports.weixinAck=function(req,res){
     var data = nodeWeixinAuth.extract(req.query);
@@ -34,6 +33,7 @@ exports.weixinAck=function(req,res){
         }
     });
 };
+
 
 exports.weiXinJsSdkSign=function(req,res){
     var url = req.query.url;
@@ -98,5 +98,9 @@ exports.authorizeUsercallback=function(req,res,next){
         });
     });
 };
+
+
+
+
 
 exports.paycallback=weixinpay.paycallback;

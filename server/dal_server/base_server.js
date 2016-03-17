@@ -562,8 +562,8 @@ exports.getSchoolCoach = function (coachinfo, callback) {
     }
     coachmode.find(searchinfo)
         .populate("serverclasslist", "classname carmodel cartype  price onsaleprice", {"is_using": true})
-        .skip((coachinfo.index - 1) * 10)
-        .limit(10)
+        .skip((coachinfo.index - 1) * coachinfo.count)
+        .limit(coachinfo.count)
         .exec(function (err, coachlist) {
             if (err || !coachlist) {
                 console.log(err);

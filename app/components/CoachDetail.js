@@ -1,4 +1,5 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 
 import CoachDetailActions from '../actions/CoachDetailActions';
 import CoachDetailStore from '../stores/CoachDetailStore';
@@ -46,7 +47,7 @@ class CoachDetail extends React.Component {
 
 		return (
 			<div className="cd-wrap">
-
+				<DocumentTitle title="教练详情"></DocumentTitle>
 			    <Coach key={detail.id} coach={detail} />
 				
 				<ul className="list-group prop-list-group mt20">
@@ -71,7 +72,6 @@ class CoachDetail extends React.Component {
 		            <li className="list-group-item">课程班型</li>
 		           	{lessonList}
 		        </ul>
-
 			</div>
 		);
 	}

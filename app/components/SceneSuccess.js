@@ -1,4 +1,5 @@
 import React from 'react';
+import DocumentTitle from 'react-document-title';
 
 class SceneSuccess extends React.Component {
 	constructor(props) {
@@ -45,6 +46,7 @@ class SceneSuccess extends React.Component {
 
 		return (
 			<div className="sc-wrap">
+				<DocumentTitle title="报名成功"></DocumentTitle>
 		        <div className="sc-top">
 		            <img src="/img/success_apply.png" alt=""/>
 		        </div>
