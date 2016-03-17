@@ -13,7 +13,8 @@ var weixinUserSchema = new Schema({
     country :{type:String,default:""}, //普通用户个人资料填写的城市
     headimgurl:{type:String,default:false}, //  	用户头像
     unionid :{type:String,default:""},  // 只有在用户将公众号绑定到微信开放平台帐号后，
-    is_bindapp:{type:Number,default:0} // 0 没有  1 绑定
+    is_bindapp:{type:Number,default:0} ,// 0 没有  1 绑定
+    bcode:{type:String,default:""}, //渠道码
 });
 
 weixinUserSchema.index({openid: 1});
