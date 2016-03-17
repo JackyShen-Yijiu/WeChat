@@ -87,6 +87,7 @@ var defautfun = {
             newuser.openid = applyinfo.openid;
             newuser.password = "93e6bf49e71743b00cee035c0f3fc92f";
             newuser.loc.coordinates = [0, 0];
+            newuser.bcode=weixinuser?weixinuser.bcode:"";
             newuser.headportrait.originalpic = weixinuser ? weixinuser.headimgurl : "";
             newuser.nickname = weixinuser ? weixinuser.nickname : "";
             newuser.source = 2;
