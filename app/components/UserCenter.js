@@ -36,9 +36,27 @@ class UserCenter extends React.Component {
 	}
 
 	render() {
-		let orderData = this.state.order || {};
-		let school = orderData.applyschoolinfo || {};
-		let lesson = orderData.applyclasstypeinfo || {};
+		let orderData = this.state.order;
+		if(!orderData || !orderData.applyschoolinfo || !orderData.applyclasstypeinfo) {
+			return (
+				<div className="pc-wrap">
+					<DocumentTitle title="个人中心"></DocumentTitle>
+					<div className="user-item">
+			            <div className="left">
+			                <img className="img-circle" src={'http://placehold.it/80x80'} alt=""/>
+			            </div>
+			            <div className="middle">
+			                <div className="name">姓名：未知</div>
+			                <div className="mobile">手机号：暂无</div>
+			                <div className="ycode">我的Y码：暂无</div>
+			            </div>
+			        </div>
+				</div>
+			);
+		}
+
+		let school = orderData.applyschoolinfo;
+		let lesson = orderData.applyclasstypeinfo;
 		let payStatus = orderData.paytypestatus; // 0 未 1
 		let payType = orderData.paytype; // 1 现场 2 微信
 
@@ -49,13 +67,13 @@ class UserCenter extends React.Component {
 		let orderStateNode = (() => {
 			let link = '';
 			if(payType == 1) { // 现场支付
-				if(payStatus == 1) { // 已支付
+				if(payStatus == 20) { // 已支付
 					link = sceneSuccessLink;
 				} else { // 未支付
 					link = sceneSuccessLink;
 				}
 			} else { // 微信支付
-				if(payStatus == 1) { // 已支付
+				if(payStatus == 20) { // 已支付
 					link = wechatSuccessLink;
 				} else { // 未支付
 					link = payLink;
@@ -66,7 +84,7 @@ class UserCenter extends React.Component {
 				<li className="list-group-item">
 	            	<Link to={link} className="pay">
 	            		{payType == 1 ? '现场支付' : '微信支付'}
-	            		<span className="pull-right">{payStatus == 1 ? '已支付' : '未支付'}
+	            		<span className="pull-right">{payStatus == 20 ? '已支付' : '未支付'}
 	            			<i className="icon-more_right pull-right"></i>
 	            		</span>
 	            	</Link>
@@ -122,8 +140,8 @@ class UserCenter extends React.Component {
 		                <img className="img-circle" src={orderData.logimg || 'http://placehold.it/80x80'} alt=""/>
 		            </div>
 		            <div className="middle">
-		                <div className="name">{orderData.name}</div>
-		                <div className="mobile">{orderData.mobile || '暂无'}</div>
+		                <div className="name">姓名：{orderData.name}</div>
+		                <div className="mobile">手机号：{orderData.mobile || '暂无'}</div>
 		                <div className="ycode">我的Y码：{orderData.Ycode || '暂无'}</div>
 		            </div>
 		        </div>

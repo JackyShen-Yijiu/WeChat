@@ -17,6 +17,7 @@ class CoachListActions {
         })
         .done(response => {
             if(response.type === 1) {
+                localStorage.setItem('order', JSON.stringify(response.data));
                 this.actions.getOrderSuccess(response.data);
             } else {
                 this.actions.getOrderFail(response.msg);

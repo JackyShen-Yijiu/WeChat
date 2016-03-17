@@ -45,7 +45,7 @@ class CostPayActions {
                     // 发起微信支付
                     let weixinParams = {
                         appId: weixinpay.appId,
-                        timestamp:  weixinpay.timeStamp, 
+                        timestamp:  weixinpay.timeStamp + "", 
                         nonceStr: weixinpay.nonceStr, 
                         package: weixinpay.package, 
                         signType: weixinpay.signType,
