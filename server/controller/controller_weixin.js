@@ -79,6 +79,7 @@ exports.authorizeUsercallback=function(req,res,next){
                 client.getUser(openid, function (err, result) {
 
                     var oauth_user = result;
+                    result.bcode = bcode;
 
                     var _user = new weiXinUserModel(oauth_user);
                     _user.save(function(err, user) {
