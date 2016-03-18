@@ -752,7 +752,7 @@ exports.postUserCreateOrder = function (applyinfo, callback) {
                                 spbill_create_ip: applyinfo.clientip,
                                 notify_url: merchant.notify_url,
                                 trade_type: 'JSAPI',
-                                openid: applyinfo.openid,
+                                openid: applyinfo.openid
                             };
 
                             wenpay.createUnifiedOrder(weixinpayinfo, function (err, weixinpaydata) {
@@ -771,6 +771,7 @@ exports.postUserCreateOrder = function (applyinfo, callback) {
                                     signType: "MD5"
                                 };
                                 reqparam.paySign = wenpay.sign(reqparam);
+                                console.log(reqparam);
                                 var returndata = {
                                     applyschoolinfo: data.applyschoolinfo,
                                     applyclasstypeinfo: data.applyclasstypeinfo,
