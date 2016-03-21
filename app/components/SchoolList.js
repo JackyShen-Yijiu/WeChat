@@ -41,7 +41,7 @@ class SchoolList extends React.Component {
         } else {
             localStorage.setItem('bcode', '');
         }
-        
+
         if(openid) {
             localStorage.setItem('openid', openid);
         } else {

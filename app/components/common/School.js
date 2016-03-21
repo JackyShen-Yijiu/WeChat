@@ -27,7 +27,7 @@ class School extends React.Component {
         // 价格
         let minPrice = school.min_price;
         let maxPrice = school.max_price;
-        let price = '暂无价格信息'
+        let price = '暂无价格'
         if(minPrice && maxPrice) {
             price = '¥' + minPrice + '~¥' + maxPrice; 
         }

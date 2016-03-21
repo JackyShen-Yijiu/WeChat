@@ -145,13 +145,14 @@ exports.postUserCreateOrder = function (req, res) {
         bcode: req.body.bcode,   //渠道码
         clientip: getClientIp(req)
     };
-    if (applyinfo.clientip.length < 15) {
+    var regIP = /^(((\d{1,2})|(1\d{2,2})|(2[0-4][0-9])|(25[0-5]))\.){3,3}((\d{1,2})|(1\d{2,2})|(2[0-4][0-9])|(25[0-5]))$/;
+    if (regIP.test(applyinfo.clientip)) {
         applyinfo.clientip = applyinfo.clientip;
-    }
-    else {
+    }else {
         var nyIP = applyinfo.clientip.slice(7);
         applyinfo.clientip = nyIP;
     }
+    console.log('applyinfo', applyinfo);
     if (applyinfo.openid === undefined) {
         return res.json(
             new BaseReturnInfo(0, "参数不完整", ""));
