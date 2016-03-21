@@ -417,7 +417,7 @@ exports.getSchoolList = function (searchinfo, callback) {
                                     longitude: r.longitude,
                                     address: r.address,
                                     max_price: r.maxprice ? r.maxprice : 0,
-                                    min_price: r.minprice ? r.maxprice : 0,
+                                    min_price: r.minprice ? r.minprice : 0,
                                     school_level: r.schoollevel,
                                     coach_count: r.coachcount ? r.coachcount : 0,
                                     //comment_count: r.commentcount ? r.commentcount : 0,
