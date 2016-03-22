@@ -1,9 +1,9 @@
 exports.weixinconfig = {
-    id: 'wxf8337b6f556b0bb8', // ycw
+    /*id: 'wxf8337b6f556b0bb8', // ycw
     secret: 'cd8fccf9052a3bccae25f3fa398fe44c',
     token: 'jizhijiafuweixin',
     domain: 'http://moodpo.tunnel.qydev.com',
-    encodingAESKey: ''
+    encodingAESKey: ''*/
     
     //id: 'wx59f87fdc85ee66c9',
     //secret: 'd4624c36b6795d1d99dcf0547af5443d',
@@ -11,11 +11,11 @@ exports.weixinconfig = {
     //id: 'wxb815a53dcb2faf06',
     //secret: '2637931343bdd1d1991fcef1b28a187a',
     
-    /*id: 'wxc360e212be5b3bb4', // 公众号
+    id: 'wxc360e212be5b3bb4', // 公众号
     secret: '9a2a6e99d8b44e5b5e39faa17799195c',
     token: 'jizhijiafuweixin',
     domain: 'http://weixin.jizhijiafu.cn',
-    encodingAESKey: 'iJ1qGRzr2QV5ILX0DvSMR2NVXvYhRfG0FxePXkQiRd7'*/
+    encodingAESKey: 'iJ1qGRzr2QV5ILX0DvSMR2NVXvYhRfG0FxePXkQiRd7'
 };
 
 

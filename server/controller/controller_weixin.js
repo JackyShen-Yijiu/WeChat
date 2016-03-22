@@ -86,7 +86,7 @@ exports.authorizeUsercallback=function(req,res,next){
                         if (err) {
                             next({openid:openid});
                         } else {
-                            res.redirect(jizhijiafu + '?openid=' + openid + '#bcode' + bcode );
+                            res.redirect(jizhijiafu + '/sx-activity.html?openid=' + openid + '#bcode' + bcode );
                             //res.redirect("http://nodeweixin.tunnel.qydev.com?opend="+openid);
                             //next({openid:openid});
                         }
@@ -94,7 +94,7 @@ exports.authorizeUsercallback=function(req,res,next){
                 });
             }else{
                 console.log('根据openid查询，用户已经存在', user);
-                res.redirect(jizhijiafu + '?openid=' + openid + '#bcode=' + bcode);
+                res.redirect(jizhijiafu + '/sx-activity.html?openid=' + openid + '#bcode=' + bcode);
             }
         });
     });
