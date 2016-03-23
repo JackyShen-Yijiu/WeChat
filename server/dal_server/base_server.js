@@ -23,6 +23,7 @@ var userAvailableFcodeModel = mongodb.UserAvailableFcodeModel;
 var UserPayModel = mongodb.UserPayModel;
 var userCountModel = mongodb.UserCountModel;
 var weixinUserModel = mongodb.WeiXinUserModel;
+var userfcode=mongodb.UserFcode;
 var wenpay = require("../weixin_server/wenxinpay")
 require('date-utils');
 var timeout = 60 * 5;
@@ -665,23 +666,27 @@ exports.getMyOrder = function (openid, callback) {
             if (userData.applystate == 0) {
                 return callback("用户报名");
             }
-            var returndata = {
-                applyschoolinfo: userData.applyschoolinfo,
-                applyclasstypeinfo: userData.applyclasstypeinfo,
-                applytime: userData.applyinfo.applytime.toFormat("YYYY/MM/DD"),
-                scanauditurl: userData.scanauditurl,
-                orderid: userData._id,
-                name: userData.name,
-                mobile: userData.mobile,
-                logimg: userData.headportrait.originalpic,
-                Ycode: "",
-                paytype: userData.paytype,
-                paytypestatus: userData.paytypestatus,
-            };
-            if (userData.applystate == 2) {
-                returndata.paytypestatus = 20
-            }
-            return callback(null, returndata);
+            userfcode.findOne({"userid":userid})
+                .select("userid fcode money")
+                .exec(function(err, userfcode) {
+                    var returndata = {
+                        applyschoolinfo: userData.applyschoolinfo,
+                        applyclasstypeinfo: userData.applyclasstypeinfo,
+                        applytime: userData.applyinfo.applytime.toFormat("YYYY/MM/DD"),
+                        scanauditurl: userData.scanauditurl,
+                        orderid: userData._id,
+                        name: userData.name,
+                        mobile: userData.mobile,
+                        logimg: userData.headportrait.originalpic,
+                        Ycode: userfcode?userfcode.fcode:"",
+                        paytype: userData.paytype,
+                        paytypestatus: userData.paytypestatus,
+                    };
+                    if (userData.applystate == 2) {
+                        returndata.paytypestatus = 20
+                    }
+                    return callback(null, returndata);
+                })
         })
 };
 
