@@ -34,6 +34,8 @@ Router.get("/userCancelOrder", baseController.userCancelOrder);
 
 // 获取我的订单
 Router.get("/getMyOrder", baseController.getMyOrder);
+// 根据Y码,获取用户信息
+Router.get("/getUserInfoByYCode",baseController.getUserInfoByYCode);
 
 
 // 获取训练场地

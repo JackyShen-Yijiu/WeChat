@@ -86,7 +86,20 @@ exports.getSchoolCoach = function (req, res) {
     });
 
 };
-
+// 根据Y码获取用户信息
+exports.getUserInfoByYCode=function(req,res){
+    var fcode = req.query.fcode;
+    if (fcode === undefined) {
+        return res.json(
+            new BaseReturnInfo(0, "参数不完整", ""));
+    }
+    service.getUserInfoByYCode(fcode, function (err, data) {
+        if (err) {
+            return res.json(new BaseReturnInfo(0, err, []));
+        }
+        return res.json(new BaseReturnInfo(1, "", data));
+    })
+}
 // 获取用户可以使用的F吗
 exports.getUserAvailableFcode = function (req, res) {
     var openid = req.query.openid;

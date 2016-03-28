@@ -595,7 +595,33 @@ exports.getSchoolCoach = function (coachinfo, callback) {
         });
 
 };
+// 根据Y码 获取用户信息
+exports.getUserInfoByYCode= function (fcode, callback) {
+  userfcode.findOne({"fcode":fcode},function(err,fcodedata){
+      if(err){
+          return callback("查找Y码出错："+err);
+      }
+      if(!fcodedata){
+          return callback("没有查询到Y码");
+      }
+      var  dataModel;
+      if(fcodedata.usertype==1){
+          dataModel=userModel;
+      }
+      else{
+          dataModel=coachmode;
+      }
 
+      dataModel.findById(fcodedata.userid)
+          .select("name mobile headportrait")
+          .exec(function(err,data){
+              if(err){
+                  return callback("查找Y码出错："+err)
+              }
+            return  callback(null,data);
+          })
+  })
+}
 
 //  获取我领取的优惠卷
 exports.getUserAvailableFcode = function (openid, callback) {
