@@ -651,6 +651,47 @@ exports.getUserAvailableFcode = function (openid, callback) {
             })
         })
 };
+
+exports.saveUserAvailableFcode=function(mobile,ycode,callback){
+    userfcode.findOne({"fcode":ycode},function(err,fcodedata){
+        if(err){
+            return callback("查找Y码出错："+err);
+        }
+        if(!fcodedata){
+            return callback("没有查询到Y码");
+        }
+        var  dataModel;
+        if(fcodedata.usertype==1){
+            dataModel=userModel;
+        }
+        else{
+            dataModel=coachmode;
+        }
+
+        dataModel.findById(fcodedata.userid)
+            .select("name mobile headportrait")
+            .exec(function(err,data){
+                if(err){
+                    return callback("查找Y码出错："+err)
+                }
+                var newavailable= new  userAvailableFcodeModel();
+                newavailable.mobile=mobile;
+                newavailable.createtime=new Date();
+                newavailable.fcode=ycode;
+                newavailable.name=data.name;
+                newavailable.save(function(err,data){
+                    if(err){
+                        return callback("领取失败:"+err);
+                    }
+                    else {
+                        return callback(null,"success");
+                    }
+
+                })
+
+            })
+    })
+};
 //用户取消订单
 exports.userCancelOrder = function (openid, callback) {
     userModel.findOne({"weixinopenid": openid})

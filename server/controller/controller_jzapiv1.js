@@ -114,6 +114,20 @@ exports.getUserAvailableFcode = function (req, res) {
         return res.json(new BaseReturnInfo(1, "", data));
     })
 };
+exports.saveUserAvailableFcode=function (req, res) {
+     var mobile    = req.body.mobile;
+    var ycode    = req.body.ycode;
+    if (mobile === undefined||ycode===undefined) {
+        return res.json(
+            new BaseReturnInfo(0, "参数不完整", ""));
+    }
+    service.saveUserAvailableFcode(mobile,ycode, function (err, data) {
+        if (err) {
+            return res.json(new BaseReturnInfo(0, err, []));
+        }
+        return res.json(new BaseReturnInfo(1, "", data));
+    })
+}
 
 // 用户报名接口
 exports.postUserApplySchool = function (req, res) {

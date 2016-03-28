@@ -28,6 +28,8 @@ Router.post("/userCreateOrder", baseController.postUserCreateOrder);
 
 // 获取我领取的F吗
 Router.get("/getUserAvailableFcode", baseController.getUserAvailableFcode);
+// 用户领取Y码
+Router.post("/saveUserAvailableFcode",baseController.saveUserAvailableFcode);
 
 // 用户取消订单
 Router.get("/userCancelOrder", baseController.userCancelOrder);
