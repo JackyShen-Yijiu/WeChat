@@ -626,7 +626,7 @@ exports.getUserInfoByYCode= function (fcode, callback) {
 //  获取我领取的优惠卷
 exports.getUserAvailableFcode = function (openid, callback) {
     userModel.findOne({"weixinopenid": openid})
-        .select("_id")
+        .select("_id mobile")
         .exec(function (err, userData) {
             if (err) {
                 return callback("查找用户出错");
@@ -634,7 +634,7 @@ exports.getUserAvailableFcode = function (openid, callback) {
             if (!userData) {
                 return callback("没有查询到用户信息");
             }
-            userAvailableFcodeModel.find({"userid": userData._id}, function (err, data) {
+            userAvailableFcodeModel.find({$or:[{"userid": userData._id},{"mobile":userData.mobile}]}, function (err, data) {
                 if (err) {
                     return callback("查找可用Y码出错");
                 }
