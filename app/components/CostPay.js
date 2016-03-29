@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 import DocumentTitle from 'react-document-title';
 
 import CostPayStore from '../stores/CostPayStore';
@@ -18,6 +19,10 @@ class CostPay extends React.Component {
 	componentDidMount() {
 		CostPayStore.listen(this.onChange);
         CostPayActions.getSchool(this.props.params.school_id);
+        let ycode = localStorage.getItem('ycode') || '';
+        this.setState({
+        	ycode
+        });
 	}
 
 	componentWillUnmount() {
@@ -106,13 +111,13 @@ class CostPay extends React.Component {
 		                <span className="title">支付费用</span>
 		                <span className="price">¥{price}</span>
 		            </li>
-		            <a href="#" className="list-group-item ycode-item">
+		            <Link to="/ycodes" className="list-group-item ycode-item">
 		                <span className="title">Y码返现</span>
 		                <span className="ycode">
-		                	<input type="text" className="form-control" disabled value={this.state.ycode} onChange={CostPayActions.updateYcode} placeholder="请选择一张你领取的Y码券" />
+		                	<input type="text" className="form-control" value={this.state.ycode} placeholder="请选择一张你领取的Y码券" />
 		                	<i className="icon-more_right pull-right"></i>
 		                </span>
-		            </a>
+		            </Link>
 		            <li className="list-group-item">
 		                <span className="title">邀请码</span>
 		                <input type="text" className="form-control"  value={this.state.bcode} onChange={CostPayActions.updateBcode} placeholder="请输入邀请码（选填）"/>

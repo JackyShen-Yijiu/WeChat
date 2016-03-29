@@ -55,6 +55,7 @@ class CollectYcode extends React.Component {
     	}
     	return (
     		<div style={{background:'#fff'}}>
+                <DocumentTitle title="领取Y码"></DocumentTitle>
 	    		<div className="cy-wrap">
 					<div className="logo">
 						<img src="/img/logo.png" alt="" />

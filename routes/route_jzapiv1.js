@@ -58,6 +58,20 @@ Router.get("/searchList", baseController.searchList);
 // 获取班车列表
 Router.get("/getSchoolBus/:school_id", baseController.getSchoolBus);
 
+// 生成二维码后保存信息
+Router.post("/saveQRInfo", function(req, res){
+
+});
+
+// 用户扫码填写信息后保存扫码用户信息
+Router.post("/saveQRUser", function(req, res){
+
+});
+
+// 通过驾校的手机号查询驾校信息
+
+// 通过渠道码查询用户、门店信息
+
 //根据班型ID查询班型
 //Router.get("/searchClass/:class_id", baseController.searchClass);
 module.exports = Router;

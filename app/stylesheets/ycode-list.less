@@ -1,45 +1,61 @@
 @import 'variables';
-
-.yl-wrap{
-  .yl-main{
-
-    .list-group{
-      .li-style{
-        margin:10px 0;
-        width: 100%;
-        list-style: none;
-
-        .ylist{
-          width: 90%;
-          border: 1px solid @gray;
-          height: 100px;
-          margin: 0 auto;
-          position: relative;
-          .left{
-            position: absolute;
-            top: 30px;
-            left: 20px;
-          }
-          .middle{
-            position: absolute;
-            right: 40px;
-            top: 30px;
-            .middle-top{
-              color: @red;
-              font-size: 18px;
-              font-weight: 600;
-            }
-            .middle-bottom{
-              color: @gray;
-              font-size: 14px;
-              margin-top: 4px;
-              .date{
-                margin-left: 20px;
-              }
-            }
-          }
+.yl-wrap {
+    .desc {
+        margin: 15px;
+        background: @white;
+        padding: 10px;
+        border-radius: 5px;
+        .title {
+            line-height: 30px;
+            text-align: center;
+            font-size: 16px;
+            color: @red;
         }
-      }
+        p {
+            color: @gray;
+        }
     }
-  }
+    .tips {
+        margin: 5px 15px;
+        color: @gray;
+    }
+}
+
+.yl-item {
+    position: relative;
+    display: block;
+    height: 130px;
+    margin: 10px 15px;
+    background: url('../img/Ymaground.png') no-repeat center;
+    background-size: 400px 130px;
+    .left {
+        width: 290px;
+        padding-left: 50px;
+        padding-top: 15px;
+        .name,
+        .time {
+            line-height: 30px;
+            color: @gray;
+            .lighthigh {
+                font-size: 16px;
+                color: @gray-dark;
+            }
+        }
+        .code {
+            font-size: 24px;
+            .lighthigh {
+                color: @red;
+            }
+        }
+    }
+    .right {
+        position: absolute;
+        width: 110px;
+        right: 0;
+        line-height: 130px;
+        top: 0;
+        font-size: 30px;
+        color: @white;
+        text-align: center;
+    }
 }

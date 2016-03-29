@@ -7,8 +7,7 @@ class CostPayActions {
             'getSchoolFail',
             'doPaySuccess',
             'doPayFail',
-            'updateBcode',
-            'updateYcode'
+            'updateBcode'
         );
     }
 

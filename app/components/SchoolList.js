@@ -123,7 +123,7 @@ class SchoolList extends React.Component {
                         </Link>
                     </div>
                     <div className="searchbar">
-                        <Link to="search" className="search">
+                        <Link to="/search" className="search">
                             <i className="icon-search"></i> 请输入驾校或教练进行搜索
                         </Link>
                     </div>

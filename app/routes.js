@@ -15,6 +15,7 @@ import SceneSuccess from './components/SceneSuccess';
 import WechatSuccess from './components/WechatSuccess';
 import Search from './components/Search';
 import CollectYcode from './components/CollectYcode';
+import YcodeList from './components/YcodeList';
 
 export default (
     <Route component={App}>
@@ -34,5 +35,6 @@ export default (
         <Route path='/wechatsuccessful' component={WechatSuccess} />
         <Route path='/search' component={Search} />
         <Route path='/ycode' component={CollectYcode} />
+        <Route path='/ycodes' component={YcodeList} />
     </Route>
 );

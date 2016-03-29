@@ -7,7 +7,6 @@ class CostPayStore {
         this.bindActions(CostPayActions);
         this.school = [];
         this.payType = 2;
-        this.ycode = '';
         this.bcode = '';
     }
 
@@ -30,10 +29,6 @@ class CostPayStore {
 
     onUpdateBcode(event) {
         this.bcode = event.target.value;
-    }
-
-    onUpdateYcode(event) {
-        this.ycode = event.target.value;
     }
 
 }
