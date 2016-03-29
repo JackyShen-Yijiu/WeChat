@@ -1,6 +1,6 @@
 import alt from '../alt';
 
-class CoachListActions {
+class UserCenterActions {
     constructor() {
         this.generateActions(
             'getOrderSuccess',
@@ -31,4 +31,4 @@ class CoachListActions {
 }
 
 
-export default alt.createActions(CoachListActions);
+export default alt.createActions(UserCenterActions);

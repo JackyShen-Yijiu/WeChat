@@ -68,7 +68,7 @@ class UserCenter extends React.Component {
 			let link = '';
 			if(payType == 1) { // 现场支付
 				if(payStatus == 20) { // 已支付
-					link = wechatsuccessful;
+					link = wechatSuccessLink;
 				} else { // 未支付
 					link = sceneSuccessLink;
 				}

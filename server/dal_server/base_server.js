@@ -733,7 +733,7 @@ exports.getMyOrder = function (openid, callback) {
             if (userData.applystate == 0) {
                 return callback("用户报名");
             }
-            userfcode.findOne({"userid":userid})
+            userfcode.findOne({"userid":userData._id})
                 .select("userid fcode money")
                 .exec(function(err, userfcode) {
                     var returndata = {

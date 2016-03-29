@@ -14,6 +14,7 @@ import CostPay from './components/CostPay';
 import SceneSuccess from './components/SceneSuccess';
 import WechatSuccess from './components/WechatSuccess';
 import Search from './components/Search';
+import CollectYcode from './components/CollectYcode';
 
 export default (
     <Route component={App}>
@@ -32,5 +33,6 @@ export default (
         <Route path='/successful' component={SceneSuccess} />
         <Route path='/wechatsuccessful' component={WechatSuccess} />
         <Route path='/search' component={Search} />
+        <Route path='/ycode' component={CollectYcode} />
     </Route>
 );
