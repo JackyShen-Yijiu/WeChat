@@ -27,15 +27,20 @@ class WechatSuccess extends React.Component {
 
 	handleShare() {
 		let order = this.state.order;
+
+		if(!order.Ycode) {
+			toastr.success('没有获取到Y码，无法分享！');
+			return;
+		}
 		// 弹出指示图标
 		$('.ws-share').show();
 		setTimeout(function(){
 			$('.ws-share').hide();
-		}, 3000);
+		}, 2000);
 
 		wx.onMenuShareTimeline({ // 分享到朋友圈
-		    title: '摇身一变Y码券，报名使用就返现', // 分享标题
-		    link: 'http://weixin.jizhijiafu.cn/collect-ycode.html?ycode=' + order.Ycode, // 分享链接
+		    title: '摇身一变Y码券，报名可返现', // 分享标题
+		    link: 'http://weixin.jizhijiafu.cn/ycode?ycode=' + order.Ycode, // 分享链接
 		    imgUrl: 'http://weixin.jizhijiafu.cn/img/logo.png', // 分享图标
 		    success: function () {
 		        // 用户确认分享后执行的回调函数
@@ -47,9 +52,9 @@ class WechatSuccess extends React.Component {
 		});
 
 		wx.onMenuShareAppMessage({ // 分享到朋友
-		    title: '摇身一变Y码券，报名使用就返现', // 分享标题
-		    desc: '领取此Y码并在报名驾校时使用即可获得巨额返现，同时分享此Y码者也可获得相应返现，这么好的事还不赶快领取！', // 分享描述
-		    link: 'http://weixin.jizhijiafu.cn/collect-ycode.html?ycode=' + order.Ycode, // 分享链接
+		    title: '摇身一变Y码券，报名可返现', // 分享标题
+		    desc: '领取此Y码并在报名驾校时使用即可获得巨额返现，同时分享此Y码者也可获得相应返现，这么好的事还不赶快领取使用！', // 分享描述
+		    link: 'http://weixin.jizhijiafu.cn/ycode?ycode=' + order.Ycode, // 分享链接
 		    imgUrl: 'http://weixin.jizhijiafu.cn/img/logo.png', // 分享图标
 		    type: 'link', // 分享类型,music、video或link，不填默认为link
 		    dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空

@@ -2,6 +2,7 @@
 .cy-wrap {
     background: url("../img/background_car.jpg") no-repeat top center;
     background-size: contain;
+    padding-bottom: 20px;
     .logo {
         padding: 10px;
         color: #5B8EFB;
@@ -20,7 +21,7 @@
             color: #6E6E6E;
             font-weight: 700;
         }
-        span {
+        span.lighthigh {
             color: #E22020;
             font-size: 18px;
             font-weight: 900;
@@ -58,7 +59,7 @@
             width: 300px;
             margin: 0 auto;
             margin-top: 20px;
-            span {
+            span.lighthigh {
                 color: #E22020;
                 padding-left: 10px;
             }
@@ -74,9 +75,6 @@
         .code-content {
             text-align: center;
             font-size: 16px;
-            span {
-                padding-left: 10px;
-            }
         }
         .btn {
             margin-bottom: 14px;
@@ -93,6 +91,7 @@
         .form-control {
             margin-bottom: 10px;
             border: 1px solid #5B8EFB;
+            color: @gray-dark;
         }
     }
     .ycode-detail {
@@ -102,7 +101,7 @@
         background: #fff;
         .title {
             position: absolute;
-            top: -20px;
+            top: -15px;
             left: 38%;
             z-index: 99;
             background: #fff;
@@ -110,6 +109,7 @@
             font-size: 14px;
             color: #6E6E6E;
             font-weight: 600;
+            margin: 0;
         }
         .content {
             padding: 10px;
@@ -127,7 +127,6 @@
     .down-app {
         margin: auto;
         width: 80%;
-        margin-bottom: 20px;
         img {
             width: 100%;
         }

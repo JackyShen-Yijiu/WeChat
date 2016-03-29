@@ -14,7 +14,7 @@ class CollectYcodeActions {
 
     getUserInfo(payload) {
         $.ajax({
-            url: '/jzapi/v1/getUserInfoByYCode?fcode=' + payload.bcode
+            url: '/jzapi/v1/getUserInfoByYCode?fcode=' + payload.ycode
         })
         .done(response => {
             if(response.type === 1) {
