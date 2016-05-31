@@ -182,7 +182,7 @@
                             //location.href = './submit.html?id=' + orderID;
                             location.replace('./submit.html?id=' + orderID);
                         } else { // 微信支付
-                            var wxPayOrder = response.data;
+                            var wxPayOrder = resp.data;
                             var weixinParams = {
                                 appId: wxPayOrder.appId,
                                 timestamp: wxPayOrder.timeStamp,
