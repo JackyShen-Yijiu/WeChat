@@ -7,7 +7,7 @@ var  merchant=require("../../config").merchant;
 var fs=require("fs");
 var WXPay = require('weixin-pay');
 var mongodb = require('../common/mongodb');
-var WeiXinPayNotice =mongodb.WeiXinPayNotice;
+var WeixinPayNoticeModel = mongodb.WeixinPayNoticeModel;
 var LecooOrderModel = mongodb.LecooOrderModel;
 
 var wxpay = WXPay({
@@ -62,7 +62,7 @@ exports.paycallback=wxpay.useWXCallback(function(msg, req, res, next){
     // 处理商户业务逻辑
     console.log("收到微信支付回传");
     console.log(msg);
-    var tempnotice = new WeiXinPayNotice(msg);
+    var tempnotice = new WeixinPayNoticeModel(msg);
     tempnotice.save(function (err, savenoticedata) {
         if (err) {
             res.fail();
