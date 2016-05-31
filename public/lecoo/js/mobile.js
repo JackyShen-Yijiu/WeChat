@@ -19,7 +19,8 @@ window.mobileUtil = (function(win, doc) {
         isMobile = isAndroid || isIos; // 粗略的判断
 
     return {
-        baseUrl: "http://192.168.199.106:3000",
+        //baseUrl: "http://192.168.199.106:3000",
+        baseUrl: "http://weixin.jizhijiafu.cn",
         isAndroid: isAndroid,
         isIos: isIos,
         isMobile: isMobile,
