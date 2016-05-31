@@ -5,6 +5,7 @@ var BaseReturnInfo = require('../common/basereturnmodel.js');
 var service = require('../dal_server/base_server.js');
 var mobileVerify = /^1\d{10}$/;
 var qr = require("qr-image");
+var wenpay = require('../weixin_server/wenxinpay');
 
 //通过位置定位城市
 exports.getCityByPosition = function (req, res) {
@@ -252,11 +253,11 @@ exports.fetchCode = function (req, res) {
     service.getCodebyMolile(mobile, function (err) {
         if (err) {
             return res.json(
-                new BaseReturnInfo(0, err, ""));
+                new BaseReturnInfo(0, err, "短信验证码发送失败"));
         }
         else {
             return res.json(
-                new BaseReturnInfo(1, "", "send success"));
+                new BaseReturnInfo(1, "", "短信验证码发送成功"));
         }
     });
 };
@@ -304,3 +305,83 @@ exports.getSchoolBus = function (req, res) {
         }
     });
 };
+
+
+exports.postUserApplyEvent = function(req, res) {
+    var params = req.body;
+    console.log(params);
+    if(!params.openid || !params.name || !params.mobile
+        || !params.smscode || !params.idNo) {
+        return res.json(new BaseReturnInfo(0, "参数不完整", ""));
+    }
+    service.postUserApplyEvent(params, function (err, data) {
+        if (err) {
+            return res.json(new BaseReturnInfo(0, err, ""));
+        }
+        console.log('########' + data);
+        return res.json(new BaseReturnInfo(1, "", data));
+    })
+}
+
+exports.putUserApplyEvent = function(req, res) {
+    var params = req.body;
+    if(!params.mobile || !params.name || !params.address
+        || !params.phone || !params.lesson || !params.price || !params.trainTime) {
+        return res.json(new BaseReturnInfo(0, "参数不完整", ""));
+    }
+    service.putUserApplyEvent(params, function (err, data) {
+        if (err) {
+            return res.json(new BaseReturnInfo(0, err, ""));
+        }
+        console.log('########' + data);
+        return res.json(new BaseReturnInfo(1, "", data));
+    })
+}
+
+exports.payApplyEvent = function(req, res) {
+    var params = req.body;
+    params.clientip = getClientIp(req);
+    var regIP = /^(((\d{1,2})|(1\d{2,2})|(2[0-4][0-9])|(25[0-5]))\.){3,3}((\d{1,2})|(1\d{2,2})|(2[0-4][0-9])|(25[0-5]))$/;
+    if (regIP.test(params.clientip)) {
+        params.clientip = params.clientip;
+    } else {
+        var nyIP = params.clientip.slice(7);
+        params.clientip = nyIP;
+    }
+
+    if(!params.mobile || !params.payType) {
+        return res.json(new BaseReturnInfo(0, "参数不完整", ""));
+    }
+    service.payApplyEvent(params, function (err, data) {
+        if (err) {
+            return res.json(new BaseReturnInfo(0, err, ""));
+        }
+        console.log('########' + data);
+        return res.json(new BaseReturnInfo(1, "", data));
+    })
+}
+
+// 微信支付通知
+exports.noticeApplyEvent = wenpay.paycallback;
+
+exports.getUserApplyEvent = function(req, res) {
+    var id = req.params.id;
+    service.getUserApplyEvent(id, function (err, data) {
+        if (err) {
+            return res.json(new BaseReturnInfo(0, err, ""));
+        }
+        console.log('########' + data);
+        return res.json(new BaseReturnInfo(1, "", data));
+    })
+}
+
+exports.deleteApplyEvent = function(req, res) {
+    var id = req.params.id;
+    service.deleteApplyEvent(id, function (err, data) {
+        if (err) {
+            return res.json(new BaseReturnInfo(0, err, ""));
+        }
+        console.log('########' + data);
+        return res.json(new BaseReturnInfo(1, "", data));
+    })
+}

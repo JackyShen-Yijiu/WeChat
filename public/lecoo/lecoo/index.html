@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
+    <title>极致驾服 - 利客活动</title>
+    <script src="../js/mobile.js"></script>
+    <link rel="stylesheet" href="../css/main.css"/>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+</head>
+<body ontouchstart>
+    <div class="lecoo-wrap" id="wrapper">
+        <div>
+            <div class="image-wrap">
+                <img src="../images/lecoo.jpg" alt="">
+            </div>
+            <div class="lecoo-btn-area">
+                <a class="btn btn-primary" href="apply.html">立刻报名</a>
+                <a class="btn btn-default" href="javascript:void(0)" onclick="shareEvent()">收藏或分享</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui-share" onclick="hideShare()">
+        <div class="ui-share-icon"></div>
+        <div class="ui-share-box">
+            点击右上角发送给指定朋友或分享到朋友圈
+        </div>
+    </div>
+    <script src="../js/zepto.min.js"></script>
+    <script type="text/javascript">
+        var openid = "";
+        var bcode = "";
+        try {
+            console.log(location.href);
+            var _params = location.href.split('openid=')[1].split('#');
+            openid = _params[0];
+            bcode = _params[1].split('bcode=')[1];
+        } catch(e) {}
+        console.log("openid = " + openid);
+        console.log("bcode = " + bcode);
+
+        localStorage.setItem("openid", openid);
+        localStorage.setItem("bcode", bcode);
+
+        function shareEvent() {
+            $('.ui-share').show();
+        }
+        function hideShare() {
+            $('.ui-share').hide();
+        }
+
+        $(function() {
+            if(mobileUtil.isWeixin) {
+                // 获取微信配置
+                var wxConfigUrl = mobileUtil.baseUrl + '/jzapi/weixin/getjssign?url='
+                    + location.href.split('#')[0];
+                $.getJSON(wxConfigUrl, function(resp){
+                    console.log(resp);
+                    if(resp.type == 1) {
+                        var config = resp.data;
+                        wx.config({
+                            debug: false,
+                            appId: config.appId,
+                            timestamp: config.timestamp,
+                            nonceStr: config.nonceStr,
+                            signature: config.signature,
+                            jsApiList: [
+                                'onMenuShareAppMessage',
+                                'onMenuShareTimeline'
+                            ]
+                        });
+                    }
+                });
+            }
+
+            wx.ready(function() {
+                wx.onMenuShareTimeline({ // 分享到朋友圈
+        		    title: '极致驾服－利客活动：0元学车，学费全返', // 分享标题
+        		    link: mobileUtil.baseUrl + "/lecoo", // 分享链接
+        		    imgUrl: 'http://weixin.jizhijiafu.cn/img/logo.png', // 分享图标
+        		    success: function () {
+        		        // 用户确认分享后执行的回调函数
+        		    },
+        		    cancel: function () {
+        		        // 用户取消分享后执行的回调函数
+        		    }
+        		});
+            });
+
+        })
+    </script>
+</body>
+</html>

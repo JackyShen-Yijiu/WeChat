@@ -96,3 +96,5 @@ exports.UserPayModel=require("../models/userpay");
 //exports.AdminUser=require("./AdminUser");
 exports.WeiXinUserModel=require('../models/weixinusermodel');
 exports.UserAvailableFcodeModel=require('../models/useravailableFcode');
+exports.LecooOrderModel = require('../models/lecooOrder');
+exports.WxPayNoticeModel = require('../models/wxPayNotice');

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
+    <title>极致驾服 - 选择驾校</title>
+    <script src="../js/mobile.js"></script>
+    <link rel="stylesheet" href="../css/main.css"/>
+</head>
+<body ontouchstart>
+    <div class="lecoo-school-wrap" id="wrapper">
+        <div>
+            <div class="ui-panel">
+                <div class="ui-panel-hd">
+                    <div class="title">
+                        洪都驾校
+                    </div>
+                    <div class="address">
+                        地址：呼和浩特市机场高速路北鸿德学院旁
+                    </div>
+                    <div class="mobile">
+                        电话：400-823-6161
+                    </div>
+                </div>
+                <div class="ui-panel-bd">
+                    <div class="media-lesson">
+                        <div class="media-hd">
+                            <div class="title">至尊VIP 单人单车单教练 <span class="price">¥ 3380</span></div>
+                        </div>
+                        <div class="media-ft">
+                            <div class="time">
+                                练车时间：周一～周日
+                            </div>
+                            <div class="option">
+                                <a href="javascript:void(0)" class="btn btn-apply" onclick="applySchool(0)">报名</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-panel">
+                <div class="ui-panel-hd">
+                    <div class="title">
+                        明辉驾校
+                    </div>
+                    <div class="address">
+                        地址：呼和浩特市110国道警犬基地附近
+                    </div>
+                    <div class="mobile">
+                        电话：400-823-6161
+                    </div>
+                </div>
+                <div class="ui-panel-bd">
+                    <div class="media-lesson">
+                        <div class="media-hd">
+                            <div class="title">至尊VIP 单人单车单教练 <span class="price">¥ 3380</span></div>
+                        </div>
+                        <div class="media-ft">
+                            <div class="time">
+                                练车时间：周一～周日
+                            </div>
+                            <div class="option">
+                                <a href="javascript:void(0)" class="btn btn-apply" onclick="applySchool(1)">报名</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="../js/zepto.min.js"></script>
+    <script src="../js/iscroll-lite.js"></script>
+    <script type="text/javascript">
+        var schoolScroll = new IScroll('#wrapper', {
+            click: true
+        });
+
+        var openid = localStorage.getItem('openid');
+        var mobile = localStorage.getItem('mobile');
+
+        var schoolArr = [{
+            name: '洪都驾校',
+            phone: '400-823-6161',
+            address: '呼和浩特市机场高速路北鸿德学院旁',
+            lesson: '至尊VIP 单人单车单教练',
+            price: '3380',
+            trainTime: '周一～周日'
+        }, {
+            name: '明辉驾校',
+            phone: '400-823-6161',
+            address: '呼和浩特市110国道警犬基地附近',
+            lesson: '至尊VIP 单人单车单教练',
+            price: '3380',
+            trainTime: '周一～周日'
+        }];
+
+        function applySchool(id) {
+            var school = schoolArr[id];
+            school.mobile = mobile;
+            school.openid = openid;
+            var applyUrl = mobileUtil.baseUrl + '/jzapi/v1/userApplyEvent';
+            $.ajax({
+                type: 'PUT',
+                url: applyUrl,
+                data: school,
+                dataType: 'json',
+                success: function(resp) {
+                    console.log(resp);
+                    if(resp.type == 1) {
+                        var order = resp.data;
+                        //location.href = './pay.html?id=' + order._id;
+                        location.replace('./pay.html?id=' + order._id);
+                    }
+                }
+            })
+        }
+    </script>
+</body>
+</html>

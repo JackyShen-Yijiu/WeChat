@@ -24,7 +24,7 @@ var UserPayModel = mongodb.UserPayModel;
 var userCountModel = mongodb.UserCountModel;
 var weixinUserModel = mongodb.WeiXinUserModel;
 var userfcode=mongodb.UserFcode;
-var wenpay = require("../weixin_server/wenxinpay")
+var wenpay = require("../weixin_server/wenxinpay");
 require('date-utils');
 var timeout = 60 * 5;
 
@@ -1153,3 +1153,197 @@ exports.getSchoolBus = function (q, callback) {
         })
 
 };
+
+var LecooOrderModel = mongodb.LecooOrderModel;
+
+// 用户报名活动
+exports.postUserApplyEvent = function(params, callback) {
+    // 验证验证码
+    defautfun.checkSmsCode(params.mobile, params.smscode, function (err, data) {
+        if (err) {
+            return callback(err);
+        }
+        // 验证微信用户
+        LecooOrderModel.find({mobile: params.mobile}, function(err, lecooOrders) {
+            if(err) {
+                return callback("查找订单出错");
+            }
+
+            if(lecooOrders && lecooOrders.length > 0) {
+                var hasOrder = false;
+                lecooOrders.forEach(function(lecooOrder) {
+                    if(lecooOrder.status == 2 || lecooOrder.status == 3) { // 存在订单: 订单已创建
+                        hasOrder = true;
+                        return;
+                    }
+                });
+
+                if(hasOrder) {
+                    return callback("您已经参加了此活动，请先取消报名！");
+                }
+
+                // 自动取消掉 之前报名的信息
+                LecooOrderModel.update({mobile: params.mobile, status: 1}, {
+                    status: 4,
+                    modifyTime: Date.now()
+                },  function(err, numAffected) {
+                    if(err) {
+                        return callback("更新订单出错");
+                    }
+                    // 保存报名信息
+                    saveLecooOrder(params, callback);
+                });
+            } else {
+                // 保存报名信息
+                saveLecooOrder(params, callback);
+            }
+        });
+    });
+};
+
+function saveLecooOrder(params, callback) {
+    var lecooOrderInstance = new LecooOrderModel();
+    lecooOrderInstance.openid = params.openid;
+    lecooOrderInstance.name = params.name;
+    lecooOrderInstance.mobile = params.mobile;
+    lecooOrderInstance.idNo = params.idNo;
+    lecooOrderInstance.storeName = params.storeName;
+    lecooOrderInstance.save(function(err) {
+        if(err) {
+            return callback(err);
+        }
+        console.log("保存活动报名信息成功");
+        return callback(null, "success");
+    });
+}
+
+// 用户报名活动后选择驾校 创建订单
+exports.putUserApplyEvent = function(params, callback) {
+    LecooOrderModel.findOne({mobile: params.mobile, status: 1}, function(err, lecooOrder) {
+        if(err) {
+            return callback("查找订单出错");
+        }
+        if(!lecooOrder) {
+            return callback("查找订单不存在，请先报名该活动");
+        }
+
+        LecooOrderModel.update({mobile: params.mobile, status: 1}, {
+            schoolInfo: {
+                name: params.name,
+                address: params.address,
+                phone: params.phone,
+                lesson: params.lesson,
+                price: params.price,
+                trainTime: params.trainTime,
+            },
+            status: 2,
+            modifyTime: Date.now()
+        }, function(err, numAffected) {
+            if(err) {
+                return callback("更新订单出错");
+            }
+            LecooOrderModel.findById(lecooOrder._id, function(err, data) {
+                return callback(null, data);
+            });
+        });
+    });
+};
+
+// 用户支付报名活动
+exports.payApplyEvent = function(params, callback) {
+    LecooOrderModel.findOne({mobile: params.mobile, status: 2}, function(err, lecooOrder) {
+        if(err) {
+            return callback("查找订单出错");
+        }
+        if(!lecooOrder) {
+            return callback("查找订单不存在，请先报名该活动");
+        }
+
+        // 判断用户支付类型
+        var payType = params.payType * 1;
+        if(payType === 1) { // 现场支付
+            console.log("现场支付")
+            LecooOrderModel.update({mobile: params.mobile, status: 2}, {
+                payType: 1,
+                status: 2,
+                modifyTime: Date.now()
+            }, function(err, numAffected) {
+                if(err) {
+                    return callback("更新订单出错");
+                }
+                LecooOrderModel.findById(lecooOrder._id, function(err, data) {
+                    return callback(null, data);
+                });
+            });
+        } else if(payType === 2){ // 微信支付 返回微信order信息
+
+            var wxPayInfo = {
+                body: lecooOrder.schoolInfo.name + " " + lecooOrder.schoolInfo.lesson,
+                out_trade_no: lecooOrder._id + "",
+                total_fee: lecooOrder.schoolInfo.price * 100,
+                spbill_create_ip: params.clientip || '127.0.0.1',
+                notify_url: merchant.notify_event_url,
+                trade_type: 'JSAPI',
+                openid: lecooOrder.openid
+            };
+
+            console.log(wxPayInfo);
+
+            wenpay.createUnifiedOrder(wxPayInfo, function (err, wxPayResp) {
+                if (err) {
+                    return callback("创建微信订单失败：" + err);
+                }
+                if (wxPayResp.return_code == "FAIL") {
+                    return callback("创建微信订单失败：" + wxPayResp.return_msg);
+                }
+
+                var wxPayParams = {
+                    appId: app.id,
+                    timeStamp: Math.floor(Date.now() / 1000) + "",
+                    nonceStr: wxPayResp.nonce_str,
+                    package: "prepay_id=" + wxPayResp.prepay_id,
+                    signType: "MD5"
+                };
+                wxPayParams.paySign = wenpay.sign(wxPayParams);
+
+                LecooOrderModel.update({mobile: params.mobile, status: 2}, {
+                    wxPayInfo: JSON.stringify(wxPayParams),
+                    payType: 2,
+                    status: 2,
+                    modifyTime: Date.now()
+                }, function(err, numAffected) {
+                    if(err) {
+                        return callback("更新订单出错");
+                    }
+                    return callback(null, wxPayParams);
+                });
+            });
+        } else {
+            return callback("参数错误");
+        }
+    });
+};
+
+exports.getUserApplyEvent = function(id, callback) {
+    LecooOrderModel.findById(id, function(err, data) {
+        if(err) {
+            return callback("查询订单出错");
+        }
+        if(data.status == 4) {
+            return callback("订单不存在");
+        }
+        return callback(null, data);
+    });
+};
+
+exports.deleteApplyEvent = function(id, callback) {
+    LecooOrderModel.update({'_id': id}, {
+        status: 4,
+        modifyTime: Date.now()
+    }, function(err, numAffected){
+        if(err) {
+            return callback("更新订单出错");
+        }
+        return callback(null, "success");
+    })
+}

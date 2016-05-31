@@ -74,4 +74,18 @@ Router.post("/saveQRUser", function(req, res){
 
 //根据班型ID查询班型
 //Router.get("/searchClass/:class_id", baseController.searchClass);
+
+// 利客活动报名
+Router.post("/userApplyEvent", baseController.postUserApplyEvent);
+// 报名活动后选择驾校
+Router.put("/userApplyEvent", baseController.putUserApplyEvent);
+// 支付报名活动
+Router.put("/payApplyEvent", baseController.payApplyEvent);
+// 微信支付成功后通知地址
+Router.post("/noticeApplyEvent", baseController.noticeApplyEvent);
+// 查询订单
+Router.get("/userApplyEvent/:id", baseController.getUserApplyEvent);
+// 取消订单
+Router.delete("/userApplyEvent/:id", baseController.deleteApplyEvent);
+
 module.exports = Router;

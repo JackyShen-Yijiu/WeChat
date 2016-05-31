@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
+    <title>极致驾服 - 填写报名信息</title>
+    <script src="../js/mobile.js"></script>
+    <link rel="stylesheet" href="../css/main.css"/>
+</head>
+<body ontouchstart>
+    <div class="lecoo-apply-wrap" id="wrapper">
+        <div>
+            <div class="ui-panel">
+                <div class="ui-panel-hd">活动信息</div>
+                <div class="ui-panel-bd">
+                    <div class="media-box media-apply">
+                        <div class="media-bd">
+                            <span class="label">活动时间：</span>
+                            <span class="value">2016年6月1日-2016年8月31日</span>
+                        </div>
+                    </div>
+                    <div class="media-box media-apply">
+                        <div class="media-bd">
+                            <span class="label">活动地点：</span>
+                            <span class="value">内蒙古 呼和浩特市</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="ui-panel">
+                <div class="ui-panel-hd">驾校信息</div>
+                <div class="ui-panel-bd">
+                    <div class="media-box media-apply">
+                        <div class="media-bd">
+                            <span class="label">驾校名称：</span>
+                            <span class="value">洪都驾校</span>
+                        </div>
+                    </div>
+                    <div class="media-box media-apply">
+                        <div class="media-bd">
+                            <span class="label">课程班型：</span>
+                            <span class="value">至尊VIP 单人单车单教练 <span class="price">¥ 3380</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="ui-panel">
+                <div class="ui-panel-hd">报名信息</div>
+                <div class="ui-panel-bd">
+                    <div class="media-box media-apply-form">
+                        <div class="media-bd">
+                            <span class="label">您的姓名：</span>
+                            <div class="value">
+                                <input type="text" id="userName" name="username" placeholder="请填写您的真实姓名">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="media-box media-apply-form">
+                        <div class="media-bd">
+                            <span class="label">手机号码：</span>
+                            <div class="value">
+                                <input type="number" id="mobile" name="mobile" placeholder="请填写您的手机号码">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="media-box media-apply-form">
+                        <div class="media-bd">
+                            <span class="label">验证码：</span>
+                            <div class="value">
+                                <input type="number" id="smsCode" name="smscode" placeholder="请输入您收到的验证码">
+                                <button type="button" id="sendCodeBtn" class="btn btn-send" onclick="sendSmsCode()">发送验证码</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="media-box media-apply-form">
+                        <div class="media-bd">
+                            <span class="label">身份证<br>后六位：</span>
+                            <div class="value">
+                                <input type="text" id="idNo" name="idno" placeholder="请输入您的身份证后六位">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="media-box media-apply-form">
+                        <div class="media-bd">
+                            <span class="label">门店名称：</span>
+                            <div class="value">
+                                <input type="text" id="storeName" name="storename" placeholder="请输入利客门店名称，例如：中山路店">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="lecoo-btn-area lecoo-apply-btn-area">
+            <a class="btn btn-primary" href="javascript:void(0)" onclick="submitApply()">提 交</a>
+        </div>
+    </div>
+    <script src="../js/zepto.min.js"></script>
+    <script type="text/javascript">
+        var interval = 0;
+        var startNum = 60;
+        var mobileReg = /^0?(13[0-9]|15[012356789]|17[0678]|18[0-9]|14[57])[0-9]{8}$/;
+        var smsCodeReg = /^[0-9]{5}$/;
+        function sendSmsCode() {
+            var mobile = $('#mobile').val();
+            if(!mobile) {
+                alert('手机号码不能为空！');
+                return;
+            }
+            if(!mobileReg.test(mobile)) {
+                alert('手机号码格式不正确！');
+                return;
+            }
+            var sendCodeUrl = mobileUtil.baseUrl + '/jzapi/v1/code/' + mobile;
+            $.getJSON(sendCodeUrl, function(resp){
+                interval = setInterval(function() {
+                    $('#sendCodeBtn').html(startNum + '秒')
+                        .attr('disabled', 'disabled');
+                    startNum--;
+                    if(startNum <= 0) {
+                        $('#sendCodeBtn').html('发送验证码')
+                            .removeAttr('disabled');
+                        clearInterval(interval);
+                    }
+                }, 1000);
+                alert(resp.data);
+            });
+        }
+
+        function submitApply() {
+            var userName = $('#userName').val();
+            var mobile = $('#mobile').val();
+            var smsCode = $('#smsCode').val();
+            var idNo = $('#idNo').val();
+            var storeName = $('#storeName').val();
+            if(!mobile) {
+                alert('手机号码不能为空！');
+                return;
+            }
+            if(!mobileReg.test(mobile)) {
+                alert('手机号码格式不正确！');
+                return;
+            }
+            if(!smsCode || !smsCodeReg.test(smsCode)) {
+                alert('短信验证码不正确！');
+                return;
+            }
+            if(!idNo || idNo.length != 6) {
+                alert('请输入身份证后六位！');
+                return;
+            }
+
+            var openid = localStorage.getItem('openid');
+
+            var applyUrl = mobileUtil.baseUrl + '/jzapi/v1/userApplyEvent';
+            $.post(applyUrl, {
+                name: userName,
+                mobile: mobile,
+                smscode: smsCode,
+                idNo: idNo,
+                storeName: storeName,
+                openid: openid
+            }, function(resp) {
+                console.log(resp);
+                if(resp.type == 1) {
+                    localStorage.setItem('mobile', mobile);
+                    //location.href="./school.html";
+                    location.replace('./school.html');
+                } else {
+                    alert(resp.msg);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -6,6 +6,9 @@ var  app=require("../../config").weixinconfig;
 var  merchant=require("../../config").merchant;
 var fs=require("fs");
 var WXPay = require('weixin-pay');
+var mongodb = require('../common/mongodb');
+var WeiXinPayNotice =mongodb.WeiXinPayNotice;
+var LecooOrderModel = mongodb.LecooOrderModel;
 
 var wxpay = WXPay({
     appid: app.id,
@@ -57,8 +60,83 @@ exports.sign=function(parm){
 }
 exports.paycallback=wxpay.useWXCallback(function(msg, req, res, next){
     // 处理商户业务逻辑
+    console.log("收到微信支付回传");
     console.log(msg);
-    // res.success() 向微信返回处理成功信息，res.fail()返回失败信息。
+    var tempnotice = new WeiXinPayNotice(msg);
+    tempnotice.save(function (err, savenoticedata) {
+        if (err) {
+            res.fail();
+        }
+
+        if (msg.return_code == "FAIL") {
+            savenoticedata.is_deal = 4;
+            savenoticedata.dealreamk = "结果错误："+msg.return_msg;
+            savenoticedata.save(function (err, data) {
+
+            });
+            res.success();
+        } else if (msg.result_code == "FAIL"){
+            savenoticedata.is_deal = 4;
+            savenoticedata.dealreamk = "结果错误："+ msg.err_code + msg.err_code_des;
+            savenoticedata.save(function (err, data) {
+
+            });
+        } else if (msg.result_code == "SUCCESS") {
+
+            LecooOrderModel.findById(msg.out_trade_no, function(err, lecooOrder) {
+                if (err) {
+                    savenoticedata.is_deal = 2;
+                    savenoticedata.dealreamk = "查询订单失败：" + err;
+                    savenoticedata.save(function (err, data) {
+
+                    });
+                    res.fail();
+                }
+
+                if (!lecooOrder) {
+                    savenoticedata.is_deal = 2;
+                    savenoticedata.dealreamk = "没有查询到订单";
+                    savenoticedata.save(function (err, data) {
+
+                    });
+                    res.success();
+                }
+
+                if (msg.total_fee != lecooOrder.schoolInfo.price * 100) {
+                    savenoticedata.is_deal = 2;
+                    savenoticedata.dealreamk = "订单金额不对无法完成支付";
+                    savenoticedata.save(function (err, data) {
+
+                    });
+                    res.fail();
+                }
+
+                LecooOrderModel.update({mobile: lecooOrder.mobile, status: 2}, {
+                    status: 3,
+                    modifyTime: Date.now()
+                }, function(err, numAffected) {
+                    if(err) {
+                        res.end("fail");
+                    }
+                    res.end("success");
+                });
+
+                savenoticedata.is_deal = 1; //成功
+                savenoticedata.dealreamk = "保存订单更新成功";
+                savenoticedata.save(function (err, data) {
+                });
+                res.success();
+            });
+
+        } else {
+            savenoticedata.is_deal = 3; //暂时不用处理
+            savenoticedata.dealreamk = "暂时不用处理";
+            savenoticedata.save(function (err, data) {
+
+            });
+            res.success();
+        }
+        res.success();
+    })
     res.success();
 })
-

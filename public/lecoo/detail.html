@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
+    <title>极致驾服 - 驾校详情</title>
+    <script src="./js/mobile.js"></script>
+    <link rel="stylesheet" href="./css/main.css" />
+</head>
+
+<body ontouchstart>
+    <div class="sd-wrap" id="wrapper">
+        <div>
+            <div class="sd-header">
+                <div id="slider1" class="slider">
+                    <ul>
+                        <li><img src="images/1.jpg" alt=""></li>
+                        <li><img src="images/2.jpg" alt=""></li>
+                        <li><img src="images/3.jpg" alt=""></li>
+                    </ul>
+                </div>
+                <div class="slider-footer">
+                    <h4 class="title">极致驾服互联网驾校</h4>
+                    <p class="level">
+                        <i class="icon-star-fill"></i>
+                        <i class="icon-star-fill"></i>
+                        <i class="icon-star"></i>
+                        <i class="icon-star"></i>
+                        <i class="icon-star"></i>
+                    </p>
+                </div>
+            </div>
+            <div class="sd-content">
+                <div class="ui-panel">
+                    <div class="ui-panel-bd">
+                        <div class="media-box media-school-detail">
+                            <div class="media-hd">
+                                <i class="icon-money"></i>
+                            </div>
+                            <div class="media-bd">
+                                <span class="label">价格：</span>
+                                <span class="value price">3600 - 4200</span>
+                            </div>
+                        </div>
+                        <div class="media-box media-school-detail">
+                            <div class="media-hd">
+                                <i class="icon-location"></i>
+                            </div>
+                            <div class="media-bd">
+                                <span class="label">地址：</span>
+                                <span class="value">北京市海淀区安河北路29号</span>
+                            </div>
+                        </div>
+                        <div class="media-box media-school-detail">
+                            <div class="media-hd">
+                                <i class="icon-pass"></i>
+                            </div>
+                            <div class="media-bd">
+                                <span class="label">通过率：</span>
+                                <span class="value">98%</span>
+                            </div>
+                        </div>
+                        <div class="media-box media-school-detail">
+                            <div class="media-hd">
+                                <i class="icon-time"></i>
+                            </div>
+                            <div class="media-bd">
+                                <span class="label">营业时间：</span>
+                                <span class="value">09:00～21:00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui-panel">
+                    <div class="ui-panel-hd">驾校详情</div>
+                    <div class="ui-panel-bd">
+                        <div class="ui-panel-bd-desc">
+                            <p>今天在项目中遇到图片居中的问题。今天在项目中遇到图片居中的问题。今天在项目中遇到图片居中的问题。今天在项目中遇到图片居中的问题。</p>
+                            <p>如果你有一种设备侦测的内部机制，或者你知道你的脚本将在什么地方运行，你可以把你不需要的事件禁用（鼠标，指针或者触摸事件）。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui-panel">
+                    <a class="ui-panel-ft" href="#">教练信息</a>
+                    <a class="ui-panel-ft" href="#">班车路线</a>
+                    <a class="ui-panel-ft" href="#">训练场地</a>
+                </div>
+
+                <div class="ui-panel">
+                    <div class="ui-panel-hd">课程班型</div>
+                    <div class="ui-panel-bd">
+                        <div class="media-lesson">
+                            <div class="media-hd">
+                                <div class="title">C1全周班</div>
+                                <div class="price">¥3600</div>
+                            </div>
+                            <div class="media-bd">
+                                <p>今天在项目中遇到图片居中的问题。如果你有一种设备侦测的内部机制，或者你知道你的脚本将在什么地方运行，你可以把你不需要的事件禁用（鼠标，指针或者触摸事件）。</p>
+                            </div>
+                            <div class="media-ft">
+                                <div class="time">
+                                    <i class="icon-time"></i>
+                                    周六～周日
+                                </div>
+                                <div class="option">
+                                    <a href="apply.html" class="btn btn-apply">报名</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="media-lesson">
+                            <div class="media-hd">
+                                <div class="title">C1全周班</div>
+                                <div class="price">¥3600</div>
+                            </div>
+                            <div class="media-bd">
+                                <p>今天在项目中遇到图片居中的问题。</p>
+                            </div>
+                            <div class="media-ft">
+                                <div class="time">
+                                    <i class="icon-time"></i>
+                                    周六～周日
+                                </div>
+                                <div class="option">
+                                    <button type="button" class="btn btn-apply">报名</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="./js/zepto.min.js"></script>
+    <script src="./js/swipe.min.js"></script>
+    <script src="./js/iscroll-lite.js"></script>
+    <script type="text/javascript">
+        window.mySwipe = Swipe($('#slider1')[0], {
+            speed: 1000,
+            auto: 1000,
+            startSlide: 0,
+            callback: function(index, element) {
+                //$('.slider-nav li a').removeClass("active");
+                //$('.slider-nav li a').eq(index).addClass("active");
+            },
+            transitionEnd: function(index, element) {
+
+            }
+        });
+        var schoolScroll = new IScroll('#wrapper', {
+            click: true
+        });
+    </script>
+</body>
+
+</html>

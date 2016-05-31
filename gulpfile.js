@@ -32,7 +32,7 @@ var dependencies = [
 gulp.task('vendor', function() {
   return gulp.src([
     'bower_components/jquery/dist/jquery.js',
-    'bower_components/bootstrap/dist/js/bootstrap.js',
+    //'bower_components/bootstrap/dist/js/bootstrap.js',
     'bower_components/toastr/toastr.js'
   ]).pipe(concat('vendor.js'))
     .pipe(gulpif(production, uglify({ mangle: false })))
@@ -50,7 +50,8 @@ gulp.task('browserify-vendor', function() {
     .bundle()
     .pipe(source('vendor.bundle.js'))
     .pipe(buffer())
-    .pipe(gulpif(production, uglify({ mangle: false })))
+    .pipe(uglify({ mangle: false}))
+    //.pipe(gulpif(production, uglify({ mangle: false })))
     .pipe(gulp.dest('public/js'));
 });
 
@@ -67,7 +68,8 @@ gulp.task('browserify', ['browserify-vendor'], function() {
     .pipe(source('bundle.js'))
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(gulpif(production, uglify({ mangle: false })))
+    .pipe(uglify({ mangle: false}))
+    //.pipe(gulpif(production, uglify({ mangle: false })))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('public/js'));
 });

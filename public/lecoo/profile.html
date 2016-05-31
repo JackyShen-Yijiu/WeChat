@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
+    <title>极致驾服 - 个人中心</title>
+    <script src="./js/mobile.js"></script>
+    <link rel="stylesheet" href="./css/main.css"/>
+</head>
+<body ontouchstart>
+    <div class="pf-wrap" id="wrapper">
+        <div>
+            <div class="ui-panel">
+                <div class="ui-panel-bd">
+                    <div class="media-box media-user">
+                        <div class="media-hd">
+                            <img class="thumb" src="http://placehold.it/80x80" alt="">
+                        </div>
+                        <div class="media-bd">
+                            <h4 class="name">姓名：李林</h4>
+                            <p class="mobile">手机号：13436306675</p>
+                            <p class="code">优惠码：LTDP32EA</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-panel">
+                <div class="ui-panel-bd">
+                    <div class="media-box media-order">
+                        <div class="media-bd">
+                            <h4 class="title">极致驾服互联网驾校</h4>
+                            <p class="lesson">报名班型：全周班</p>
+                            <p class="time">报名时间：2016/03/04</p>
+                        </div>
+                        <div class="media-rd">
+                            <h4 class="price">实付款：<span>¥3600</span></h4>
+                            <p class="order">订单编号：98765432</p>
+                        </div>
+                    </div>
+                </div>
+                <a class="ui-panel-ft" href="pay.html">
+                    查看详情
+                    <span class="status">未支付</span>
+                </a>
+            </div>
+
+            <div class="ui-panel">
+                <div class="ui-panel-bd">
+                    <div class="media-box media-order">
+                        <div class="media-bd">
+                            <h4 class="title">极致驾服互联网驾校</h4>
+                            <p class="lesson">报名班型：全周班</p>
+                            <p class="time">报名时间：2016/03/04</p>
+                        </div>
+                        <div class="media-rd">
+                            <h4 class="price">实付款：<span>¥3600</span></h4>
+                            <p class="order">订单编号：98765432</p>
+                        </div>
+                    </div>
+                </div>
+                <a class="ui-panel-ft" href="#">
+                    查看详情
+                    <span class="status">已支付</span>
+                </a>
+            </div>
+
+        </div>
+    </div>
+    <script src="./js/iscroll-lite.js"></script>
+    <script type="text/javascript">
+        var schoolScroll = new IScroll('#wrapper', {
+            click: true
+        });
+    </script>
+</body>
+</html>

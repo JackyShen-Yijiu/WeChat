@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
+    <title>极致驾服 - 提交成功</title>
+    <script src="../js/mobile.js"></script>
+    <link rel="stylesheet" href="../css/main.css"/>
+</head>
+<body ontouchstart>
+    <div class="lecoo-submit-wrap">
+        <div>
+            <div class="ui-panel">
+                <div class="image-wrap">
+                    <img src="../images/submit-success.jpg" alt="">
+                </div>
+            </div>
+
+            <div class="ui-panel ui-panel-order">
+                <div class="ui-panel-hd">订单编号：<span id="orderID"></span></div>
+                <div class="ui-panel-bd">
+                    <div class="media-box media-order">
+                        <div class="media-bd">
+                            <h4 class="title" id="title">-</h4>
+                            <p class="time">报名时间：<span id="createTime">-</span></p>
+                        </div>
+                        <div class="media-rd">
+                            <h4 class="type">现场支付</h4>
+                            <p class="lesson" id="lesson">-</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-panel-ft">
+                    需付款：<span class="price" id="price"></span>
+                    <button type="button" class="btn btn-default" onclick="cancelOrder()">取消订单</button>
+                </div>
+            </div>
+
+            <div class="ui-panel ui-panel-code">
+                <div class="ui-panel-bd">
+                    <p class="desc">您的报名信息将保存到公众号里的“个人中心”<br>关注公众号能在您需要时及时查看</p>
+                    <div class="image-wrap">
+                        <img src="../images/code.jpg" alt="">
+                    </div>
+                    <p class="desc">关注极致驾服公众号<br><span>进入公众号-关于我们-个人中心</span></p>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="ui-loading-toast" id="loadingToast">
+        <div class="ui-mask-trans"></div>
+        <div class="ui-toast">
+            <div class="ui-loading">
+                <div class="ui-loading-leaf ui-loading-leaf-0"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-1"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-2"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-3"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-4"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-5"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-6"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-7"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-8"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-9"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-10"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-11"></div>
+            </div>
+            <p class="ui-toast-content">数据加载中</p>
+        </div>
+    </div>
+
+    <script src="../js/zepto.min.js"></script>
+    <script type="text/javascript">
+        var orderID = location.href.split('id=')[1];
+        $(function() {
+            var getOrderUrl = mobileUtil.baseUrl + '/jzapi/v1/userApplyEvent/' + orderID;
+            $('#loadingToast').show();
+            $.getJSON(getOrderUrl, function(resp) {
+                $('#loadingToast').hide();
+                if(resp.type == 1) {
+                    var order = resp.data;
+                    var school = order.schoolInfo;
+                    var createTime = order.modifyTime;
+                    createTime = createTime.substring(0, 10);
+
+                    $('#orderID').html(num32to8(order._id));
+                    $('#title').html(school.name);
+                    $('#price').html('¥ ' + school.price);
+                    $('#lesson').html(school.lesson);
+                    $('#createTime').html(createTime);
+                } else {
+                    alert('订单不存在！');
+                }
+            });
+        });
+
+        function num32to8(a) {
+            var s = '0123456789ABCDEFGHIJKLMNOPQRSTUV';
+            var d = '';
+            for(var i = 0; i < 8; i++) {
+                var g = s.substring(i,i+1).charCodeAt();
+                var e = (g^(a.substring(i + 8,i + 9).charCodeAt())) - g & 0x1F;
+                d = d + s.substring(e, e + 1);
+            }
+            return d;
+        }
+
+        function cancelOrder() {
+            var cancelOrderUrl = mobileUtil.baseUrl + '/jzapi/v1/userApplyEvent/' + orderID;
+            $.ajax({
+                type: 'DELETE',
+                url: cancelOrderUrl,
+                dataType: 'json',
+                success: function(resp) {
+                    alert('取消订单成功！');
+                    history.back();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

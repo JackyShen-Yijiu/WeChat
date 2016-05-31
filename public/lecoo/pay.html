@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
+    <title>极致驾服 - 费用支付</title>
+    <script src="./js/mobile.js"></script>
+    <link rel="stylesheet" href="./css/main.css"/>
+</head>
+<body ontouchstart>
+    <div class="pa-wrap">
+        <div>
+            <div class="ui-panel">
+                <div class="ui-panel-bd">
+                    <div class="media-box media-school">
+                        <!-- <div class="media-hd">
+                            <img class="thumb" src="images/2.jpg" alt="">
+                        </div> -->
+                        <div class="media-bd">
+                            <h4 class="title"><span id="title">-</span></h4>
+                            <p class="address">地址：<span id="address">-</span></p>
+                            <p class="coach">报考教练：<span id="coach">-</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-panel">
+                <div class="ui-panel-bd">
+                    <div class="media-box media-apply">
+                        <div class="media-bd">
+                            <span class="label">课程班型：</span>
+                            <span class="value" id="lesson">-</span>
+                        </div>
+                    </div>
+                    <div class="media-box media-apply">
+                        <div class="media-bd">
+                            <span class="label">支付费用：</span>
+                            <span class="value price" id="price">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-panel">
+                <div class="ui-panel-hd">付款方式</div>
+                <div class="ui-panel-bd">
+                    <a href="javascript:void(0)" class="media-box media-pay media-pay-weixin" onclick="selectWxPay()">
+                        <div class="media-hd">
+                            <img class="thumb" src="images/wechat.png" alt="">
+                        </div>
+                        <div class="media-bd">
+                            <h4 class="title">微信支付</h4>
+                            <p class="desc">推荐开通微信支付的用户使用</p>
+                        </div>
+                        <div class="media-rd">
+                            <i class="icon-sure"></i>
+                        </div>
+                    </a>
+                    <a href="javascript:void(0)" class="media-box media-pay media-pay-scene" onclick="selectScPay()">
+                        <div class="media-hd">
+                            <img class="thumb" src="images/scene.png" alt="">
+                        </div>
+                        <div class="media-bd">
+                            <h4 class="title">现场支付</h4>
+                            <p class="desc">到制定现场了解更多后支付</p>
+                        </div>
+                        <div class="media-rd">
+                            <i class="icon-pay-off"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="pa-footer">
+            <div class="left">合计：<span id="total">-</span></div>
+            <div class="right">
+                <a href="javascript:void(0)" class="btn btn-pay" onclick="payOrder()">确认支付</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui-loading-toast" id="loadingToast">
+        <div class="ui-mask-trans"></div>
+        <div class="ui-toast">
+            <div class="ui-loading">
+                <div class="ui-loading-leaf ui-loading-leaf-0"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-1"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-2"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-3"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-4"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-5"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-6"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-7"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-8"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-9"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-10"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-11"></div>
+            </div>
+            <p class="ui-toast-content">数据加载中</p>
+        </div>
+    </div>
+
+    <script src="./js/zepto.min.js"></script>
+    <script type="text/javascript">
+        var payType = 2;
+        var orderID = location.href.split('id=')[1];
+        function selectWxPay() {
+            $('.media-pay-scene>.media-rd').html('<i class="icon-pay-off"></i>');
+            $('.media-pay-weixin>.media-rd').html('<i class="icon-sure"></i>');
+            payType = 2;
+        }
+
+        function selectScPay() {
+            $('.media-pay-weixin>.media-rd').html('<i class="icon-pay-off"></i>');
+            $('.media-pay-scene>.media-rd').html('<i class="icon-sure"></i>');
+            payType = 1;
+        }
+
+        $(function() {
+            var getOrderUrl = mobileUtil.baseUrl + '/jzapi/v1/userApplyEvent/' + orderID;
+            $('#loadingToast').show();
+            $.getJSON(getOrderUrl, function(resp){
+                $('#loadingToast').hide();
+                if(resp.type == 1) {
+                    var order = resp.data;
+                    var school = order.schoolInfo;
+
+                    $('#title').html(school.name);
+                    $('#address').html(school.address);
+                    $('#price').html('¥ ' + school.price);
+                    $('#lesson').html(school.lesson);
+                    $('#coach').html('智能匹配');
+                    $('#total').html('¥ ' + school.price);
+
+                } else {
+                    alert('没有查找到订单信息');
+                }
+            });
+
+            if(mobileUtil.isWeixin) {
+                // 获取微信配置
+                var wxConfigUrl = mobileUtil.baseUrl + '/jzapi/weixin/getjssign?url='
+                    + location.href.split('#')[0];
+                $.getJSON(wxConfigUrl, function(resp){
+                    console.log(resp);
+                    if(resp.type == 1) {
+                        var config = resp.data;
+                        wx.config({
+                            debug: false,
+                            appId: config.appId,
+                            timestamp: config.timestamp,
+                            nonceStr: config.nonceStr,
+                            signature: config.signature,
+                            jsApiList: [
+                                'chooseWXPay'
+                            ]
+                        });
+                    }
+                });
+            }
+
+        });
+
+        function payOrder() {
+            var payUrl = mobileUtil.baseUrl + '/jzapi/payApplyEvent';
+            var mobile = localStorage.getItem('mobile');
+            $.ajax({
+                type: 'PUT',
+                url: payUrl,
+                data: {
+                    payType: payType,
+                    mobile: mobile
+                },
+                dataType: 'json',
+                success: function(resp) {
+                    console.log(resp);
+                    if(resp.type == 1) {
+                        if(payType == 1) { // 现场支付
+                            // 跳转
+                            location.href = './submit.html?id=' + orderID;
+                        } else { // 微信支付
+                            let wxPayOrder = response.data;
+                            let weixinParams = {
+                                appId: wxPayOrder.appId,
+                                timestamp: wxPayOrder.timeStamp,
+                                nonceStr: wxPayOrder.nonceStr,
+                                package: wxPayOrder.package,
+                                signType: wxPayOrder.signType,
+                                paySign: wxPayOrder.paySign,
+                                success: function(res) {
+                                    console.log(res);
+                                    alert('微信支付成功');
+                                    // 跳转
+                                    location.href = './success.html?id=' + orderID;
+                                }
+                            };
+                            wx.chooseWXPay(weixinParams);
+                        }
+                    } else {
+                        alert('提交支付订单失败');
+                    }
+                }
+            })
+        }
+
+    </script>
+</body>
+</html>
