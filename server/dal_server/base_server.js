@@ -1221,7 +1221,7 @@ function saveLecooOrder(params, callback) {
 
 // 用户报名活动后选择驾校 创建订单
 exports.putUserApplyEvent = function(params, callback) {
-    LecooOrderModel.findOne({mobile: params.mobile, {$in: [1, 2]}, function(err, lecooOrder) {
+    LecooOrderModel.findOne({mobile: params.mobile, status: {$in: [1, 2]}}, function(err, lecooOrder) {
         if(err) {
             return callback("查找订单出错");
         }
