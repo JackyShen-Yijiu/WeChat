@@ -88,19 +88,20 @@ exports.authorizeUsercallback=function(req,res,next){
                         } else {
                             if(bcode == 'lecoo') {
                                 res.redirect(jizhijiafu + '/lecoo/lecoo?openid=' + openid + '#bcode=' + bcode );
+                            } else if(bcode == 'center') {
+                                res.redirect(jizhijiafu + '/user?openid=' + openid);
                             } else {
                                 res.redirect(jizhijiafu + '?openid=' + openid + '#bcode=' + bcode );
                             }
-
-                            //res.redirect("http://nodeweixin.tunnel.qydev.com?opend="+openid);
-                            //next({openid:openid});
                         }
                     });
                 });
-            }else{
+            } else {
                 console.log('根据openid查询，用户已经存在', user);
                 if(bcode == 'lecoo') {
                     res.redirect(jizhijiafu + '/lecoo/lecoo?openid=' + openid + '#bcode=' + bcode );
+                } else if(bcode == 'center') {
+                    res.redirect(jizhijiafu + '/user?openid=' + openid);
                 } else {
                     res.redirect(jizhijiafu + '?openid=' + openid + '#bcode=' + bcode );
                 }

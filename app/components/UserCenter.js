@@ -18,7 +18,13 @@ class UserCenter extends React.Component {
 
 	componentDidMount() {
 		UserCenterStore.listen(this.onChange);
-		let openid = localStorage.getItem('openid');
+		let {query} = this.props.location;
+        let openid = query.openid;
+		if(openid) {
+            localStorage.setItem('openid', openid);
+        } else {
+			openid = localStorage.getItem('openid');
+		}
         UserCenterActions.getOrder(openid);
 		UserCenterActions.getLecooOrder(openid);
 	}

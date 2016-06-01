@@ -146,8 +146,8 @@
                     console.log(resp);
                     if(resp.type == 1) {
                         var order = resp.data;
-                        //location.href = './pay.html?id=' + order._id;
-                        location.replace('./pay.html?id=' + order._id);
+                        location.href = './pay.html?id=' + order._id;
+                        //location.replace('./pay.html?id=' + order._id);
                     }
                 }
             })

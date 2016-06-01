@@ -1171,15 +1171,17 @@ exports.postUserApplyEvent = function(params, callback) {
 
             if(lecooOrders && lecooOrders.length > 0) {
                 var hasOrder = false;
+                var hasOrderID = "";
                 lecooOrders.forEach(function(lecooOrder) {
                     if(lecooOrder.status == 2 || lecooOrder.status == 3) { // 存在订单: 订单已创建
                         hasOrder = true;
+                        hasOrderID = lecooOrder._id;
                         return;
                     }
                 });
 
                 if(hasOrder) {
-                    return callback("您已经参加了此活动，请先取消报名！");
+                    return callback("您已经参加了此活动，请先取消报名！", {id: hasOrderID});
                 }
 
                 // 自动取消掉 之前报名的信息
@@ -1227,7 +1229,7 @@ exports.putUserApplyEvent = function(params, callback) {
             return callback("查找订单不存在，请先报名该活动");
         }
 
-        LecooOrderModel.update({mobile: params.mobile, status: 1}, {
+        LecooOrderModel.update({mobile: params.mobile}, {
             schoolInfo: {
                 name: params.name,
                 address: params.address,

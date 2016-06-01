@@ -113,8 +113,23 @@
         </div>
     </div>
 
+    <div class="ui-dialog-confirm" id="dialogConfirm">
+        <div class="ui-mask"></div>
+        <div class="ui-dialog">
+            <div class="ui-dialog-hd">
+              <strong class="ui-dialog-title">提示信息</strong>
+            </div>
+            <div class="ui-dialog-bd"></div>
+            <div class="ui-dialog-ft">
+                <a href="javascript:void(0)" class="ui-btn-dialog" onclick="hideDialog(0)">取消</a>
+                <a href="javascript:void(0)" class="ui-btn-dialog" onclick="hideDialog(1)">确定</a>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/zepto.min.js"></script>
     <script type="text/javascript">
+        var orderID = "";
         var interval = 0;
         var startNum = 60;
         var mobileReg = /^0?(13[0-9]|15[012356789]|17[0678]|18[0-9]|14[57])[0-9]{8}$/;
@@ -182,12 +197,29 @@
                 console.log(resp);
                 if(resp.type == 1) {
                     localStorage.setItem('mobile', mobile);
-                    //location.href="./school.html";
-                    location.replace('./school.html');
+                    location.href = "./school.html";
+                    //location.replace('./school.html');
                 } else {
-                    showAlert(resp.msg);
+                    var msg = resp.msg;
+                    if(msg.indexOf('取消报名') > 0) {
+                        showDialog(msg);
+                        orderID = resp.data.id;
+                    } else {
+                        showAlert(msg);
+                    }
                 }
             });
+        }
+
+        function hideDialog(flag) {
+            $('#dialogConfirm').hide();
+            if(flag == 1) {
+                location.href = './submit.html?id=' + orderID;
+            }
+        }
+        function showDialog(msg) {
+            $('#dialogConfirm').find('.ui-dialog-bd').html(msg);
+            $('#dialogConfirm').show();
         }
 
         function showAlert(msg) {
