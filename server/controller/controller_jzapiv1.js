@@ -385,3 +385,13 @@ exports.deleteApplyEvent = function(req, res) {
         return res.json(new BaseReturnInfo(1, "", data));
     })
 }
+
+exports.searchUserApplyEvent = function(req, res) {
+    service.searchUserApplyEvent(req.query, function (err, data) {
+        if (err) {
+            return res.json(new BaseReturnInfo(0, err, ""));
+        }
+        console.log('########' + data);
+        return res.json(new BaseReturnInfo(1, "", data));
+    })
+}

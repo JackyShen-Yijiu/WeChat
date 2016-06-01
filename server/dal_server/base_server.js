@@ -1347,3 +1347,24 @@ exports.deleteApplyEvent = function(id, callback) {
         return callback(null, "success");
     })
 }
+
+exports.searchUserApplyEvent = function(query, callback) {
+    var condations = {
+        status: {$ne: 4}
+    };
+    if(query.openid) {
+        condations.openid = query.openid;
+    }
+    if(query.id) {
+        condations.id = query.id;
+    }
+    LecooOrderModel.findOne(condations, function(err, data) {
+        if(err) {
+            return callback("查询订单出错");
+        }
+        if(!data) {
+            return callback("没有查询到订单");
+        }
+        return callback(null, data);
+    });
+}

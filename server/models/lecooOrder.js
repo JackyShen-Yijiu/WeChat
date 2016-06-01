@@ -1,7 +1,9 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var idg = require('../common/idgenerator');
 
 var OrderSchema = Schema({
+    id: {type: Number, unique: true},
     mobile: String,
     name: String,
     idNo: String, // 身份证后六位
@@ -22,6 +24,17 @@ var OrderSchema = Schema({
     createTime: {type: Date, default: Date.now()},
     modifyTime: {type: Date, default: Date.now()},
     modifyMobile: String // 修改手机号
+});
+
+OrderSchema.pre('save', function(next) {
+    var order = this;
+    // 获得一个新ID
+    idg.getNewID('LecooOrder', function(newid) {
+        if(newid) {
+            order.id = newid;
+            next();
+        }
+    });
 });
 
 module.exports = mongoose.model('LecooOrder', OrderSchema);

@@ -102,6 +102,19 @@
         </div>
     </div>
 
+    <div class="ui-dialog-alert" id="dialogAlert">
+        <div class="ui-mask"></div>
+        <div class="ui-dialog">
+            <div class="ui-dialog-hd">
+              <strong class="ui-dialog-title">提示信息</strong>
+          </div>
+            <div class="ui-dialog-bd"></div>
+            <div class="ui-dialog-ft">
+                <a href="javascript:void(0)" class="ui-btn-dialog" onclick="hideAlert()">确定</a>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/zepto.min.js"></script>
     <script type="text/javascript">
         var payType = 2;
@@ -135,7 +148,7 @@
                     $('#total').html('¥ ' + school.price);
 
                 } else {
-                    alert('订单不存在！');
+                    showAlert('订单不存在！');
                 }
             });
 
@@ -148,7 +161,7 @@
                     if(resp.type == 1) {
                         var config = resp.data;
                         wx.config({
-                            debug: true,
+                            debug: false,
                             appId: config.appId,
                             timestamp: config.timestamp,
                             nonceStr: config.nonceStr,
@@ -192,7 +205,7 @@
                                 paySign: wxPayOrder.paySign,
                                 success: function(res) {
                                     console.log(res);
-                                    alert('微信支付成功');
+                                    showAlert('微信支付成功');
                                     // 跳转
                                     //location.href = './success.html?id=' + orderID;
                                     location.replace('./success.html?id=' + orderID);
@@ -201,12 +214,19 @@
                             wx.chooseWXPay(weixinParams);
                         }
                     } else {
-                        alert('提交支付订单失败');
+                        showAlert('提交支付订单失败');
                     }
                 }
             })
         }
 
+        function showAlert(msg) {
+            $('#dialogAlert').find('.ui-dialog-bd').html(msg);
+            $('#dialogAlert').show();
+        }
+        function hideAlert() {
+            $('#dialogAlert').hide();
+        }
     </script>
 </body>
 </html>

@@ -32,7 +32,7 @@
                 </div>
                 <div class="ui-panel-ft">
                     需付款：<span class="price" id="price"></span>
-                    <button type="button" class="btn btn-default" onclick="cancelOrder()">取消订单</button>
+                    <button type="button" class="btn btn-default" onclick="clickCancel()">取消订单</button>
                 </div>
             </div>
 
@@ -71,6 +71,33 @@
         </div>
     </div>
 
+    <div class="ui-dialog-alert" id="dialogAlert">
+        <div class="ui-mask"></div>
+        <div class="ui-dialog">
+            <div class="ui-dialog-hd">
+              <strong class="ui-dialog-title">提示信息</strong>
+          </div>
+            <div class="ui-dialog-bd"></div>
+            <div class="ui-dialog-ft">
+                <a href="javascript:void(0)" class="ui-btn-dialog" onclick="hideAlert()">确定</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui-dialog-confirm" id="dialogConfirm">
+        <div class="ui-mask"></div>
+        <div class="ui-dialog">
+            <div class="ui-dialog-hd">
+              <strong class="ui-dialog-title">提示信息</strong>
+          </div>
+            <div class="ui-dialog-bd"></div>
+            <div class="ui-dialog-ft">
+                <a href="javascript:void(0)" class="ui-btn-dialog" onclick="hideDialog(0)">取消</a>
+                <a href="javascript:void(0)" class="ui-btn-dialog" onclick="hideDialog(1)">确定</a>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/zepto.min.js"></script>
     <script type="text/javascript">
         var orderID = location.href.split('id=')[1];
@@ -85,26 +112,40 @@
                     var createTime = order.modifyTime;
                     createTime = createTime.substring(0, 10);
 
-                    $('#orderID').html(num32to8(order._id));
+                    $('#orderID').html(num2str(order.id));
                     $('#title').html(school.name);
                     $('#price').html('¥ ' + school.price);
                     $('#lesson').html(school.lesson);
                     $('#createTime').html(createTime);
                 } else {
-                    alert('订单不存在！');
+                    showAlert('订单不存在！');
                 }
             });
         });
 
-        function num32to8(a) {
-            var s = '0123456789ABCDEFGHIJKLMNOPQRSTUV';
-            var d = '';
-            for(var i = 0; i < 8; i++) {
-                var g = s.substring(i,i+1).charCodeAt();
-                var e = (g^(a.substring(i + 8,i + 9).charCodeAt())) - g & 0x1F;
-                d = d + s.substring(e, e + 1);
+        function num2str(num) {
+            var str = num + "";
+            var length = 8 - str.length;
+            for(var i = 0; i < length; i++) {
+                str = '0' + str;
             }
-            return d;
+            return str;
+        }
+
+        function clickCancel() {
+            showDialog('确定取消该订单吗？');
+        }
+
+        function hideDialog(flag) {
+            $('#dialogConfirm').hide();
+            if(flag == 1) {
+                cancelOrder();
+            }
+        }
+
+        function showDialog(msg) {
+            $('#dialogConfirm').find('.ui-dialog-bd').html(msg);
+            $('#dialogConfirm').show();
         }
 
         function cancelOrder() {
@@ -114,10 +155,18 @@
                 url: cancelOrderUrl,
                 dataType: 'json',
                 success: function(resp) {
-                    alert('取消订单成功！');
+                    showAlert('取消订单成功！');
                     history.back();
                 }
             });
+        }
+
+        function showAlert(msg) {
+            $('#dialogAlert').find('.ui-dialog-bd').html(msg);
+            $('#dialogAlert').show();
+        }
+        function hideAlert() {
+            $('#dialogAlert').hide();
         }
     </script>
 </body>

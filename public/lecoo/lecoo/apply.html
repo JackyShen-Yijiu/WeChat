@@ -16,7 +16,7 @@
                     <div class="media-box media-apply">
                         <div class="media-bd">
                             <span class="label">活动时间：</span>
-                            <span class="value">2016年6月1日-2016年8月31日</span>
+                            <span class="value">2016年6月1日-2016年9月30日</span>
                         </div>
                     </div>
                     <div class="media-box media-apply">
@@ -53,7 +53,7 @@
                         <div class="media-bd">
                             <span class="label">您的姓名：</span>
                             <div class="value">
-                                <input type="text" id="userName" name="username" placeholder="请填写您的真实姓名">
+                                <input type="text" id="userName" name="username" placeholder="请填写您的真实姓名" autofocus>
                             </div>
                         </div>
                     </div>
@@ -76,7 +76,7 @@
                     </div>
                     <div class="media-box media-apply-form">
                         <div class="media-bd">
-                            <span class="label">身份证<br>后六位：</span>
+                            <span class="label">身份证后六位：</span>
                             <div class="value">
                                 <input type="text" id="idNo" name="idno" placeholder="请输入您的身份证后六位">
                             </div>
@@ -84,9 +84,9 @@
                     </div>
                     <div class="media-box media-apply-form">
                         <div class="media-bd">
-                            <span class="label">门店名称：</span>
+                            <span class="label">利客门店名称：</span>
                             <div class="value">
-                                <input type="text" id="storeName" name="storename" placeholder="请输入利客门店名称，例如：中山路店">
+                                <input type="text" id="storeName" name="storename" placeholder="例如：中山路店（选填）">
                             </div>
                         </div>
                     </div>
@@ -96,9 +96,23 @@
         </div>
 
         <div class="lecoo-btn-area lecoo-apply-btn-area">
-            <a class="btn btn-primary" href="javascript:void(0)" onclick="submitApply()">提 交</a>
+            <a class="btn btn-primary" href="javascript:void(0)" onclick="submitApply()">更上一层楼 优惠在前头</a>
         </div>
     </div>
+
+    <div class="ui-dialog-alert" id="dialogAlert">
+        <div class="ui-mask"></div>
+        <div class="ui-dialog">
+            <div class="ui-dialog-hd">
+              <strong class="ui-dialog-title">提示信息</strong>
+          </div>
+            <div class="ui-dialog-bd"></div>
+            <div class="ui-dialog-ft">
+                <a href="#" class="ui-btn-dialog" onclick="hideAlert()">确定</a>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/zepto.min.js"></script>
     <script type="text/javascript">
         var interval = 0;
@@ -108,11 +122,11 @@
         function sendSmsCode() {
             var mobile = $('#mobile').val();
             if(!mobile) {
-                alert('手机号码不能为空！');
+                showAlert('手机号码不能为空！');
                 return;
             }
             if(!mobileReg.test(mobile)) {
-                alert('手机号码格式不正确！');
+                showAlert('手机号码格式不正确！');
                 return;
             }
             var sendCodeUrl = mobileUtil.baseUrl + '/jzapi/v1/code/' + mobile;
@@ -127,7 +141,7 @@
                         clearInterval(interval);
                     }
                 }, 1000);
-                alert(resp.data);
+                showAlert(resp.data);
             });
         }
 
@@ -138,19 +152,19 @@
             var idNo = $('#idNo').val();
             var storeName = $('#storeName').val();
             if(!mobile) {
-                alert('手机号码不能为空！');
+                showAlert('手机号码不能为空！');
                 return;
             }
             if(!mobileReg.test(mobile)) {
-                alert('手机号码格式不正确！');
+                showAlert('手机号码格式不正确！');
                 return;
             }
             if(!smsCode || !smsCodeReg.test(smsCode)) {
-                alert('短信验证码不正确！');
+                showAlert('短信验证码不正确！');
                 return;
             }
             if(!idNo || idNo.length != 6) {
-                alert('请输入身份证后六位！');
+                showAlert('请输入身份证后六位！');
                 return;
             }
 
@@ -171,9 +185,17 @@
                     //location.href="./school.html";
                     location.replace('./school.html');
                 } else {
-                    alert(resp.msg);
+                    showAlert(resp.msg);
                 }
             });
+        }
+
+        function showAlert(msg) {
+            $('#dialogAlert').find('.ui-dialog-bd').html(msg);
+            $('#dialogAlert').show();
+        }
+        function hideAlert() {
+            $('#dialogAlert').hide();
         }
     </script>
 </body>

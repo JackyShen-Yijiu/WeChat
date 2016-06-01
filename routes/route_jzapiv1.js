@@ -87,5 +87,7 @@ Router.post("/noticeApplyEvent", baseController.noticeApplyEvent);
 Router.get("/userApplyEvent/:id", baseController.getUserApplyEvent);
 // 取消订单
 Router.delete("/userApplyEvent/:id", baseController.deleteApplyEvent);
+// 查询订单
+Router.get("/userApplyEvent", baseController.searchUserApplyEvent);
 
 module.exports = Router;
