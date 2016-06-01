@@ -316,7 +316,7 @@ exports.postUserApplyEvent = function(req, res) {
     }
     service.postUserApplyEvent(params, function (err, data) {
         if (err) {
-            return res.json(new BaseReturnInfo(0, err, ""));
+            return res.json(new BaseReturnInfo(0, err, data));
         }
         console.log('########' + data);
         return res.json(new BaseReturnInfo(1, "", data));
