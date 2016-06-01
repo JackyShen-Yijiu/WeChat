@@ -78,9 +78,9 @@ Router.post("/saveQRUser", function(req, res){
 // 利客活动报名
 Router.post("/userApplyEvent", baseController.postUserApplyEvent);
 // 报名活动后选择驾校
-Router.put("/userApplyEvent", baseController.putUserApplyEvent);
+Router.put("/userApplyEvent/:id", baseController.putUserApplyEvent);
 // 支付报名活动
-Router.put("/payApplyEvent", baseController.payApplyEvent);
+Router.put("/payApplyEvent/:id", baseController.payApplyEvent);
 // 微信支付成功后通知地址
 Router.post("/noticeApplyEvent", baseController.noticeApplyEvent);
 // 查询订单

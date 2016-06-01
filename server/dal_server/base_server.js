@@ -1210,18 +1210,18 @@ function saveLecooOrder(params, callback) {
     lecooOrderInstance.mobile = params.mobile;
     lecooOrderInstance.idNo = params.idNo;
     lecooOrderInstance.storeName = params.storeName;
-    lecooOrderInstance.save(function(err) {
+    lecooOrderInstance.save(function(err, order) {
         if(err) {
             return callback(err);
         }
         console.log("保存活动报名信息成功");
-        return callback(null, "success");
+        return callback(null, order);
     });
 }
 
 // 用户报名活动后选择驾校 创建订单
 exports.putUserApplyEvent = function(params, callback) {
-    LecooOrderModel.findOne({mobile: params.mobile, status: {$in: [1, 2]}}, function(err, lecooOrder) {
+    LecooOrderModel.findById(params.id, function(err, lecooOrder) {
         if(err) {
             return callback("查找订单出错");
         }
@@ -1229,7 +1229,7 @@ exports.putUserApplyEvent = function(params, callback) {
             return callback("查找订单不存在，请先报名该活动");
         }
 
-        LecooOrderModel.update({mobile: params.mobile}, {
+        LecooOrderModel.update({_id: param.id}, {
             schoolInfo: {
                 name: params.name,
                 address: params.address,
@@ -1253,7 +1253,7 @@ exports.putUserApplyEvent = function(params, callback) {
 
 // 用户支付报名活动
 exports.payApplyEvent = function(params, callback) {
-    LecooOrderModel.findOne({mobile: params.mobile, status: 2}, function(err, lecooOrder) {
+    LecooOrderModel.findOne({mobile: params.mobile, _id: params.id, status: 2}, function(err, lecooOrder) {
         if(err) {
             return callback("查找订单出错");
         }
@@ -1265,7 +1265,7 @@ exports.payApplyEvent = function(params, callback) {
         var payType = params.payType * 1;
         if(payType === 1) { // 现场支付
             console.log("现场支付")
-            LecooOrderModel.update({mobile: params.mobile, status: 2}, {
+            LecooOrderModel.update({mobile: params.mobile, _id: params.id, status: 2}, {
                 payType: 1,
                 status: 2,
                 modifyTime: Date.now()
@@ -1308,7 +1308,7 @@ exports.payApplyEvent = function(params, callback) {
                 };
                 wxPayParams.paySign = wenpay.sign(wxPayParams);
 
-                LecooOrderModel.update({mobile: params.mobile, status: 2}, {
+                LecooOrderModel.update({mobile: params.mobile, _id: params.id, status: 2}, {
                     wxPayInfo: JSON.stringify(wxPayParams),
                     payType: 2,
                     status: 2,

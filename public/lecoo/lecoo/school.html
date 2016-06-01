@@ -102,12 +102,10 @@
     <script src="../js/zepto.min.js"></script>
     <script src="../js/iscroll-lite.js"></script>
     <script type="text/javascript">
+        var orderID = location.href.split('id=')[1];
         var schoolScroll = new IScroll('#wrapper', {
             click: true
         });
-
-        var openid = localStorage.getItem('openid');
-        var mobile = localStorage.getItem('mobile');
 
         var schoolArr = [{
             name: '洪都驾校',
@@ -134,9 +132,7 @@
 
         function applySchool(id) {
             var school = schoolArr[id];
-            school.mobile = mobile;
-            school.openid = openid;
-            var applyUrl = mobileUtil.baseUrl + '/jzapi/v1/userApplyEvent';
+            var applyUrl = mobileUtil.baseUrl + '/jzapi/v1/userApplyEvent/' + orderID;
             $.ajax({
                 type: 'PUT',
                 url: applyUrl,

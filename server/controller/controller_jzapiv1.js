@@ -325,7 +325,8 @@ exports.postUserApplyEvent = function(req, res) {
 
 exports.putUserApplyEvent = function(req, res) {
     var params = req.body;
-    if(!params.mobile || !params.name || !params.address
+    params.id = req.params.id;
+    if(!params.id || !params.mobile || !params.name || !params.address
         || !params.phone || !params.lesson || !params.price || !params.trainTime) {
         return res.json(new BaseReturnInfo(0, "参数不完整", ""));
     }
@@ -340,6 +341,7 @@ exports.putUserApplyEvent = function(req, res) {
 
 exports.payApplyEvent = function(req, res) {
     var params = req.body;
+    params.id = req.params.id;
     params.clientip = getClientIp(req);
     var regIP = /^(((\d{1,2})|(1\d{2,2})|(2[0-4][0-9])|(25[0-5]))\.){3,3}((\d{1,2})|(1\d{2,2})|(2[0-4][0-9])|(25[0-5]))$/;
     if (regIP.test(params.clientip)) {
@@ -349,7 +351,7 @@ exports.payApplyEvent = function(req, res) {
         params.clientip = nyIP;
     }
 
-    if(!params.mobile || !params.payType) {
+    if(!params.mobile || !params.payType || !params.id) {
         return res.json(new BaseReturnInfo(0, "参数不完整", ""));
     }
     service.payApplyEvent(params, function (err, data) {

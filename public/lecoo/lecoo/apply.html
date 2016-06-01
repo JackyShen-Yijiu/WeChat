@@ -154,6 +154,7 @@
                         $('#sendCodeBtn').html('发送验证码')
                             .removeAttr('disabled');
                         clearInterval(interval);
+                        startNum = 60;
                     }
                 }, 1000);
                 if(resp.type == 1) {
@@ -201,7 +202,8 @@
                 console.log(resp);
                 if(resp.type == 1) {
                     localStorage.setItem('mobile', mobile);
-                    location.href = "./school.html";
+                    var order = resp.data;
+                    location.href = "./school.html?id=" + order._id;
                     //location.replace('./school.html');
                 } else {
                     var msg = resp.msg;

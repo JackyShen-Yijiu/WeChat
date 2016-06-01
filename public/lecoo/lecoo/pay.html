@@ -177,7 +177,7 @@
         });
 
         function payOrder() {
-            var payUrl = mobileUtil.baseUrl + '/jzapi/v1/payApplyEvent';
+            var payUrl = mobileUtil.baseUrl + '/jzapi/v1/payApplyEvent/' + orderID;
             var mobile = localStorage.getItem('mobile');
             $.ajax({
                 type: 'PUT',
