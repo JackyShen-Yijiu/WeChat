@@ -156,7 +156,11 @@
                         clearInterval(interval);
                     }
                 }, 1000);
-                showAlert(resp.data);
+                if(resp.type == 1) {
+                    showAlert(resp.data);
+                } else {
+                    showAlert(resp.msg);
+                }
             });
         }
 
