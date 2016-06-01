@@ -6,6 +6,7 @@ var OrderSchema = Schema({
     id: {type: Number, unique: true},
     mobile: String,
     name: String,
+    avatar: String,
     idNo: String, // 身份证后六位
     storeName: String, // 门店名称
     openid: String, // 微信id

@@ -47,13 +47,15 @@ class UserCenter extends React.Component {
 
 	render() {
 		let orderData = this.state.order;
-		if(!orderData || !orderData.applyschoolinfo || !orderData.applyclasstypeinfo) {
+		let lecooOrder = this.state.lecooOrder;
+
+		if(!orderData.orderid && !lecooOrder.id) {
 			return (
 				<div className="pc-wrap">
 					<DocumentTitle title="个人中心"></DocumentTitle>
 					<div className="user-item">
 			            <div className="left">
-			                <img className="img-circle" src={'http://placehold.it/80x80'} alt=""/>
+			                <img className="img-circle" src={''} alt=""/>
 			            </div>
 			            <div className="middle">
 			                <div className="name">姓名：未知</div>
@@ -65,49 +67,61 @@ class UserCenter extends React.Component {
 			);
 		}
 
-		let school = orderData.applyschoolinfo;
-		let lesson = orderData.applyclasstypeinfo;
-		let payStatus = orderData.paytypestatus; // 0 未 1
-		let payType = orderData.paytype; // 1 现场 2 微信
-
-		let sceneSuccessLink = '/successful/';
-		let wechatSuccessLink = '/wechatsuccessful/';
-		let payLink = '/pay/' + school.id + '/-1/' + lesson.id;
-
-		let orderStateNode = (() => {
-			let link = '';
-			if(payType == 1) { // 现场支付
-				if(payStatus == 20) { // 已支付
-					link = wechatSuccessLink;
-				} else { // 未支付
-					link = sceneSuccessLink;
-				}
-			} else { // 微信支付
-				if(payStatus == 20) { // 已支付
-					link = wechatSuccessLink;
-				} else { // 未支付
-					link = payLink;
-				}
-			}
-
-			return (
-				<li className="list-group-item">
-	            	<Link to={link} className="pay">
-	            		{payType == 1 ? '现场支付' : '微信支付'}
-	            		<span className="pull-right">{payStatus == 20 ? '已支付' : '未支付'}
-	            			<i className="icon-more_right pull-right"></i>
-	            		</span>
-	            	</Link>
-	            </li>
-			);
-		})();
+		let user = {};
+		if(orderData) {
+			user.name = orderData.name;
+			user.mobile = orderData.mobile;
+			user.avatar = orderData.logimg;
+			user.ycode = orderData.Ycode || '暂无';
+		}
+		if(lecooOrder) {
+			user.name = user.name || lecooOrder.name || '暂无';
+			user.mobile = user.mobile || lecooOrder.mobile || '暂无';
+			user.avatar = user.avatar || lecooOrder.avatar || '';
+		}
 
 		let orderNode = (() => {
+			let school = orderData.applyschoolinfo || {};
+			let lesson = orderData.applyclasstypeinfo || {};
+			let payType = orderData.paytype; // 1 现场 2 微信
+
 			if(!school.id || !lesson.id) {
 				return (
 					<div></div>
 				);
 			}
+
+			let orderStateNode = (() => {
+				let payStatus = orderData.paytypestatus; // 0 未 1
+				let link = '';
+				let sceneSuccessLink = '/successful/';
+				let wechatSuccessLink = '/wechatsuccessful/';
+				let payLink = '/pay/' + school.id + '/-1/' + lesson.id;
+				if(payType == 1) { // 现场支付
+					if(payStatus == 20) { // 已支付
+						link = wechatSuccessLink;
+					} else { // 未支付
+						link = sceneSuccessLink;
+					}
+				} else { // 微信支付
+					if(payStatus == 20) { // 已支付
+						link = wechatSuccessLink;
+					} else { // 未支付
+						link = payLink;
+					}
+				}
+
+				return (
+					<li className="list-group-item">
+		            	<Link to={link} className="pay">
+		            		{payType == 1 ? '现场支付' : '微信支付'}
+		            		<span className="pull-right">{payStatus == 20 ? '已支付' : '未支付'}
+		            			<i className="icon-more_right pull-right"></i>
+		            		</span>
+		            	</Link>
+		            </li>
+				);
+			})();
 
 			let styleObj = {
 				display: 'none'
@@ -143,7 +157,6 @@ class UserCenter extends React.Component {
 		})();
 
 		// 利客订单
-		let lecooOrder = this.state.lecooOrder;
 		let lecooOrderNode = (() => {
 			if(!lecooOrder || !lecooOrder.id) {
 				return (
@@ -157,6 +170,8 @@ class UserCenter extends React.Component {
 
 			let payUrl = './lecoo/lecoo/pay.html?id=' + lecooOrder._id;
 			let successUrl = './lecoo/lecoo/success.html?id=' + lecooOrder._id;
+
+			let hasPay = lecooOrder.status == 3;
 
 			return (
 				<div className="ui-panel ui-panel-order">
@@ -175,7 +190,7 @@ class UserCenter extends React.Component {
 	                </div>
 	                <a href={lecooOrder.status == 3 ? successUrl : payUrl} className="ui-panel-ft">
 	                    需付款：<span className="price">¥ {lecooSchool.price}</span>
-						<span className="status">{lecooOrder.status == 3 ? '已支付' : '未支付'}</span>
+					<span className={hasPay ? 'status has-pay' : 'status'}>{hasPay ? '已支付' : '未支付'}</span>
 						<i className="icon-more_right link-icon"></i>
 					</a>
 	            </div>
@@ -187,12 +202,12 @@ class UserCenter extends React.Component {
 				<DocumentTitle title="个人中心"></DocumentTitle>
 				<div className="user-item">
 		            <div className="left">
-		                <img className="img-circle" src={orderData.logimg || 'http://placehold.it/80x80'} alt=""/>
+		                <img className="img-circle" src={user.avatar} alt=""/>
 		            </div>
 		            <div className="middle">
-		                <div className="name">姓名：{orderData.name}</div>
-		                <div className="mobile">手机号：{orderData.mobile || '暂无'}</div>
-		                <div className="ycode">我的Y码：{orderData.Ycode || '暂无'}</div>
+		                <div className="name">姓名：{user.name}</div>
+		                <div className="mobile">手机号：{user.mobile}</div>
+		                <div className="ycode">我的Y码：{user.ycode}</div>
 		            </div>
 		        </div>
 		        {orderNode}

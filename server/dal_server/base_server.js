@@ -1365,6 +1365,14 @@ exports.searchUserApplyEvent = function(query, callback) {
         if(!data) {
             return callback("没有查询到订单");
         }
-        return callback(null, data);
+        var openid = data.openid;
+        weixinUserModel.findOne({openid: openid}, function (err, user) {
+            if(err) {
+                return callback("查询用户信息出错");
+            }
+            data.avatar = user.headimgurl;
+            return callback(null, data);
+        });
+
     });
 }
