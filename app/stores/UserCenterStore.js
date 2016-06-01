@@ -5,6 +5,7 @@ class UserCenterStore {
     constructor() {
         this.bindActions(UserCenterActions);
         this.order = {};
+        this.lecooOrder = {};
     }
 
     onGetOrderSuccess(data) {
@@ -12,6 +13,14 @@ class UserCenterStore {
     }
 
     onGetOrderFail(errorMessage) {
+        console.log(errorMessage);
+    }
+
+    onGetLecooOrderSuccess(data) {
+        this.lecooOrder = data;
+    }
+
+    onGetLecooOrderFail(errorMessage) {
         console.log(errorMessage);
     }
 

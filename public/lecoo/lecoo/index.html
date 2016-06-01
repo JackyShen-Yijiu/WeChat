@@ -60,6 +60,7 @@
         var openid = "";
         var bcode = "";
         var orderID = "";
+        var orderStatus = 0;
         try {
             console.log(location.href);
             var _params = location.href.split('openid=')[1].split('#');
@@ -92,7 +93,11 @@
         function hideDialog(flag) {
             $('#dialogConfirm').hide();
             if(flag == 1) {
-                location.href = './pay.html?id=' + orderID;
+                if(orderStatus == 2) {
+                    location.href = './pay.html?id=' + orderID;
+                } else if(orderStatus == 3) {
+                    location.href = './success.html?id=' + orderID;
+                }
             }
         }
         function showDialog(msg) {
@@ -108,17 +113,20 @@
                     if(resp.type == 1) {
                         var order = resp.data;
                         orderID = order._id;
+                        orderStatus = order.status;
                         if(order.status == 2) { // 有订单 未支付
                             showDialog('您已经报名了该活动，但还未支付订单，请先支付或取消订单！是否跳转到订单支付页面？');
                         } else if(order.status == 3) {
-                            showAlert('您已经报名了该活动且已支付订单，无需再次报名！');
+                            showDialog('您已经报名了该活动且已支付订单，无需再次报名！是否跳转到报名成功页面？');
+                        } else {
+                            location.href = './apply.html';
                         }
                     } else {
                         location.href = './apply.html';
                     }
                 });
             } else {
-                showAlert('用户微信信息获取失败，无法完成报名操作，请重新打开此页面！');
+                showAlert('用户微信信息获取失败，无法完成报名操作，请重新打开此页面重试！');
             }
         }
 

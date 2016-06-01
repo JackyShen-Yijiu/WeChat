@@ -13,9 +13,9 @@
             <div class="ui-panel">
                 <div class="image-wrap">
                     <img src="../images/pay-success.png" alt="">
-                    <div class="number">订单编号：12345678</div>
+                    <div class="number" id="number">-</div>
                 </div>
-                <img class="share-image" src="../images/share.png" alt="">
+                <img onclick="shareEvent()" class="share-image" src="../images/share.png" alt="">
             </div>
 
             <p class="desc desc0">您可凭订单信息到锁报名的驾校领取</p>
@@ -27,5 +27,75 @@
             </div>
         </div>
     </div>
+
+    <div class="ui-loading-toast" id="loadingToast">
+        <div class="ui-mask-trans"></div>
+        <div class="ui-toast">
+            <div class="ui-loading">
+                <div class="ui-loading-leaf ui-loading-leaf-0"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-1"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-2"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-3"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-4"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-5"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-6"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-7"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-8"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-9"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-10"></div>
+                <div class="ui-loading-leaf ui-loading-leaf-11"></div>
+            </div>
+            <p class="ui-toast-content">数据加载中</p>
+        </div>
+    </div>
+
+    <div class="ui-dialog-alert" id="dialogAlert">
+        <div class="ui-mask"></div>
+        <div class="ui-dialog">
+            <div class="ui-dialog-hd">
+              <strong class="ui-dialog-title">提示信息</strong>
+          </div>
+            <div class="ui-dialog-bd"></div>
+            <div class="ui-dialog-ft">
+                <a href="javascript:void(0)" class="ui-btn-dialog" onclick="hideAlert()">确定</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/zepto.min.js"></script>
+    <script type="text/javascript">
+        var orderID = location.href.split('id=')[1];
+        var getOrderUrl = mobileUtil.baseUrl + '/jzapi/v1/userApplyEvent/' + orderID;
+
+        $(function() {
+            $('#loadingToast').show();
+            $.getJSON(getOrderUrl, function(resp) {
+                $('#loadingToast').hide();
+                if(resp.type == 1) {
+                    var order = resp.data;
+                    $('#number').html("订单编号：" + num2str(order.id));
+                } else {
+                    showAlert('订单不存在！');
+                }
+            });
+        });
+
+        function num2str(num) {
+            var str = num + "";
+            var length = 8 - str.length;
+            for(var i = 0; i < length; i++) {
+                str = '0' + str;
+            }
+            return str;
+        }
+
+        function showAlert(msg) {
+            $('#dialogAlert').find('.ui-dialog-bd').html(msg);
+            $('#dialogAlert').show();
+        }
+        function hideAlert() {
+            $('#dialogAlert').hide();
+        }
+    </script>
 </body>
 </html>

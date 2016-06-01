@@ -20,6 +20,7 @@ class UserCenter extends React.Component {
 		UserCenterStore.listen(this.onChange);
 		let openid = localStorage.getItem('openid');
         UserCenterActions.getOrder(openid);
+		UserCenterActions.getLecooOrder(openid);
 	}
 
 	componentWillUnmount() {
@@ -33,6 +34,15 @@ class UserCenter extends React.Component {
 		    current: allUrl,
 		    urls: [allUrl]
 		});
+	}
+
+	num2str(num) {
+		var str = num + "";
+		var length = 8 - str.length;
+		for(var i = 0; i < length; i++) {
+			str = '0' + str;
+		}
+		return str;
 	}
 
 	render() {
@@ -132,6 +142,46 @@ class UserCenter extends React.Component {
 			);
 		})();
 
+		// 利客订单
+		let lecooOrder = this.state.lecooOrder;
+		let lecooOrderNode = (() => {
+			if(!lecooOrder || !lecooOrder.id) {
+				return (
+					<div></div>
+				);
+			}
+
+			let lecooSchool = lecooOrder.schoolInfo;
+			let createTime = lecooOrder.modifyTime.substring(0, 10);
+			let orderNum = this.num2str(lecooOrder.id);
+
+			let payUrl = './lecoo/lecoo/pay.html?id=' + lecooOrder._id;
+			let successUrl = './lecoo/lecoo/success.html?id=' + lecooOrder._id;
+
+			return (
+				<div className="ui-panel ui-panel-order">
+	                <div className="ui-panel-hd">订单编号：{orderNum}</div>
+	                <div className="ui-panel-bd">
+	                    <div className="media-box media-order">
+	                        <div className="media-bd">
+	                            <h4 className="title">{lecooSchool.name}</h4>
+	                            <p className="time">报名时间：{createTime}</p>
+	                        </div>
+	                        <div className="media-rd">
+	                            <h4 className="type">{lecooOrder.payType == 1 ? '现场支付' : '微信支付'}</h4>
+	                            <p className="lesson">{lecooSchool.lesson}</p>
+	                        </div>
+	                    </div>
+	                </div>
+	                <a href={lecooOrder.status == 3 ? successUrl : payUrl} className="ui-panel-ft">
+	                    需付款：<span className="price">¥ {lecooSchool.price}</span>
+						<span className="status">{lecooOrder.status == 3 ? '已支付' : '未支付'}</span>
+						<i className="icon-more_right link-icon"></i>
+					</a>
+	            </div>
+			);
+		})();
+
 		return (
 			<div className="pc-wrap">
 				<DocumentTitle title="个人中心"></DocumentTitle>
@@ -146,6 +196,7 @@ class UserCenter extends React.Component {
 		            </div>
 		        </div>
 		        {orderNode}
+				{lecooOrderNode}
 			</div>
 		);
 	}

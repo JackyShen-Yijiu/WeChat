@@ -1329,7 +1329,7 @@ exports.getUserApplyEvent = function(id, callback) {
         if(err) {
             return callback("查询订单出错");
         }
-        if(data.status == 4) {
+        if(data.status == 4 || data.status == 1) {
             return callback("订单不存在");
         }
         return callback(null, data);
@@ -1350,7 +1350,7 @@ exports.deleteApplyEvent = function(id, callback) {
 
 exports.searchUserApplyEvent = function(query, callback) {
     var condations = {
-        status: {$ne: 4}
+        status: {$in: [2, 3]}
     };
     if(query.openid) {
         condations.openid = query.openid;
