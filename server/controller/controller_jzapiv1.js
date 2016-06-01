@@ -326,7 +326,6 @@ exports.postUserApplyEvent = function(req, res) {
 exports.putUserApplyEvent = function(req, res) {
     var params = req.body;
     params.id = req.params.id;
-    console.log(params);
     if(!params.id || !params.mobile || !params.name || !params.address
         || !params.phone || !params.lesson || !params.price || !params.trainTime) {
         return res.json(new BaseReturnInfo(0, "参数不完整", ""));

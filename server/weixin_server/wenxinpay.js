@@ -111,7 +111,7 @@ exports.paycallback=wxpay.useWXCallback(function(msg, req, res, next){
                     res.fail();
                 }
 
-                LecooOrderModel.update({mobile: lecooOrder.mobile, status: 2}, {
+                LecooOrderModel.update({_id: lecooOrder._id, status: 2}, {
                     status: 3,
                     modifyTime: Date.now()
                 }, function(err, numAffected) {
