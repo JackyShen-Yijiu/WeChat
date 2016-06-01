@@ -1229,7 +1229,7 @@ exports.putUserApplyEvent = function(params, callback) {
             return callback("查找订单不存在，请先报名该活动");
         }
 
-        LecooOrderModel.update({_id: param.id}, {
+        LecooOrderModel.update({_id: params.id}, {
             schoolInfo: {
                 name: params.name,
                 address: params.address,
